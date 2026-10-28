@@ -1,0 +1,137 @@
+improve readme.md and add workflow to pubish plugin to npm as `@chrisdoc/pi-pii-redact`
+
+---
+
+I want to use OIDC trusted publishing
+
+---
+
+add MIT license
+
+---
+
+also setup https://github.com/changesets/changesets
+
+---
+
+i authenticated npm here for the publishing
+
+---
+
+<task-notification>
+<task-id>b3silcef6</task-id>
+<tool-use-id>toolu_011Z4NWEqyXgEoBSBex4aAs7</tool-use-id>
+<output-file>/tmp/claude-1001/-home-ubuntu--t3-worktrees-pi-pii-redact-t3-843ae0cf/52383537-2687-4f0f-a98c-1b236cda218e/tasks/b3silcef6.output</output-file>
+<status>completed</status>
+<summary>Background command "npm test 2&gt;&amp;1 | tail -8" completed (exit code 0)</summary>
+</task-notification>
+
+---
+
+i am using a passkey
+
+---
+
+<task-notification>
+<task-id>bm8mr6gcl</task-id>
+<tool-use-id>toolu_0188HBkV116yC64mVF78Db3p</tool-use-id>
+<output-file>/tmp/claude-1001/-home-ubuntu--t3-worktrees-pi-pii-redact-t3-843ae0cf/52383537-2687-4f0f-a98c-1b236cda218e/tasks/bm8mr6gcl.output</output-file>
+<status>failed</status>
+<summary>Background command "npm publish --provenance=false --auth-type=web &gt; /tmp/npm-publish.log 2&gt;&amp;1 &lt; /dev/null" failed with exit code 1</summary>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>bbaodkgz8</task-id>
+<tool-use-id>toolu_01LhYdUyRZ7yB6w1751JPg9G</tool-use-id>
+<output-file>/tmp/claude-1001/-home-ubuntu--t3-worktrees-pi-pii-redact-t3-843ae0cf/52383537-2687-4f0f-a98c-1b236cda218e/tasks/bbaodkgz8.output</output-file>
+<status>completed</status>
+<summary>Background command "script -q -f -c "npm publish --provenance=false --auth-type=web" /tmp/npm-publish-tty.log &lt; /dev/null &gt; /dev/null 2&gt;&amp;1" completed (exit code 0)</summary>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>bulecc6a1</task-id>
+<tool-use-id>toolu_01FmyFY8qWHCzfJaURRZrqzt</tool-use-id>
+<output-file>/tmp/claude-1001/-home-ubuntu--t3-worktrees-pi-pii-redact-t3-843ae0cf/52383537-2687-4f0f-a98c-1b236cda218e/tasks/bulecc6a1.output</output-file>
+<status>completed</status>
+<summary>Background command "script -q -f -c "npm trust github @chrisdoc/pi-pii-redact --repo chrisdoc/pi-pii-redact --file publish.yml --allow-publish --yes --auth-type=web" /tmp/npm-trust-tty.log &lt; /dev/null &gt; /dev/null 2&gt;&amp;1" completed (exit code 0)</summary>
+</task-notification>
+
+---
+
+skip to:contentpackage search
+
+Pro
+Teams
+Pricing
+Documentation
+npm
+Search packages
+Search
+@chrisdoc/pi-pii-redact
+0.0.0-stage • Public • Published a minute ago
+Versions
+Current Tags
+Version	Downloads (Last 7 Days)	Tag
+0.0.0-stage	0	latest
+Version History
+Validating: Automated review hasn't finished. The version will remain unavailable until review completes.
+
+Version	Status	Downloads (Last 7 Days)	Published
+0.2.0	Validating	-	-
+0.0.0-stage	Published	0	a minute ago
+Package Sidebar
+Install
+npm i @chrisdoc/pi-pii-redact
+
+
+Version
+0.0.0-stage
+
+License
+none
+
+Last publish
+a minute ago
+
+Collaborators
+chrisdoc
+Analyze security with SocketCheck bundle sizeView package healthExplore dependencies
+Report malware
+Footer
+Support
+Help
+Advisories
+Status
+Contact npm
+Company
+About
+Blog
+Press
+Terms & Policies
+Policies
+Terms of Use
+Code of Conduct
+Privacy
+Viewing @chrisdoc/pi-pii-redact version 0.0.0-stage
+
+---
+
+<task-notification>
+<task-id>bqu2xuxmj</task-id>
+<tool-use-id>toolu_01NWuzusnuanVxdp7p9Ekye2</tool-use-id>
+<output-file>/tmp/claude-1001/-home-ubuntu--t3-worktrees-pi-pii-redact-t3-843ae0cf/52383537-2687-4f0f-a98c-1b236cda218e/tasks/bqu2xuxmj.output</output-file>
+<status>completed</status>
+<summary>Background command "until curl -s "https://registry.npmjs.org/@chrisdoc%2fpi-pii-redact" | grep -q '"0.2.0"'; do sleep 15; done; echo "0.2.0 is live"; curl -s "https://registry.npmjs.org/@chrisdoc%2fpi-pii-redact" | node -e 'let s="";process.stdin.on("data",d=&gt;s+=d).on("end",()=&gt;{const j=JSON.parse(s);console.log(j["dist-tags"],Object.keys(j.versions))})'" completed (exit code 0)</summary>
+</task-notification>
+
+---
+
+improve our readme first including how to install the extension and add a npm badge
+
+---
+
+open pr
