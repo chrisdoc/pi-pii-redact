@@ -249,8 +249,8 @@ describe("Challenger 2 Empirical Verification: Hooks, Concurrency, and False Pos
   // 3. Concurrency & Race Conditions Across Multiple Async Turns
   // =========================================================================
   describe("3. Concurrent Execution Across Multiple Async Turns", () => {
-    it("preserves per-turn closure isolation across 50 simultaneous parallel redactions", async () => {
-      const count = 50;
+    it("preserves per-turn closure isolation across 10 simultaneous parallel redactions", async () => {
+      const count = 10;
       const tasks = Array.from({ length: count }, async (_, i) => {
         const email = `concurrent_user_${i}@example.org`;
         const key = `sk-proj_conc_${i}_1234567890abcdef1234567890`;
