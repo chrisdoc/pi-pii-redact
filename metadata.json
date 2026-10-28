@@ -3,8 +3,16 @@
   "checkpoint_id": "01M614FBV8ET7GYF03YM8JHGG5",
   "strategy": "manual-commit",
   "branch": "main",
-  "checkpoints_count": 2,
-  "files_touched": null,
+  "checkpoints_count": 3,
+  "files_touched": [
+    "TEST_INFRA.md",
+    "TEST_READY.md",
+    "tests/e2e/harness.ts",
+    "tests/e2e/tier1-features.test.ts",
+    "tests/e2e/tier2-boundaries.test.ts",
+    "tests/e2e/tier3-combinations.test.ts",
+    "tests/e2e/tier4-workflows.test.ts"
+  ],
   "sessions": [
     {
       "metadata": "/0/metadata.json",
@@ -16,6 +24,12 @@
       "metadata": "/1/metadata.json",
       "transcript": "/1/full.jsonl",
       "content_hash": "/1/content_hash.txt",
+      "prompt": ""
+    },
+    {
+      "metadata": "/2/metadata.json",
+      "transcript": "/2/full.jsonl",
+      "content_hash": "/2/content_hash.txt",
       "prompt": ""
     }
   ],
