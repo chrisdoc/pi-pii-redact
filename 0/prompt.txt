@@ -1,5 +1,0 @@
-/init but write AGENTS.md
-
----
-
-create a pr
