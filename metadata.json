@@ -3,7 +3,7 @@
   "checkpoint_id": "01M617828SH6P93ESK95KT6FXM",
   "strategy": "manual-commit",
   "branch": "main",
-  "checkpoints_count": 3,
+  "checkpoints_count": 4,
   "files_touched": [
     "tests/e2e/tier5-adversarial.test.ts"
   ],
@@ -25,10 +25,16 @@
       "transcript": "/2/full.jsonl",
       "content_hash": "/2/content_hash.txt",
       "prompt": ""
+    },
+    {
+      "metadata": "/3/metadata.json",
+      "transcript": "/3/full.jsonl",
+      "content_hash": "/3/content_hash.txt",
+      "prompt": ""
     }
   ],
   "redaction": {
-    "replacements": 54,
+    "replacements": 83,
     "layers": {
       "betterleaks": 3,
       "connection_string": 0,
@@ -37,7 +43,7 @@
       "credentialed_uri": 0,
       "entropy": 0,
       "key_context": 0,
-      "provider_token": 44,
+      "provider_token": 73,
       "shell_stdin": 0
     }
   }
