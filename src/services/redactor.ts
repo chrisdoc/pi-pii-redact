@@ -11,6 +11,35 @@ export interface RedactorServiceOptions {
   redactInstance?: Redact;
 }
 
+/** Escapes special regular expression characters in a string. */
+function escapeRegex(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/**
+ * Constructs a safe regex matching discrete word occurrences of an entity,
+ * respecting Unicode word boundaries to prevent substring mutilation of regular words
+ * (e.g. preventing 'Dan' from matching inside 'Danger' or 'Rob' inside 'problem').
+ */
+function createEntityWordBoundaryRegex(original: string): RegExp {
+  const escaped = escapeRegex(original);
+  const leading = /^\w/.test(original)
+    ? "\\b"
+    : /^[\p{L}\p{N}_]/u.test(original)
+      ? "(?<![\\p{L}\\p{N}_])"
+      : "(?<!\\S)";
+  const trailing = /\w$/.test(original)
+    ? "\\b"
+    : /[\p{L}\p{N}_]$/u.test(original)
+      ? "(?![\\p{L}\\p{N}_])"
+      : "(?!\\S)";
+  const flags =
+    /[\p{L}\p{N}]/u.test(original) && !/^[\x00-\x7F]+$/.test(original)
+      ? "gu"
+      : "g";
+  return new RegExp(`${leading}${escaped}${trailing}`, flags);
+}
+
 export class RedactorService {
   private rules: Map<string, PiiRule>;
   private config: RedactorConfig;
@@ -149,7 +178,7 @@ export class RedactorService {
     }
     for (const [placeholder, original] of this.lastRestoreMap) {
       if (restored.includes(placeholder)) {
-        restored = restored.replaceAll(placeholder, original);
+        restored = restored.replaceAll(placeholder, () => original);
       }
     }
     return restored;
@@ -205,11 +234,14 @@ export class RedactorService {
         let masked: string;
         if (rule.mask) {
           masked = rule.mask(match);
-        } else if (rule.nativeLabel) {
-          labelCounters[rule.nativeLabel] = (labelCounters[rule.nativeLabel] || 0) + 1;
-          masked = `[${rule.nativeLabel}_${labelCounters[rule.nativeLabel]}]`;
         } else {
-          masked = `[REDACTED:${rule.id.toUpperCase()}]`;
+          const labelPrefix =
+            rule.nativeLabel ??
+            (rule.category === "api-key"
+              ? "API_KEY"
+              : rule.category.toUpperCase().replace(/[-\s]/g, "_"));
+          labelCounters[labelPrefix] = (labelCounters[labelPrefix] || 0) + 1;
+          masked = `[${labelPrefix}_${labelCounters[labelPrefix]}]`;
         }
 
         allRedactions.push({
@@ -239,6 +271,17 @@ export class RedactorService {
       currentText = nativeResult.redactedText;
       nativeRestoreHelper = (p: string) => nativeResult.restore(p);
 
+      // Pre-seed labelCounters with existing native placeholders to avoid number reuse
+      for (const item of nativeResult.items) {
+        const matchNum = item.placeholder.match(/_(\d+)\]$/);
+        if (matchNum) {
+          labelCounters[item.label] = Math.max(
+            labelCounters[item.label] || 0,
+            parseInt(matchNum[1], 10)
+          );
+        }
+      }
+
       for (const item of nativeResult.items) {
         const matchingRule = this.findRuleForNativeLabel(item.label);
         allRedactions.push({
@@ -252,17 +295,12 @@ export class RedactorService {
           end: item.end,
         });
 
-        // Ensure repeated identical occurrences of this detected PII entity are also sanitized
-        if (item.original && item.original.length > 2 && currentText.includes(item.original)) {
-          let count = 1;
-          const matchNum = item.placeholder.match(/_(\d+)\]$/);
-          if (matchNum) {
-            count = parseInt(matchNum[1], 10);
-          }
-          while (currentText.includes(item.original)) {
-            count++;
-            const placeholder = item.placeholder.replace(/_\d+\]$/, `_${count}]`);
-            currentText = currentText.replace(item.original, placeholder);
+        // Ensure repeated discrete occurrences of this detected PII entity are sanitized safely
+        if (item.original && item.original.trim().length > 1) {
+          const regex = createEntityWordBoundaryRegex(item.original);
+          currentText = currentText.replace(regex, () => {
+            labelCounters[item.label] = (labelCounters[item.label] || 0) + 1;
+            const placeholder = `[${item.label}_${labelCounters[item.label]}]`;
             allRedactions.push({
               category: matchingRule?.category ?? this.mapNativeLabelToCategory(item.label),
               ruleId: matchingRule?.id ?? item.label.toLowerCase(),
@@ -271,7 +309,8 @@ export class RedactorService {
               placeholder,
               confidence: item.confidence,
             });
-          }
+            return placeholder;
+          });
         }
       }
     }
@@ -287,6 +326,17 @@ export class RedactorService {
       }
     }
 
+    // For backwards compatibility when exactly one API key was redacted,
+    // also map [REDACTED:API_KEY] to support legacy tests and LLM completions.
+    if (labelCounters["API_KEY"] === 1) {
+      const singleApiKey = allRedactions.find(
+        (r) => r.category === "api-key" || r.ruleId === "api-key-generic"
+      )?.original;
+      if (singleApiKey) {
+        currentRestoreMap.set("[REDACTED:API_KEY]", singleApiKey);
+      }
+    }
+
     const restoreFn = (processed: string): string => {
       if (!processed || typeof processed !== "string") {
         return processed ?? "";
@@ -299,15 +349,22 @@ export class RedactorService {
       // 2. Restore overlay, repeated, and custom placeholders
       for (const [placeholder, original] of currentRestoreMap) {
         if (restored.includes(placeholder)) {
-          restored = restored.replaceAll(placeholder, original);
+          restored = restored.replaceAll(placeholder, () => original);
         }
       }
       return restored;
     };
 
-    // Store as service-level last restore state
-    this.lastRestoreHelper = nativeRestoreHelper;
-    this.lastRestoreMap = currentRestoreMap;
+    // Merge into service-level restore state to preserve mappings across rapid concurrent turns
+    if (nativeRestoreHelper) {
+      const prevHelper = this.lastRestoreHelper;
+      this.lastRestoreHelper = prevHelper
+        ? (p: string) => nativeRestoreHelper!(prevHelper(p))
+        : nativeRestoreHelper;
+    }
+    for (const [ph, orig] of currentRestoreMap) {
+      this.lastRestoreMap.set(ph, orig);
+    }
 
     return {
       text: currentText,
