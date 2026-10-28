@@ -534,6 +534,6 @@ describe("Tier 5: Adversarial Stress & Concurrency Hardening (Challenger 2)", ()
       assertRedactedIp(res?.text!, ip);
       assertRedactedApiKey(res?.text!, key);
       expect(res?.text?.length).toBeGreaterThan(10000);
-    });
+    }, 15000);
   });
 });

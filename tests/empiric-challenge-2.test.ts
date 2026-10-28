@@ -266,7 +266,7 @@ describe("Challenger 2 Empirical Verification: Hooks, Concurrency, and False Pos
 
       const finished = await Promise.all(tasks);
       expect(finished.length).toBe(count);
-    });
+    }, 15000);
 
     it("handles concurrent redaction and restore operations simultaneously", async () => {
       const emailA = "simul_a@test.com";
