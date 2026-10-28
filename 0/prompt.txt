@@ -1,0 +1,17 @@
+what is slowing down this server
+
+---
+
+continue
+
+---
+
+fix it for me, also write in
+
+---
+
+yes add the agents.md rule
+
+---
+
+create a pr for the agents.md
