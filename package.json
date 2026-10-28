@@ -1,13 +1,42 @@
 {
-  "name": "pi-pii-redact",
-  "version": "0.1.0",
+  "name": "@chrisdoc/pi-pii-redact",
+  "version": "0.2.0",
   "description": "Pi extension to detect and redact PII and sensitive tokens from user prompts, tool results, and context",
   "type": "module",
   "main": "./src/index.ts",
-  "keywords": [
-    "pi-package"
+  "files": [
+    "src",
+    "CHANGELOG.md",
+    "README.md"
   ],
+  "keywords": [
+    "pi-package",
+    "pi",
+    "pi-extension",
+    "pii",
+    "redaction",
+    "privacy",
+    "llm"
+  ],
+  "license": "MIT",
+  "author": "Christoph Kieslich",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chrisdoc/pi-pii-redact.git"
+  },
+  "homepage": "https://github.com/chrisdoc/pi-pii-redact#readme",
+  "bugs": {
+    "url": "https://github.com/chrisdoc/pi-pii-redact/issues"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "scripts": {
+    "changeset": "changeset",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
@@ -26,6 +55,8 @@
     "typebox": "*"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^1.0.1",
+    "@changesets/cli": "^3.0.3",
     "@earendil-works/pi-agent-core": "^1.4.0",
     "@earendil-works/pi-coding-agent": "^1.4.0",
     "@types/node": "^26.6.5",
