@@ -69,6 +69,13 @@ export class MockExtensionAPI {
   public hookHandlers: Map<string, Array<HookHandler<any, any>>> = new Map();
   public commands: Map<string, Omit<RegisteredCommand, "name" | "sourceInfo">> = new Map();
 
+  /** Custom session entries appended via pi.appendEntry, in order. */
+  public entries: Array<{ type: "custom"; customType: string; data: unknown }> = [];
+
+  public appendEntry(customType: string, data?: unknown): void {
+    this.entries.push({ type: "custom", customType, data });
+  }
+
   public on(event: string, handler: HookHandler<any, any>): () => void {
     if (!this.hookHandlers.has(event)) {
       this.hookHandlers.set(event, []);
@@ -211,7 +218,7 @@ export function assertRedactedEmail(text: string, original?: string) {
       throw new Error(`Expected text to NOT contain original email "${original}", but found in: "${text}"`);
     }
   }
-  const match = text.match(/\[(?:REDACTED:EMAIL|EMAIL(?:_\d+)?)\]/i);
+  const match = text.match(/\[(?:REDACTED:EMAIL|EMAIL(?:_\d+(?:#[a-z0-9]{4})?)?)\]/i);
   if (!match) {
     throw new Error(`Expected text to contain redacted email placeholder, but got: "${text}"`);
   }
@@ -223,7 +230,7 @@ export function assertRedactedApiKey(text: string, original?: string) {
       throw new Error(`Expected text to NOT contain original API key "${original}", but found in: "${text}"`);
     }
   }
-  const match = text.match(/\[(?:REDACTED:API_KEY|API_KEY(?:_\d+)?)\]/i);
+  const match = text.match(/\[(?:REDACTED:API_KEY|API_KEY(?:_\d+(?:#[a-z0-9]{4})?)?)\]/i);
   if (!match) {
     throw new Error(`Expected text to contain redacted API key placeholder, but got: "${text}"`);
   }
@@ -235,7 +242,7 @@ export function assertRedactedIp(text: string, original?: string) {
       throw new Error(`Expected text to NOT contain original IP "${original}", but found in: "${text}"`);
     }
   }
-  const match = text.match(/\[(?:REDACTED:IP_ADDRESS|IP_ADDRESS(?:_\d+)?)\]/i);
+  const match = text.match(/\[(?:REDACTED:IP_ADDRESS|IP_ADDRESS(?:_\d+(?:#[a-z0-9]{4})?)?)\]/i);
   if (!match) {
     throw new Error(`Expected text to contain redacted IP placeholder, but got: "${text}"`);
   }
@@ -247,7 +254,7 @@ export function assertRedactedPhone(text: string, original?: string) {
       throw new Error(`Expected text to NOT contain original phone "${original}", but found in: "${text}"`);
     }
   }
-  const match = text.match(/\[(?:REDACTED:PHONE|PHONE(?:_\d+)?)\]/i);
+  const match = text.match(/\[(?:REDACTED:PHONE|PHONE(?:_\d+(?:#[a-z0-9]{4})?)?)\]/i);
   if (!match) {
     throw new Error(`Expected text to contain redacted phone placeholder, but got: "${text}"`);
   }
@@ -259,7 +266,7 @@ export function assertRedactedCreditCard(text: string, original?: string) {
       throw new Error(`Expected text to NOT contain original credit card "${original}", but found in: "${text}"`);
     }
   }
-  const match = text.match(/\[(?:REDACTED:CREDIT_CARD|CREDIT_CARD(?:_\d+)?)\]/i);
+  const match = text.match(/\[(?:REDACTED:CREDIT_CARD|CREDIT_CARD(?:_\d+(?:#[a-z0-9]{4})?)?)\]/i);
   if (!match) {
     throw new Error(`Expected text to contain redacted credit card placeholder, but got: "${text}"`);
   }

@@ -5,6 +5,7 @@ import type {
   ExtensionCommandContext,
   RegisteredCommand,
 } from "@earendil-works/pi-coding-agent";
+import { PiiVault } from "../src/services/vault.js";
 import type { RedactorService } from "../src/services/redactor.js";
 import type { RedactorConfig, RedactionResult, PiiRule } from "../src/types.js";
 
@@ -34,6 +35,10 @@ export interface MockExtensionAPIFixture {
   onSpy: ReturnType<typeof vi.fn>;
   registerCommandSpy: ReturnType<typeof vi.fn>;
   handlers: Map<string, Array<HookHandler>>;
+  /** Spy for pi.appendEntry(customType, data). */
+  appendEntrySpy: ReturnType<typeof vi.fn>;
+  /** Session entries as Pi would store them ({type:"custom", customType, data}), in append order. */
+  entries: Array<{ type: "custom"; customType: string; data: any }>;
   commands: Map<string, RegisteredCommandEntry>;
   getHandler: (event: string, index?: number) => HookHandler | undefined;
   getCommand: (name: string) => RegisteredCommandEntry | undefined;
@@ -71,6 +76,7 @@ export interface MockRedactorFixture {
   redactSpy: ReturnType<typeof vi.fn>;
   getRulesSpy: ReturnType<typeof vi.fn>;
   rulesList: PiiRule[];
+  vault: PiiVault;
 }
 
 /**
@@ -82,6 +88,12 @@ export function createMockContext(options?: {
   noUi?: boolean;
   missingSetStatus?: boolean;
   missingNotify?: boolean;
+  /** Session entries returned by ctx.sessionManager.getEntries(). */
+  entries?: unknown[];
+  /** Model returned as ctx.model (a plain object is enough for mocked compact()). */
+  model?: unknown;
+  /** Result of ctx.modelRegistry.getApiKeyAndHeaders(model). */
+  auth?: { ok: true; apiKey?: string; headers?: Record<string, string> } | { ok: false; error: string };
 }): MockContextFixture {
   const notifications: Array<{ message: string; type?: string }> = [];
   const statuses = new Map<string, string | undefined>();
@@ -132,6 +144,11 @@ export function createMockContext(options?: {
     cwd: "/mock/cwd",
     hasUI: true,
     mode: "tui",
+    ...(options?.entries ? { sessionManager: { getEntries: () => options.entries } } : {}),
+    ...(options?.model !== undefined ? { model: options.model } : {}),
+    modelRegistry: {
+      getApiKeyAndHeaders: vi.fn(async () => options?.auth ?? { ok: true, apiKey: "test-key", headers: {} }),
+    },
   } as unknown as ExtensionContext & ExtensionCommandContext;
 
   return { ctx, setStatusSpy, notifySpy, notifications, statuses };
@@ -166,9 +183,15 @@ export function createMockExtensionAPI(): MockExtensionAPIFixture {
     }
   );
 
+  const entries: Array<{ type: "custom"; customType: string; data: any }> = [];
+  const appendEntrySpy = vi.fn((customType: string, data?: unknown) => {
+    entries.push({ type: "custom", customType, data: data === undefined ? undefined : JSON.parse(JSON.stringify(data)) });
+  });
+
   const api = {
     on: onSpy,
     registerCommand: registerCommandSpy,
+    appendEntry: appendEntrySpy,
   } as unknown as ExtensionAPI;
 
   const trigger = async <TEvent = any, TResult = any>(
@@ -219,6 +242,8 @@ export function createMockExtensionAPI(): MockExtensionAPIFixture {
   const clear = () => {
     handlers.clear();
     commands.clear();
+    entries.length = 0;
+    appendEntrySpy.mockClear();
     onSpy.mockClear();
     registerCommandSpy.mockClear();
   };
@@ -228,6 +253,8 @@ export function createMockExtensionAPI(): MockExtensionAPIFixture {
     onSpy,
     registerCommandSpy,
     handlers,
+    appendEntrySpy,
+    entries,
     commands,
     getHandler: (event: string, index = 0) => handlers.get(event)?.[index],
     getCommand: (name: string) => commands.get(name),
@@ -287,7 +314,20 @@ export function createMockRedactor(options?: {
       ];
   const getRulesSpy = vi.fn(() => rulesList);
 
+  let vault = new PiiVault();
   const redactor = {
+    getVault: () => vault,
+    setVault: (v: PiiVault) => {
+      vault = v;
+    },
+    restore: (t: string) => vault.restore(t),
+    dispose: vi.fn(),
+    toggleRule: (id: string, val?: boolean) => {
+      const rule = rulesList.find((r) => r.id === id);
+      if (!rule) return false;
+      rule.enabled = val ?? !rule.enabled;
+      return rule.enabled;
+    },
     isEnabled: isEnabledSpy,
     setEnabled: setEnabledSpy,
     getConfig: getConfigSpy,
@@ -303,6 +343,9 @@ export function createMockRedactor(options?: {
     redactSpy,
     getRulesSpy,
     rulesList,
+    get vault() {
+      return vault;
+    },
   };
 }
 

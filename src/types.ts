@@ -58,8 +58,8 @@ export interface RedactionResult {
   count: number;
   redactions: RedactionDetail[];
   /**
-   * Restoration helper from native Redaction.
-   * Restores redacted placeholders in processed text back to original values.
+   * Restoration helper backed by the session vault.
+   * Restores vault tokens (tolerantly matched) in processed text back to original values.
    */
   restore: (processed: string) => string;
 }

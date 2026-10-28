@@ -1,5 +1,6 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import type { RedactorService } from "../services/redactor.js";
+import { persistConfig } from "../hooks/persist.js";
 
 export function registerPiiCommands(pi: ExtensionAPI, redactor: RedactorService): void {
   pi.registerCommand("pii", {
@@ -17,6 +18,7 @@ export function registerPiiCommands(pi: ExtensionAPI, redactor: RedactorService)
       if (action === "toggle") {
         const next = !redactor.isEnabled();
         redactor.setEnabled(next);
+        persistConfig(pi, redactor);
         ctx.ui.setStatus("pii-redact", next ? "PII: On" : "PII: Off");
         ctx.ui.notify(`PII redaction is now ${next ? "ENABLED" : "DISABLED"}`, "info");
         return;
@@ -24,6 +26,7 @@ export function registerPiiCommands(pi: ExtensionAPI, redactor: RedactorService)
 
       if (action === "enable") {
         redactor.setEnabled(true);
+        persistConfig(pi, redactor);
         ctx.ui.setStatus("pii-redact", "PII: On");
         ctx.ui.notify("PII redaction ENABLED", "info");
         return;
@@ -31,6 +34,7 @@ export function registerPiiCommands(pi: ExtensionAPI, redactor: RedactorService)
 
       if (action === "disable") {
         redactor.setEnabled(false);
+        persistConfig(pi, redactor);
         ctx.ui.setStatus("pii-redact", "PII: Off");
         ctx.ui.notify("PII redaction DISABLED", "info");
         return;
