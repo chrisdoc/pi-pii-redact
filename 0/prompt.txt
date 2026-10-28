@@ -1,0 +1,20 @@
+when running the pi extension i noticed that there is info / debug logging bleeding into the tui name, I'll
+ remember it for this conversation.
+INFO: [gpu_registry.cc:101] Attempting to l.
+────────────────────────────────────────────
+
+INFO: [cpu_registry.cc:75] XNNPACK CPU acce.
+INFO: [compiled_model.cc:833] Flatbuffer mo.
+↑15k ↓341 R7.7k CH98.2% 4.0%/200k (auto)  op
+
+---
+
+what about this https://github.com/google-ai-edge/LiteRT/issues/7420
+
+---
+
+create an issue in the redact library repo
+
+---
+
+create a pr with our fix in our repo
