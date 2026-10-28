@@ -3,7 +3,7 @@
   "checkpoint_id": "01M6177WKNTNQQHY0CHTE1VWM2",
   "strategy": "manual-commit",
   "branch": "main",
-  "checkpoints_count": 5,
+  "checkpoints_count": 6,
   "files_touched": [
     "tests/stress-challenger.test.ts"
   ],
@@ -36,6 +36,12 @@
       "metadata": "/4/metadata.json",
       "transcript": "/4/full.jsonl",
       "content_hash": "/4/content_hash.txt",
+      "prompt": ""
+    },
+    {
+      "metadata": "/5/metadata.json",
+      "transcript": "/5/full.jsonl",
+      "content_hash": "/5/content_hash.txt",
       "prompt": ""
     }
   ],
