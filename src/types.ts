@@ -61,7 +61,7 @@ export interface RedactionResult {
    * Restoration helper from native Redaction.
    * Restores redacted placeholders in processed text back to original values.
    */
-  restore?: (processed: string) => string;
+  restore: (processed: string) => string;
 }
 
 /**
@@ -74,7 +74,7 @@ export interface RedactorConfig {
   maskContextMessages: boolean;
   notifyOnRedact: boolean;
   /**
-   * Minimum neural confidence threshold (0.0 to 1.0). Default is 0.6.
+   * Minimum neural confidence threshold (0.0 to 1.0). Default is 0.85 (calibrated to eliminate NER false positives).
    */
   minimumConfidence?: number;
   /**
