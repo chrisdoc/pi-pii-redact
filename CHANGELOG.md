@@ -1,19 +1,21 @@
 # Changelog
 
-## [Unreleased]
+## 0.2.0
 
-### Added
-- Session vault: stable `[LABEL_N#nonce]` tokens (same value, same token, across calls and turns), persisted as `pii-vault` session entries and rebuilt on `session_start`.
-- Tolerant restore of tokens in assistant replies (`message_end`) and tool-call arguments (`tool_call`).
-- Context redaction now covers assistant text and tool-call arguments, bash executions, compaction and branch summaries, and `structuredContent` of tool results.
-- Redacted compaction and branch summaries (cancelled instead of falling back to plaintext on failure).
-- `/pii enable`, `/pii disable` and `/pii toggle` persist across reloads.
-- The redactor is disposed on `session_shutdown`.
+### Minor Changes
 
-### Changed
-- Placeholders changed from per-call `[EMAIL_1]` to vault tokens such as `[EMAIL_1#k7q2]`; `[REDACTED:API_KEY]` is no longer special-cased.
-- Repeat occurrences of an entity no longer inflate the redaction count.
-- Context messages are processed sequentially for deterministic token numbering.
+- Publish to npm as `@chrisdoc/pi-pii-redact` under the MIT license. Install with `pi install npm:@chrisdoc/pi-pii-redact`.
+
+- Add a session vault with reversible PII tokens.
+  
+  - Stable `[LABEL_N#nonce]` tokens (same value, same token, across calls and turns), persisted as `pii-vault` session entries and rebuilt on `session_start`. They replace the per-call `[EMAIL_1]` placeholders; `[REDACTED:API_KEY]` is no longer special-cased.
+  - Tolerant restore of tokens in assistant replies (`message_end`) and tool-call arguments (`tool_call`).
+  - Context redaction now covers assistant text and tool-call arguments, bash executions, compaction and branch summaries, and `structuredContent` of tool results.
+  - Compaction and branch summaries are generated from redacted input, and cancelled instead of falling back to plaintext on failure.
+  - `/pii enable`, `/pii disable` and `/pii toggle` persist across reloads.
+  - The redactor is disposed on `session_shutdown`.
+  - Repeat occurrences of an entity no longer inflate the redaction count.
+  - Context messages are processed sequentially for deterministic token numbering.
 
 ## [0.1.0] - 2026-10-28
 
