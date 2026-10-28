@@ -15,7 +15,7 @@
   "checkpoint_transcript_start": 132,
   "transcript_lines_at_start": 132,
   "redaction": {
-    "replacements": 49,
+    "replacements": 52,
     "layers": {
       "betterleaks": 2,
       "connection_string": 0,
@@ -24,7 +24,7 @@
       "credentialed_uri": 3,
       "entropy": 0,
       "key_context": 0,
-      "provider_token": 41,
+      "provider_token": 44,
       "shell_stdin": 0
     }
   }
