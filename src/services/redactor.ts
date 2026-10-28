@@ -40,6 +40,21 @@ function createEntityWordBoundaryRegex(original: string): RegExp {
   return new RegExp(`${leading}${escaped}${trailing}`, flags);
 }
 
+/**
+ * Open-vocabulary linguistic labels susceptible to false-positive classification on common English words.
+ * Calibrated with a higher confidence threshold (default 0.85) to eliminate non-PII false positives.
+ */
+const OPEN_VOCABULARY_LABELS = new Set<string>([
+  "GIVEN_NAME",
+  "SURNAME",
+  "STREET_NAME",
+  "CITY",
+  "STATE",
+  "BUILDING_NUMBER",
+  "SECONDARY_ADDRESS",
+  "ORG",
+]);
+
 export class RedactorService {
   private rules: Map<string, PiiRule>;
   private config: RedactorConfig;
@@ -262,55 +277,81 @@ export class RedactorService {
 
     if (activeNativeLabels.length > 0) {
       const redactInstance = await this.getRedactInstance();
-      const options: { labels: Iterable<RedactLabel>; minimumConfidence?: number } = {
-        labels: activeNativeLabels,
-        minimumConfidence: this.config.minimumConfidence ?? 0.85,
-      };
-      const nativeResult = await redactInstance.redaction(currentText, options);
+      const openLabels = activeNativeLabels.filter((l) => OPEN_VOCABULARY_LABELS.has(l));
+      const structLabels = activeNativeLabels.filter((l) => !OPEN_VOCABULARY_LABELS.has(l));
 
-      currentText = nativeResult.redactedText;
-      nativeRestoreHelper = (p: string) => nativeResult.restore(p);
+      const nativePasses: Array<{
+        labels: RedactLabel[];
+        confidence: number;
+      }> = [];
 
-      // Pre-seed labelCounters with existing native placeholders to avoid number reuse
-      for (const item of nativeResult.items) {
-        const matchNum = item.placeholder.match(/_(\d+)\]$/);
-        if (matchNum) {
-          labelCounters[item.label] = Math.max(
-            labelCounters[item.label] || 0,
-            parseInt(matchNum[1], 10)
-          );
-        }
+      // Only run structured pass if text contains digit patterns that could form numbers
+      const hasDigitSequences = /\d{2,}/.test(currentText.replace(/\[[A-Z0-9_]+\]/g, ""));
+      if (structLabels.length > 0 && hasDigitSequences) {
+        nativePasses.push({
+          labels: structLabels,
+          confidence: Math.min(this.config.minimumConfidence ?? 0.85, 0.60),
+        });
+      }
+      if (openLabels.length > 0) {
+        nativePasses.push({
+          labels: openLabels,
+          confidence: this.config.minimumConfidence ?? 0.85,
+        });
       }
 
-      for (const item of nativeResult.items) {
-        const matchingRule = this.findRuleForNativeLabel(item.label);
-        allRedactions.push({
-          category: matchingRule?.category ?? this.mapNativeLabelToCategory(item.label),
-          ruleId: matchingRule?.id ?? item.label.toLowerCase(),
-          original: item.original,
-          masked: item.placeholder,
-          placeholder: item.placeholder,
-          confidence: item.confidence,
-          start: item.start,
-          end: item.end,
+      for (const pass of nativePasses) {
+        const passResult = await redactInstance.redaction(currentText, {
+          labels: pass.labels,
+          minimumConfidence: pass.confidence,
         });
+        currentText = passResult.redactedText;
+        const prevHelper = nativeRestoreHelper;
+        nativeRestoreHelper = prevHelper
+          ? (p: string) => prevHelper(passResult.restore(p))
+          : (p: string) => passResult.restore(p);
 
-        // Ensure repeated discrete occurrences of this detected PII entity are sanitized safely
-        if (item.original && item.original.trim().length > 1) {
-          const regex = createEntityWordBoundaryRegex(item.original);
-          currentText = currentText.replace(regex, () => {
-            labelCounters[item.label] = (labelCounters[item.label] || 0) + 1;
-            const placeholder = `[${item.label}_${labelCounters[item.label]}]`;
-            allRedactions.push({
-              category: matchingRule?.category ?? this.mapNativeLabelToCategory(item.label),
-              ruleId: matchingRule?.id ?? item.label.toLowerCase(),
-              original: item.original,
-              masked: placeholder,
-              placeholder,
-              confidence: item.confidence,
-            });
-            return placeholder;
+        // Pre-seed labelCounters with existing native placeholders to avoid number reuse
+        for (const item of passResult.items) {
+          const matchNum = item.placeholder.match(/_(\d+)\]$/);
+          if (matchNum) {
+            labelCounters[item.label] = Math.max(
+              labelCounters[item.label] || 0,
+              parseInt(matchNum[1], 10)
+            );
+          }
+        }
+
+        for (const item of passResult.items) {
+          const matchingRule = this.findRuleForNativeLabel(item.label);
+          allRedactions.push({
+            category: matchingRule?.category ?? this.mapNativeLabelToCategory(item.label),
+            ruleId: matchingRule?.id ?? item.label.toLowerCase(),
+            original: item.original,
+            masked: item.placeholder,
+            placeholder: item.placeholder,
+            confidence: item.confidence,
+            start: item.start,
+            end: item.end,
           });
+
+          // Ensure repeated discrete occurrences of this detected PII entity are sanitized safely
+          if (item.original && item.original.trim().length > 1) {
+            const regex = createEntityWordBoundaryRegex(item.original);
+            currentText = currentText.replace(regex, () => {
+              labelCounters[item.label] = (labelCounters[item.label] || 0) + 1;
+              const placeholder = `[${item.label}_${labelCounters[item.label]}]`;
+              allRedactions.push({
+                category: matchingRule?.category ?? this.mapNativeLabelToCategory(item.label),
+                ruleId: matchingRule?.id ?? item.label.toLowerCase(),
+                original: item.original,
+                masked: placeholder,
+                placeholder,
+                confidence: item.confidence,
+              });
+              return placeholder;
+            });
+          }
         }
       }
     }
