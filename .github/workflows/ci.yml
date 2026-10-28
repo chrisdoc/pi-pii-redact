@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: Typecheck & test (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      # The redaction model is downloaded from Hugging Face on first use; cache it between runs.
+      - name: Restore redaction model cache
+        id: model-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.cache/desert-ant-models
+          key: desert-ant-models-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Download once up front: parallel test workers racing to download into the same cache fail.
+      - name: Download redaction model
+        if: steps.model-cache.outputs.cache-hit != 'true'
+        run: node --input-type=module -e "const { Redact } = await import('@desert-ant-labs/redact/native'); const r = await Redact.load(); r.dispose();"
+
+      # Saved before tests so a failing test run still keeps the model cached.
+      - name: Save redaction model cache
+        if: steps.model-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.cache/desert-ant-models
+          key: ${{ steps.model-cache.outputs.cache-primary-key }}
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
