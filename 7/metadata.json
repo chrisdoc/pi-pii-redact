@@ -1,0 +1,33 @@
+{
+  "cli_version": "0.12.2",
+  "checkpoint_id": "01M6177WKNTNQQHY0CHTE1VWM2",
+  "session_id": "ff1d3928-9923-4cbb-92fc-ae6692f5f04c",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-28T12:20:01.597582Z",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "tests/stress-challenger.test.ts"
+  ],
+  "agent": "Antigravity",
+  "model": "gemini-3.8-flash-tiered",
+  "turn_id": "a319d0e5f41d",
+  "redaction": {
+    "replacements": 16,
+    "layers": {
+      "betterleaks": 2,
+      "connection_string": 0,
+      "credential_key": 0,
+      "credential_value": 2,
+      "credentialed_uri": 0,
+      "entropy": 0,
+      "key_context": 0,
+      "provider_token": 14,
+      "shell_stdin": 0
+    }
+  },
+  "session_metrics": {
+    "turn_count": 1
+  }
+}

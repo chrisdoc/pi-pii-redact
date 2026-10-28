@@ -3,7 +3,7 @@
   "checkpoint_id": "01M6177WKNTNQQHY0CHTE1VWM2",
   "strategy": "manual-commit",
   "branch": "main",
-  "checkpoints_count": 7,
+  "checkpoints_count": 8,
   "files_touched": [
     "tests/stress-challenger.test.ts"
   ],
@@ -49,19 +49,25 @@
       "transcript": "/6/full.jsonl",
       "content_hash": "/6/content_hash.txt",
       "prompt": ""
+    },
+    {
+      "metadata": "/7/metadata.json",
+      "transcript": "/7/full.jsonl",
+      "content_hash": "/7/content_hash.txt",
+      "prompt": ""
     }
   ],
   "redaction": {
-    "replacements": 165,
+    "replacements": 181,
     "layers": {
-      "betterleaks": 5,
+      "betterleaks": 7,
       "connection_string": 0,
       "credential_key": 0,
-      "credential_value": 18,
+      "credential_value": 20,
       "credentialed_uri": 3,
       "entropy": 0,
       "key_context": 0,
-      "provider_token": 143,
+      "provider_token": 157,
       "shell_stdin": 0
     }
   }
