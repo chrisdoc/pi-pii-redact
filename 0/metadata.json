@@ -3,10 +3,9 @@
   "checkpoint_id": "01M61JJH73ZM17XKS4FQBRZ87D",
   "session_id": "0ab66953-0273-46d6-81fc-f9b009d85e30",
   "strategy": "manual-commit",
-  "created_at": "2026-10-28T15:38:03.357381538Z",
+  "created_at": "2026-10-28T15:38:42.08791893Z",
   "branch": "t3/upgrade-all-dependencies",
   "checkpoints_count": 1,
-  "save_step_count": 1,
   "files_touched": [
     "package-lock.json",
     "package.json"
@@ -14,13 +13,22 @@
   "agent": "Claude Code",
   "model": "claude-opus-5-5",
   "turn_id": "27453635f700",
-  "compact_transcript_start": 0,
+  "checkpoint_transcript_start": 81,
+  "transcript_lines_at_start": 81,
+  "compact_transcript_start": 9,
   "token_usage": {
-    "input_tokens": 16,
-    "cache_creation_tokens": 23984,
-    "cache_read_tokens": 192774,
-    "output_tokens": 2509,
-    "api_call_count": 7
+    "input_tokens": 4,
+    "cache_creation_tokens": 2891,
+    "cache_read_tokens": 70522,
+    "output_tokens": 605,
+    "api_call_count": 2,
+    "subagent_tokens": {
+      "input_tokens": 16,
+      "cache_creation_tokens": 18340,
+      "cache_read_tokens": 99746,
+      "output_tokens": 5446,
+      "api_call_count": 8
+    }
   },
   "redaction": {
     "replacements": 2,

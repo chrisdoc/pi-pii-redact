@@ -14,15 +14,22 @@
       "transcript": "/0/full.jsonl",
       "compact_transcript": "/0/transcript.jsonl",
       "content_hash": "/0/content_hash.txt",
-      "prompt": "/0/prompt.txt"
+      "prompt": ""
     }
   ],
   "token_usage": {
-    "input_tokens": 16,
-    "cache_creation_tokens": 23984,
-    "cache_read_tokens": 192774,
-    "output_tokens": 2509,
-    "api_call_count": 7
+    "input_tokens": 4,
+    "cache_creation_tokens": 2891,
+    "cache_read_tokens": 70522,
+    "output_tokens": 605,
+    "api_call_count": 2,
+    "subagent_tokens": {
+      "input_tokens": 16,
+      "cache_creation_tokens": 18340,
+      "cache_read_tokens": 99746,
+      "output_tokens": 5446,
+      "api_call_count": 8
+    }
   },
   "redaction": {
     "replacements": 2,
