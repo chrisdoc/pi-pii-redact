@@ -2,6 +2,7 @@ import type { LoadOptions, Redact, RedactLabel } from "@desert-ant-labs/redact/n
 import { Redact as NativeRedact } from "@desert-ant-labs/redact/native";
 import type { PiiCategory, PiiRule, RedactionDetail, RedactionResult, RedactorConfig } from "../types.js";
 import { PiiVault, type VaultEntry } from "./vault.js";
+import { withSilencedNativeStderr } from "./native-stderr.js";
 import { defaultRules, findRuleByIdOrLabel, RULE_ID_TO_LABEL } from "../rules/default-rules.js";
 
 /** Configuration options for RedactorService initialization. */
@@ -161,9 +162,20 @@ export class RedactorService {
               ? { directory: this.config.modelDirectory }
               : {}),
           };
-          const inst = await NativeRedact.load(
-            Object.keys(loadOpts).length > 0 ? loadOpts : undefined
-          );
+          // LiteRT logs its engine setup to fd 2 on the first inference, which
+          // corrupts Pi's TUI. Load and warm up the model with that output muted.
+          const inst = await withSilencedNativeStderr(async () => {
+            const loaded = await NativeRedact.load(
+              Object.keys(loadOpts).length > 0 ? loadOpts : undefined
+            );
+            try {
+              await loaded.redaction("warm up");
+            } catch (error) {
+              loaded.dispose();
+              throw error;
+            }
+            return loaded;
+          });
           this.instance = inst;
           return inst;
         } catch (error) {
