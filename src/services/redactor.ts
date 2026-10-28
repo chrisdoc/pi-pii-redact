@@ -53,6 +53,7 @@ const OPEN_VOCABULARY_LABELS = new Set<string>([
   "BUILDING_NUMBER",
   "SECONDARY_ADDRESS",
   "ORG",
+  "URL",
 ]);
 
 export class RedactorService {
