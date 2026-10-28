@@ -11,9 +11,6 @@ export interface RedactorServiceOptions {
   redactInstance?: Redact;
 }
 
-/** Non-PII common words and terms known to trigger false positives in English NER. */
-const FALSE_POSITIVE_ENTITIES = new Set(["score", "short token"]);
-
 export class RedactorService {
   private rules: Map<string, PiiRule>;
   private config: RedactorConfig;
@@ -39,6 +36,7 @@ export class RedactorService {
       maskToolResults: true,
       maskContextMessages: true,
       notifyOnRedact: true,
+      minimumConfidence: 0.85,
       ...initialConfig,
     };
 
@@ -234,22 +232,14 @@ export class RedactorService {
       const redactInstance = await this.getRedactInstance();
       const options: { labels: Iterable<RedactLabel>; minimumConfidence?: number } = {
         labels: activeNativeLabels,
+        minimumConfidence: this.config.minimumConfidence ?? 0.85,
       };
-      if (typeof this.config.minimumConfidence === "number") {
-        options.minimumConfidence = this.config.minimumConfidence;
-      }
       const nativeResult = await redactInstance.redaction(currentText, options);
 
       currentText = nativeResult.redactedText;
       nativeRestoreHelper = (p: string) => nativeResult.restore(p);
 
       for (const item of nativeResult.items) {
-        // Revert known non-PII false positives
-        if (FALSE_POSITIVE_ENTITIES.has(item.original.trim().toLowerCase())) {
-          currentText = currentText.replaceAll(item.placeholder, item.original);
-          continue;
-        }
-
         const matchingRule = this.findRuleForNativeLabel(item.label);
         allRedactions.push({
           category: matchingRule?.category ?? this.mapNativeLabelToCategory(item.label),
