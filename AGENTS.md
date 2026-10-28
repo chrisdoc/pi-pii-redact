@@ -20,7 +20,7 @@ npx vitest run -t "restores tokens"       # tests matching a name
 pi -e .                                   # load the working copy into Pi
 ```
 
-Most tests run the real on-device model on CPU. On first run it downloads (~25 MB) into `~/.cache/desert-ant-models`. `vitest.config.ts` sets a 30 s timeout and `fileParallelism: false` on purpose, because parallel files each load a model and oversubscribe the CPU. Don't change those to speed things up.
+Most tests run the real on-device model on CPU. `tests/setup-shared-model.ts` loads it once per test file and shares it across services (`dispose()` is a no-op there), so tests that assert model-disposal behavior see the shared instance. On first run it downloads (~25 MB) into `~/.cache/desert-ant-models`. `vitest.config.ts` sets a 30 s timeout and `fileParallelism: false` on purpose, because parallel files each load a model and oversubscribe the CPU. Don't change those to speed things up.
 
 CI (`.github/workflows/ci.yml`) runs typecheck and tests on Node 22 and 24.
 

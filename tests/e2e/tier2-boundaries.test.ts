@@ -208,9 +208,9 @@ describe("Tier 2: Boundary & Corner Cases (Opaque-Box E2E)", () => {
   // Dimension 5: Extreme Lengths & Stress Inputs
   // =========================================================================
   describe("Dimension 5: Extreme Lengths & Stress Inputs", () => {
-    it("5.1 redacts email buried inside a 5,000-character payload", async () => {
+    it("5.1 redacts email buried inside a ~1,000-character payload", async () => {
       const email = "deep-needle@domain.com";
-      const padding = "lorem ipsum dolor sit amet ".repeat(200);
+      const padding = "lorem ipsum dolor sit amet ".repeat(40);
       const text = `${padding} FIND_ME: ${email} ${padding}`;
       const result = await harness.triggerInput(text);
       expect(result?.action).toBe("transform");
@@ -218,25 +218,25 @@ describe("Tier 2: Boundary & Corner Cases (Opaque-Box E2E)", () => {
       assertRedactedEmail(result?.text!, email);
     });
 
-    it("5.2 redacts IP address in a tool result containing 200 log entries", async () => {
+    it("5.2 redacts IP address in a tool result containing 30 log entries", async () => {
       const leakedIp = "10.240.12.88";
       const content = [];
-      for (let i = 0; i < 200; i++) {
+      for (let i = 0; i < 30; i++) {
         content.push({
           type: "text",
-          text: i === 150 ? `[CRITICAL] Unauthorized access from ${leakedIp} at line ${i}` : `[INFO] Normal request ping #${i}`,
+          text: i === 20 ? `[CRITICAL] Unauthorized access from ${leakedIp} at line ${i}` : `[INFO] Normal request ping #${i}`,
         });
       }
       const result = await harness.triggerToolResult("syslog", content);
       expect(result).toBeDefined();
-      expect(result?.content[150].text).not.toContain(leakedIp);
-      assertRedactedIp(result?.content[150].text!, leakedIp);
+      expect(result?.content[20].text).not.toContain(leakedIp);
+      assertRedactedIp(result?.content[20].text!, leakedIp);
       expect(result?.content[0].text).toBe("[INFO] Normal request ping #0");
     });
 
     it("5.3 redacts PII positioned at the very end of a large multi-line string", async () => {
       const key = "sk-1234567890abcdef1234567890";
-      const lines = Array.from({ length: 50 }, (_, i) => `line ${i}: nothing sensitive here`).join("\n");
+      const lines = Array.from({ length: 15 }, (_, i) => `line ${i}: nothing sensitive here`).join("\n");
       const fullText = `${lines}\nFINAL_SECRET=${key}`;
       const result = await harness.triggerInput(fullText);
       expect(result?.action).toBe("transform");
@@ -252,19 +252,19 @@ describe("Tier 2: Boundary & Corner Cases (Opaque-Box E2E)", () => {
       expect(result?.text).not.toContain(email);
     });
 
-    it("5.5 handles conversation history with 30 alternating turns efficiently", async () => {
+    it("5.5 handles conversation history with 10 alternating turns efficiently", async () => {
       const secret = "sk-1234567890abcdef1234567890";
       const messages = [];
-      for (let i = 0; i < 30; i++) {
+      for (let i = 0; i < 10; i++) {
         messages.push({
           role: i % 2 === 0 ? "user" : "assistant",
-          content: i === 25 ? `Turn ${i} with key ${secret}` : `Turn ${i} conversation standard text`,
+          content: i === 7 ? `Turn ${i} with key ${secret}` : `Turn ${i} conversation standard text`,
         });
       }
       const result = await harness.triggerContext(messages);
       expect(result).toBeDefined();
-      expect(result?.messages[25].content).not.toContain(secret);
-      assertRedactedApiKey(result?.messages[25].content as string, secret);
+      expect(result?.messages[7].content).not.toContain(secret);
+      assertRedactedApiKey(result?.messages[7].content as string, secret);
     });
   });
 

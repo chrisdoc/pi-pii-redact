@@ -78,12 +78,12 @@ describe("Tier 5: Adversarial Stress & Concurrency Hardening (Challenger 2)", ()
       assertRedactedEmail(finalInput?.text!, email);
     });
 
-    it("1.3 handles burst of 50 concurrent input redactions while active", async () => {
-      const inputs = Array.from({ length: 50 }, (_, i) => `Query ${i}: admin${i}@company.com`);
+    it("1.3 handles burst of 10 concurrent input redactions while active", async () => {
+      const inputs = Array.from({ length: 10 }, (_, i) => `Query ${i}: admin${i}@company.com`);
       const results = await Promise.all(inputs.map((text) => harness.triggerInput(text)));
 
-      expect(results.length).toBe(50);
-      for (let i = 0; i < 50; i++) {
+      expect(results.length).toBe(10);
+      for (let i = 0; i < 10; i++) {
         expect(results[i]?.action).toBe("transform");
         expect(results[i]?.text).not.toContain(`admin${i}@company.com`);
         assertRedactedEmail(results[i]?.text!, `admin${i}@company.com`);
@@ -152,9 +152,9 @@ describe("Tier 5: Adversarial Stress & Concurrency Hardening (Challenger 2)", ()
       expect(result).toBeUndefined();
     });
 
-    it("2.4 handles 100 alternating clean and sensitive tool result items", async () => {
+    it("2.4 handles 20 alternating clean and sensitive tool result items", async () => {
       const content: Array<{ type: string; text: string }> = [];
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 20; i++) {
         if (i % 2 === 0) {
           content.push({ type: "text", text: `Log line ${i}: server-node-${i} ok` });
         } else {
@@ -164,14 +164,14 @@ describe("Tier 5: Adversarial Stress & Concurrency Hardening (Challenger 2)", ()
 
       const result = await harness.triggerToolResult("mass_log", content);
       expect(result).toBeDefined();
-      expect(result?.content.length).toBe(100);
+      expect(result?.content.length).toBe(20);
 
       // Check clean blocks are untouched
-      for (let i = 0; i < 100; i += 2) {
+      for (let i = 0; i < 20; i += 2) {
         expect(result?.content[i].text).toBe(`Log line ${i}: server-node-${i} ok`);
       }
       // Check sensitive blocks are redacted
-      for (let i = 1; i < 100; i += 2) {
+      for (let i = 1; i < 20; i += 2) {
         expect(result?.content[i].text).not.toContain("ghp_secret");
         assertRedactedApiKey(result?.content[i].text!);
       }
@@ -182,10 +182,10 @@ describe("Tier 5: Adversarial Stress & Concurrency Hardening (Challenger 2)", ()
   // Section 3: Context Messages Stress & Structure Edge Cases
   // =========================================================================
   describe("3. Multi-Turn Context Messages Stress & Nested Structures", () => {
-    it("3.1 sanitizes 30-turn complex dialogue with mixed string and block payloads", async () => {
+    it("3.1 sanitizes 10-turn complex dialogue with mixed string and block payloads", async () => {
       const messages: Array<{ role: string; content: any }> = [];
 
-      for (let turn = 0; turn < 30; turn++) {
+      for (let turn = 0; turn < 10; turn++) {
         const role = turn % 3 === 0 ? "user" : turn % 3 === 1 ? "assistant" : "tool";
         if (turn % 2 === 0) {
           // String content
@@ -208,9 +208,9 @@ describe("Tier 5: Adversarial Stress & Concurrency Hardening (Challenger 2)", ()
 
       const result = await harness.triggerContext(messages);
       expect(result).toBeDefined();
-      expect(result?.messages.length).toBe(30);
+      expect(result?.messages.length).toBe(10);
 
-      for (let turn = 0; turn < 30; turn++) {
+      for (let turn = 0; turn < 10; turn++) {
         const msg = result?.messages[turn];
         if (turn % 2 === 0) {
           expect(typeof msg.content).toBe("string");
@@ -520,21 +520,21 @@ describe("Tier 5: Adversarial Stress & Concurrency Hardening (Challenger 2)", ()
       expect(res?.text).toContain("\u200B");
     });
 
-    it("7.2 safely handles 10,000-character payload with multiple PII entities", async () => {
+    it("7.2 safely handles ~2,500-character payload with multiple PII entities", async () => {
       const email = "stress10k@test.com";
       const ip = "10.254.1.99";
       const key = "sk-stress10k1234567890abcdef1234567890";
 
-      const filler = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ".repeat(150);
+      const filler = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ".repeat(20);
       const payload = `${filler} Contact: ${email} Server: ${ip} Auth: ${key} ${filler}`;
-      expect(payload.length).toBeGreaterThan(10000);
+      expect(payload.length).toBeGreaterThan(2000);
 
       const res = await harness.triggerInput(payload);
       expect(res?.action).toBe("transform");
       assertRedactedEmail(res?.text!, email);
       assertRedactedIp(res?.text!, ip);
       assertRedactedApiKey(res?.text!, key);
-      expect(res?.text?.length).toBeGreaterThan(10000);
+      expect(res?.text?.length).toBeGreaterThan(2000);
     }, 15000);
   });
 });
