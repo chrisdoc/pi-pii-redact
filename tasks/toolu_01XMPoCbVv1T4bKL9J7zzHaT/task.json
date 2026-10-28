@@ -1,0 +1,15 @@
+{
+  "tool_use_id": "toolu_01XMPoCbVv1T4bKL9J7zzHaT",
+  "agent_id": "abe55d255f69fc631",
+  "subagent_type": "shipper",
+  "task_description": "Commit and open PR",
+  "token_usage": {
+    "input_tokens": 16,
+    "cache_creation_tokens": 20196,
+    "cache_read_tokens": 106945,
+    "output_tokens": 5683,
+    "api_call_count": 8
+  },
+  "started_at": "2026-10-28T14:42:36.164512658Z",
+  "completed_at": "2026-10-28T14:43:25.542467819Z"
+}
