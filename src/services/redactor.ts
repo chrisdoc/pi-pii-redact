@@ -20,6 +20,8 @@ export class RedactorService {
   private loadOptions?: LoadOptions;
   private instance: Redact | null = null;
   private initPromise: Promise<Redact> | null = null;
+  private lastRestoreHelper?: (processed: string) => string;
+  private lastRestoreMap: Map<string, string> = new Map();
 
   constructor(
     customRules: PiiRule[] = [],
@@ -130,6 +132,29 @@ export class RedactorService {
       this.instance = null;
     }
     this.initPromise = null;
+    this.lastRestoreHelper = undefined;
+    this.lastRestoreMap.clear();
+  }
+
+  /**
+   * Restores placeholders in text (e.g. an LLM response) back to their original sensitive values
+   * using mappings from the most recent redaction. Handles both native redact-node placeholders
+   * and secret overlay placeholders.
+   */
+  public restore(processed: string): string {
+    if (!processed || typeof processed !== "string") {
+      return processed ?? "";
+    }
+    let restored = processed;
+    if (this.lastRestoreHelper) {
+      restored = this.lastRestoreHelper(restored);
+    }
+    for (const [placeholder, original] of this.lastRestoreMap) {
+      if (restored.includes(placeholder)) {
+        restored = restored.replaceAll(placeholder, original);
+      }
+    }
+    return restored;
   }
 
   /**
@@ -142,6 +167,7 @@ export class RedactorService {
         hasRedactions: false,
         count: 0,
         redactions: [],
+        restore: (p: string) => p ?? "",
       };
     }
 
@@ -202,7 +228,7 @@ export class RedactorService {
     // 3. Phase 2: Apply native ML inference if any native labels are active
     // CRITICAL: If activeNativeLabels is empty, do NOT pass { labels: [] }, as
     // @desert-ant-labs/redact treats an empty array as ALL labels enabled.
-    let restoreHelper: ((processed: string) => string) | undefined;
+    let nativeRestoreHelper: ((processed: string) => string) | undefined;
 
     if (activeNativeLabels.length > 0) {
       const redactInstance = await this.getRedactInstance();
@@ -215,7 +241,7 @@ export class RedactorService {
       const nativeResult = await redactInstance.redaction(currentText, options);
 
       currentText = nativeResult.redactedText;
-      restoreHelper = (p: string) => nativeResult.restore(p);
+      nativeRestoreHelper = (p: string) => nativeResult.restore(p);
 
       for (const item of nativeResult.items) {
         // Revert known non-PII false positives
@@ -260,12 +286,45 @@ export class RedactorService {
       }
     }
 
+    // Build composite restoration map for this specific redaction result
+    const currentRestoreMap = new Map<string, string>();
+    for (const r of allRedactions) {
+      if (r.masked && r.original) {
+        currentRestoreMap.set(r.masked, r.original);
+      }
+      if (r.placeholder && r.original) {
+        currentRestoreMap.set(r.placeholder, r.original);
+      }
+    }
+
+    const restoreFn = (processed: string): string => {
+      if (!processed || typeof processed !== "string") {
+        return processed ?? "";
+      }
+      let restored = processed;
+      // 1. Restore native engine placeholders via redact-node restore helper
+      if (nativeRestoreHelper) {
+        restored = nativeRestoreHelper(restored);
+      }
+      // 2. Restore overlay, repeated, and custom placeholders
+      for (const [placeholder, original] of currentRestoreMap) {
+        if (restored.includes(placeholder)) {
+          restored = restored.replaceAll(placeholder, original);
+        }
+      }
+      return restored;
+    };
+
+    // Store as service-level last restore state
+    this.lastRestoreHelper = nativeRestoreHelper;
+    this.lastRestoreMap = currentRestoreMap;
+
     return {
       text: currentText,
       hasRedactions: allRedactions.length > 0,
       count: allRedactions.length,
       redactions: allRedactions,
-      restore: restoreHelper,
+      restore: restoreFn,
     };
   }
 
