@@ -98,6 +98,7 @@ export const MODEL_RULE_DEFINITIONS: readonly ModelRuleDefinition[] = [
     category: "email",
     nativeLabel: "EMAIL",
     enabled: true,
+    pattern: /\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}\b/g,
     description: "Electronic mail addresses",
   },
   {
@@ -226,7 +227,6 @@ export const SECRET_RULES: readonly PiiRule[] = [
     name: "Common API Keys & Tokens",
     category: "api-key",
     pattern: /\b(?:sk-[a-zA-Z0-9_-]{20,}|gh[pousr]_[a-zA-Z0-9]{36,}|glpat-[a-zA-Z0-9-]{20,}|AKIA[0-9A-Z]{16})\b/g,
-    mask: () => "[REDACTED:API_KEY]",
     enabled: true,
     builtin: true,
     description: "High-entropy API keys for OpenAI, Anthropic, GitHub, GitLab, and AWS",
