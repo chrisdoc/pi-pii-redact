@@ -1,0 +1,17 @@
+/teamwork
+
+---
+
+i want that the pi-pii-redact extension is using https://github.com/Desert-Ant-Labs/desert-ant-core/tree/1a5efed67f44731b5eb5433aa9be3eebae05e269/packages/redact-node as the redaction library
+
+---
+
+make sure to use atomic commits, commit offent and make small commits
+
+---
+
+make sure that we restore the response from the llm so that we can replace the redacted text with the original one 
+
+     * Detect and redact the PII in `text`. Each entity is replaced by a unique,
+     * numbered placeholder (`[EMAIL_1]`, ...), safe to hand to an LLM and
+     * restore afterwards via the returned `restore`.

@@ -3,14 +3,22 @@
   "checkpoint_id": "01M614DVB05V6P7403VVWJYXNT",
   "strategy": "manual-commit",
   "branch": "main",
-  "checkpoints_count": 1,
-  "files_touched": null,
+  "checkpoints_count": 2,
+  "files_touched": [
+    "tests/redactor.test.ts"
+  ],
   "sessions": [
     {
       "metadata": "/0/metadata.json",
       "transcript": "/0/full.jsonl",
       "content_hash": "/0/content_hash.txt",
       "prompt": ""
+    },
+    {
+      "metadata": "/1/metadata.json",
+      "transcript": "/1/full.jsonl",
+      "content_hash": "/1/content_hash.txt",
+      "prompt": "/1/prompt.txt"
     }
   ],
   "redaction": {
