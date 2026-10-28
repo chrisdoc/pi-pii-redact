@@ -3,12 +3,12 @@
   "checkpoint_id": "01M61ZXT8NMN0A7RA68N0G7TTK",
   "session_id": "e9db81cf-215e-4f83-9880-009c466f352d",
   "strategy": "manual-commit",
-  "created_at": "2026-10-28T19:31:25.441332865Z",
+  "created_at": "2026-10-28T19:31:56.82273978Z",
   "branch": "t3/usage-dashboard-pii-stats",
   "checkpoints_count": 8,
-  "save_step_count": 8,
   "files_touched": [
     ".changeset/pii-stats-board.md",
+    "AGENTS.md",
     "README.md",
     "package-lock.json",
     "package.json",
@@ -29,19 +29,21 @@
   "agent": "Claude Code",
   "model": "claude-opus-5-5",
   "turn_id": "8bfb52f7dece",
-  "compact_transcript_start": 0,
+  "checkpoint_transcript_start": 669,
+  "transcript_lines_at_start": 669,
+  "compact_transcript_start": 101,
   "token_usage": {
-    "input_tokens": 190,
-    "cache_creation_tokens": 138241,
-    "cache_read_tokens": 8332702,
-    "output_tokens": 46659,
-    "api_call_count": 84,
+    "input_tokens": 6,
+    "cache_creation_tokens": 3652,
+    "cache_read_tokens": 306501,
+    "output_tokens": 869,
+    "api_call_count": 2,
     "subagent_tokens": {
-      "input_tokens": 36,
-      "cache_creation_tokens": 101807,
-      "cache_read_tokens": 641087,
-      "output_tokens": 17621,
-      "api_call_count": 18
+      "input_tokens": 14,
+      "cache_creation_tokens": 19688,
+      "cache_read_tokens": 90243,
+      "output_tokens": 4886,
+      "api_call_count": 7
     }
   },
   "redaction": {

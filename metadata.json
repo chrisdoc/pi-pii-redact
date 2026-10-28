@@ -6,6 +6,7 @@
   "checkpoints_count": 8,
   "files_touched": [
     ".changeset/pii-stats-board.md",
+    "AGENTS.md",
     "README.md",
     "package-lock.json",
     "package.json",
@@ -29,21 +30,21 @@
       "transcript": "/0/full.jsonl",
       "compact_transcript": "/0/transcript.jsonl",
       "content_hash": "/0/content_hash.txt",
-      "prompt": "/0/prompt.txt"
+      "prompt": ""
     }
   ],
   "token_usage": {
-    "input_tokens": 190,
-    "cache_creation_tokens": 138241,
-    "cache_read_tokens": 8332702,
-    "output_tokens": 46659,
-    "api_call_count": 84,
+    "input_tokens": 6,
+    "cache_creation_tokens": 3652,
+    "cache_read_tokens": 306501,
+    "output_tokens": 869,
+    "api_call_count": 2,
     "subagent_tokens": {
-      "input_tokens": 36,
-      "cache_creation_tokens": 101807,
-      "cache_read_tokens": 641087,
-      "output_tokens": 17621,
-      "api_call_count": 18
+      "input_tokens": 14,
+      "cache_creation_tokens": 19688,
+      "cache_read_tokens": 90243,
+      "output_tokens": 4886,
+      "api_call_count": 7
     }
   },
   "redaction": {
