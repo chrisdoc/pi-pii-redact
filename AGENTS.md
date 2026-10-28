@@ -60,4 +60,4 @@ Anything that changes rules, the enabled state or the vault must clear the cache
 
 ## Releasing
 
-Use Changesets. Any PR that changes behavior needs a changeset (`npx changeset`, committed in `.changeset/`). Merging to `main` opens a "Version Packages" PR, and merging that publishes to npm via OIDC trusted publishing (`.github/workflows/publish.yml`). Don't hand-edit the `version` in `package.json` or `CHANGELOG.md`.
+Use Changesets. Any PR that changes behavior needs a changeset (`npx changeset`, committed in `.changeset/`). Merging to `main` opens a "Version Packages" PR, and merging that publishes to npm via OIDC trusted publishing and creates a GitHub release (`.github/workflows/publish.yml`). Don't hand-edit the `version` in `package.json` or `CHANGELOG.md`.
