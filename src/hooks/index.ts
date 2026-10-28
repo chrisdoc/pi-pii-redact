@@ -5,7 +5,7 @@ export function registerHooks(pi: ExtensionAPI, redactor: RedactorService): void
   // Update footer status on session start
   pi.on("session_start", async (_event, ctx) => {
     const status = redactor.isEnabled() ? "PII: On" : "PII: Off";
-    ctx.ui.setStatus("pii-redact", status);
+    ctx?.ui?.setStatus?.("pii-redact", status);
   });
 
   // Intercept user prompts before expansion or dispatch
@@ -14,10 +14,14 @@ export function registerHooks(pi: ExtensionAPI, redactor: RedactorService): void
       return undefined;
     }
 
+    if (!event || typeof event.text !== "string") {
+      return undefined;
+    }
+
     const result = await redactor.redact(event.text);
     if (result.hasRedactions) {
       if (redactor.getConfig().notifyOnRedact) {
-        ctx.ui.notify(`Redacted ${result.count} sensitive item(s) from input`, "info");
+        ctx?.ui?.notify?.(`Redacted ${result.count} sensitive item(s) from input`, "info");
       }
       return { action: "transform", text: result.text };
     }
@@ -53,7 +57,8 @@ export function registerHooks(pi: ExtensionAPI, redactor: RedactorService): void
 
     if (changed) {
       if (redactor.getConfig().notifyOnRedact) {
-        ctx.ui.notify(`Redacted ${totalRedactions} item(s) from ${event.toolName} output`, "info");
+        const toolLabel = event?.toolName ? `${event.toolName} output` : "tool output";
+        ctx?.ui?.notify?.(`Redacted ${totalRedactions} item(s) from ${toolLabel}`, "info");
       }
       return { content: sanitizedContent };
     }

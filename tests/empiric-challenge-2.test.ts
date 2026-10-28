@@ -25,19 +25,51 @@ describe("Challenger 2 Empirical Verification: Hooks, Concurrency, and False Pos
         expect(await harness.triggerInput(12345 as any)).toBeUndefined();
       });
 
-      it("reproduces [BUG] unhandled TypeError when input hook receives null or undefined event", async () => {
+      it("handles null or undefined input hook events gracefully without throwing", async () => {
         const handlers = harness.api.getHookHandlers("input");
         expect(handlers.length).toBeGreaterThan(0);
 
         for (const handler of handlers) {
-          // Calling handler with null event throws TypeError in src/hooks/index.ts:17
-          await expect(async () => {
-            await handler(null as any, harness.ctx as any);
-          }).rejects.toThrow(/Cannot read properties of null/);
+          await expect(handler(null as any, harness.ctx as any)).resolves.toBeUndefined();
+          await expect(handler(undefined as any, harness.ctx as any)).resolves.toBeUndefined();
+          await expect(handler({} as any, harness.ctx as any)).resolves.toBeUndefined();
+          await expect(handler({ text: 12345 } as any, harness.ctx as any)).resolves.toBeUndefined();
+        }
+      });
 
-          await expect(async () => {
-            await handler(undefined as any, harness.ctx as any);
-          }).rejects.toThrow(/Cannot read properties of undefined/);
+      it("handles headless or UI-less contexts across all hooks without throwing", async () => {
+        // 1. session_start in headless context
+        const sessionHandlers = harness.api.getHookHandlers("session_start");
+        for (const handler of sessionHandlers) {
+          await expect(handler({}, {} as any)).resolves.toBeUndefined();
+          await expect(handler({}, undefined as any)).resolves.toBeUndefined();
+          await expect(handler({}, { ui: {} } as any)).resolves.toBeUndefined();
+        }
+
+        // 2. input in headless context with redactable content
+        const inputHandlers = harness.api.getHookHandlers("input");
+        for (const handler of inputHandlers) {
+          const res = await handler(
+            { text: "Contact alice@example.com immediately" } as any,
+            {} as any
+          );
+          expect(res).toBeDefined();
+          expect(res?.action).toBe("transform");
+          expect(res?.text).not.toContain("alice@example.com");
+        }
+
+        // 3. tool_result in headless context with redactable content
+        const toolHandlers = harness.api.getHookHandlers("tool_result");
+        for (const handler of toolHandlers) {
+          const res = await handler(
+            {
+              toolName: "read",
+              content: [{ type: "text", text: "Found key sk-abcdef1234567890abcdef" }],
+            } as any,
+            {} as any
+          );
+          expect(res).toBeDefined();
+          expect(res?.content).toBeDefined();
         }
       });
     });
