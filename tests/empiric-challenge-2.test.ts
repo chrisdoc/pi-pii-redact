@@ -266,7 +266,7 @@ describe("Challenger 2 Empirical Verification: Hooks, Concurrency, and False Pos
       expect(serviceRestored).toBe("Email: bob@test.com, Key: sk-bob1234567890abcdef12345");
     });
 
-    it("reproduces [BUG] native entity shadowing in service-level restore where older turn shadows newer turn", async () => {
+    it("verifies service-level restore reflects latest turn without native entity shadowing", async () => {
       // Turn 1 with phone number
       const phone1 = "555-111-1111";
       const res1 = await redactor.redact(`Turn 1: contact me at ${phone1}`);
@@ -282,14 +282,9 @@ describe("Challenger 2 Empirical Verification: Hooks, Concurrency, and False Pos
       expect(res2.restore("Call [PHONE_1]")).toBe(`Call ${phone2}`);
 
       // Service-level restore:
-      // EXPECTATION: Should restore to the most recent turn (phone2: "555-222-2222")
-      // ACTUAL DEFECT: Because of `(p) => nativeRestoreHelper(prevHelper(p))` in src/services/redactor.ts:404,
-      // prevHelper (Turn 1) runs first and substitutes [PHONE_1] with phone1 ("555-111-1111").
+      // Verifies that service.restore restores using mappings from the most recent redaction (Turn 2)
       const serviceRestored = redactor.restore("Call [PHONE_1]");
-      console.log(`Observed serviceRestored for native entity: "${serviceRestored}"`);
-
-      // Demonstrates that Turn 1 shadowed Turn 2 in service.restore()
-      expect(serviceRestored).toBe(`Call ${phone1}`);
+      expect(serviceRestored).toBe(`Call ${phone2}`);
     });
   });
 });

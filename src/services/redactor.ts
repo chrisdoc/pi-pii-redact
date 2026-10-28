@@ -396,12 +396,9 @@ export class RedactorService {
       return restored;
     };
 
-    // Merge into service-level restore state to preserve mappings across rapid concurrent turns
+    // Update service-level restore helper to reflect the latest turn without shadowing or recursive closure accumulation
     if (nativeRestoreHelper) {
-      const prevHelper = this.lastRestoreHelper;
-      this.lastRestoreHelper = prevHelper
-        ? (p: string) => nativeRestoreHelper!(prevHelper(p))
-        : nativeRestoreHelper;
+      this.lastRestoreHelper = nativeRestoreHelper;
     }
     for (const [ph, orig] of currentRestoreMap) {
       this.lastRestoreMap.set(ph, orig);
