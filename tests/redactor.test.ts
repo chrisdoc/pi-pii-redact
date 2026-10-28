@@ -16,7 +16,7 @@ describe("RedactorService", () => {
     const service = new RedactorService();
     const result = await service.redact("Key is sk-1234567890abcdef1234567890.");
     expect(result.hasRedactions).toBe(true);
-    expect(result.text).toBe("Key is [REDACTED:API_KEY].");
+    expect(result.text).toBe("Key is [API_KEY_1].");
     expect(result.count).toBe(1);
     expect(result.redactions[0].category).toBe("api-key");
     expect(result.redactions[0].original).toBe("sk-1234567890abcdef1234567890");
@@ -63,7 +63,7 @@ describe("RedactorService", () => {
     // API key rule remains active
     const keyResult = await service.redact("Token sk-1234567890abcdef1234567890 here");
     expect(keyResult.hasRedactions).toBe(true);
-    expect(keyResult.text).toContain("[REDACTED:API_KEY]");
+    expect(keyResult.text).toContain("[API_KEY_1]");
 
     // Re-enable email rule
     expect(service.toggleRule("email", true)).toBe(true);
