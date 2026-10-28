@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.1
+
+### Patch Changes
+
+- [#15](https://github.com/chrisdoc/pi-pii-redact/pull/15) [`6fc0598`](https://github.com/chrisdoc/pi-pii-redact/commit/6fc05981eb0c36bbcead040269bec2d3dfbda5b7) Thanks [@chrisdoc](https://github.com/chrisdoc)! - Stop LiteRT's native setup logs (`INFO: [gpu_registry.cc...]` and similar) from bleeding into Pi's TUI. The model now loads and warms up with process stderr briefly redirected to `/dev/null`. Set `PI_PII_REDACT_NATIVE_LOGS=1` to keep those logs for debugging.
+
 ## 0.3.0
 
 ### Minor Changes
