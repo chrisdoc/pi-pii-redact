@@ -428,13 +428,12 @@ describe("Tier 5: Adversarial Stress & Concurrency Hardening (Challenger 2)", ()
 
       // 2. Simulate LLM returning a message citing both placeholders
       // RedactorService retains service.restore() for the latest redaction
-      const llmResponse = `Confirmed: I have dispatched the record to [EMAIL_1] and verified credentials with [REDACTED:API_KEY].`;
+      const emailTok = redactedPrompt.match(/\[EMAIL_\d+#[a-z0-9]{4}\]/)![0];
+      const keyTok = redactedPrompt.match(/\[API_KEY_\d+#[a-z0-9]{4}\]/)![0];
+      const llmResponse = `Confirmed: I have dispatched the record to ${emailTok} and verified credentials with ${keyTok}.`;
       const restored = redactor.restore(llmResponse);
 
-      expect(restored).toContain(email);
-      expect(restored).toContain(key);
-      expect(restored).not.toContain("[EMAIL_1]");
-      expect(restored).not.toContain("[REDACTED:API_KEY]");
+      expect(restored).toBe(`Confirmed: I have dispatched the record to ${email} and verified credentials with ${key}.`);
     });
 
     it("5.2 restores LLM responses containing duplicated and repeated placeholders", async () => {
@@ -446,7 +445,8 @@ describe("Tier 5: Adversarial Stress & Concurrency Hardening (Challenger 2)", ()
       expect(inRes?.action).toBe("transform");
 
       // LLM echoes the placeholder multiple times
-      const llmEcho = `I will call [PHONE_1] immediately. Once finished with [PHONE_1], status will be updated.`;
+      const phoneTok = inRes?.text!.match(/\[PHONE_\d+#[a-z0-9]{4}\]/)![0];
+      const llmEcho = `I will call ${phoneTok} immediately. Once finished with ${phoneTok}, status will be updated.`;
       const restored = redactor.restore(llmEcho);
 
       expect(restored).toBe(`I will call ${phone} immediately. Once finished with ${phone}, status will be updated.`);
@@ -457,15 +457,16 @@ describe("Tier 5: Adversarial Stress & Concurrency Hardening (Challenger 2)", ()
       const redactor = customHarness.initCustomExtension();
 
       const email = "coder@dev.io";
-      await customHarness.triggerInput(`Log in as ${email}`);
+      const loginRes = await customHarness.triggerInput(`Log in as ${email}`);
+      const emailTok = loginRes?.text!.match(/\[EMAIL_\d+#[a-z0-9]{4}\]/)![0];
 
       // LLM response contains valid placeholder plus unrelated code brackets
-      const llmResponse = `Found user [EMAIL_1]. Accessing array[0], matrix[1][2], and regex pattern [a-zA-Z0-9_]+. Missing [EMAIL_999].`;
+      const llmResponse = `Found user ${emailTok}. Accessing array[0], matrix[1][2], and regex pattern [a-zA-Z0-9_]+. Missing [EMAIL_999#zzzz] and planted [EMAIL_1].`;
       const restored = redactor.restore(llmResponse);
 
       expect(restored).toContain(`Found user ${email}.`);
       expect(restored).toContain("Accessing array[0], matrix[1][2], and regex pattern [a-zA-Z0-9_]+.");
-      expect(restored).toContain("Missing [EMAIL_999].");
+      expect(restored).toContain("Missing [EMAIL_999#zzzz] and planted [EMAIL_1].");
     });
   });
 

@@ -65,7 +65,7 @@ describe("Challenger 1 Stress & Adversarial Test Suite", () => {
       const result = await service.redact(payload);
 
       // Defect verification: Does the redacted text mutilate regular English words?
-      // "Danger" should NOT become "[GIVEN_NAME_2]ger"
+      // "Danger" should NOT become "[GIVEN_NAME_2#xxxx]ger"
       expect(result.text).not.toContain("]ger");
       expect(result.text).toContain("Danger");
 
@@ -171,7 +171,7 @@ describe("Challenger 1 Stress & Adversarial Test Suite", () => {
       expect(result.restore(plainResponse)).toBe(plainResponse);
 
       // LLM response with hallucinated placeholder
-      const hallucinated = "Card used was [CREDIT_CARD_999] and token [API_KEY_99].";
+      const hallucinated = "Card used was [CREDIT_CARD_999#zzzz] and token [API_KEY_99#zzzz] and legacy [EMAIL_1] [REDACTED:API_KEY].";
       expect(result.restore(hallucinated)).toBe(hallucinated);
 
       // Null, empty, or non-string inputs
@@ -226,7 +226,7 @@ describe("Challenger 1 Stress & Adversarial Test Suite", () => {
 
       // Secret tokens and IP overlay SHOULD still be redacted
       expect(result.text).not.toContain("sk-1234567890abcdef1234567890");
-      expect(result.text).toContain("[API_KEY_1]");
+      expect(result.text).toMatch(/\[API_KEY_\d+#[a-z0-9]{4}\]/);
       expect(result.text).not.toContain("172.16.0.1");
 
       const restored = result.restore(result.text);
@@ -250,7 +250,7 @@ describe("Challenger 1 Stress & Adversarial Test Suite", () => {
       expect(result.hasRedactions).toBe(true);
       // Email must be redacted
       expect(result.text).not.toContain("alice@mail.com");
-      expect(result.text).toContain("[EMAIL_1]");
+      expect(result.text).toMatch(/\[EMAIL_\d+#[a-z0-9]{4}\]/);
 
       // Phone, Name, and API key must NOT be redacted because their rules are disabled
       expect(result.text).toContain("Alice");

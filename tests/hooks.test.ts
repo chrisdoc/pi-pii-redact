@@ -24,15 +24,18 @@ describe("registerHooks - Component Unit Tests", () => {
   // Registration Verification
   // --------------------------------------------------------------------------
   describe("Hook Registration", () => {
-    it("subscribes to all 4 extension lifecycle hooks", () => {
+    it("subscribes to all 9 extension lifecycle hooks", () => {
       const { redactor } = createMockRedactor();
       registerHooks(mockPi.api, redactor);
 
-      expect(mockPi.onSpy).toHaveBeenCalledTimes(4);
+      expect(mockPi.onSpy).toHaveBeenCalledTimes(9);
       expect(mockPi.handlers.has("session_start")).toBe(true);
       expect(mockPi.handlers.has("input")).toBe(true);
       expect(mockPi.handlers.has("tool_result")).toBe(true);
       expect(mockPi.handlers.has("context")).toBe(true);
+      for (const ev of ["tool_call", "message_end", "session_before_compact", "session_before_tree", "session_shutdown"]) {
+        expect(mockPi.handlers.has(ev)).toBe(true);
+      }
     });
   });
 
@@ -909,8 +912,8 @@ describe("registerHooks - Component Unit Tests", () => {
 
       expect(result).toBeDefined();
       expect(result?.action).toBe("transform");
-      expect(result?.text).toContain("[EMAIL_1]");
-      expect(result?.text).toContain("[API_KEY_1]");
+      expect(result?.text).toMatch(/\[EMAIL_\d+#[a-z0-9]{4}\]/);
+      expect(result?.text).toMatch(/\[API_KEY_\d+#[a-z0-9]{4}\]/);
       expect(result?.text).not.toContain("developer@example.com");
       expect(result?.text).not.toContain("sk-1234567890abcdef1234567890");
       expect(notifySpy).toHaveBeenCalledTimes(1);
@@ -931,8 +934,8 @@ describe("registerHooks - Component Unit Tests", () => {
 
       expect(result).toBeDefined();
       expect(result?.content[0]).toBe(imageBlock);
-      expect(result?.content[1].text).toContain("[IP_ADDRESS_1]");
-      expect(result?.content[1].text).toContain("[API_KEY_1]");
+      expect(result?.content[1].text).toMatch(/\[IP_ADDRESS_\d+#[a-z0-9]{4}\]/);
+      expect(result?.content[1].text).toMatch(/\[API_KEY_\d+#[a-z0-9]{4}\]/);
       expect(result?.content[1].text).not.toContain("192.168.1.100");
       expect(result?.content[1].text).not.toContain("ghp_1234567890abcdef1234567890abcdef1234");
       expect(notifySpy).toHaveBeenCalledWith(expect.stringContaining("read_file output"), "info");
@@ -951,7 +954,7 @@ describe("registerHooks - Component Unit Tests", () => {
 
       expect(result).toBeDefined();
       expect(result?.messages[0].content).toBe("You are a helpful coding assistant");
-      expect(result?.messages[1].content).toContain("[PHONE_1]");
+      expect(result?.messages[1].content).toMatch(/\[PHONE_\d+#[a-z0-9]{4}\]/);
       expect(result?.messages[1].content).not.toContain("+1-555-0199");
     });
 
@@ -980,11 +983,11 @@ describe("registerHooks - Component Unit Tests", () => {
       mock = createMockExtensionAPI();
     });
 
-    it("6.1 registers all 4 lifecycle hooks and the slash command on ExtensionAPI", () => {
+    it("6.1 registers all 9 lifecycle hooks and the slash command on ExtensionAPI", () => {
       extensionEntry(mock.api);
 
       // Verify hooks registered
-      expect(mock.onSpy).toHaveBeenCalledTimes(4);
+      expect(mock.onSpy).toHaveBeenCalledTimes(9);
       expect(mock.handlers.has("session_start")).toBe(true);
       expect(mock.handlers.has("input")).toBe(true);
       expect(mock.handlers.has("tool_result")).toBe(true);

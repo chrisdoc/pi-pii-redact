@@ -2,6 +2,13 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { PiTestHarness, assertRedactedEmail, assertRedactedApiKey } from "./e2e/harness.js";
 import { RedactorService } from "../src/services/redactor.js";
 
+/** Extracts the first vault token of a label (e.g. "[EMAIL_3#k7q2]") from text. */
+function tokenIn(text: string, label: string): string {
+  const m = text.match(new RegExp(`\\[${label}_\\d+#[a-z0-9]{4}\\]`));
+  if (!m) throw new Error(`no ${label} token in: ${text}`);
+  return m[0];
+}
+
 describe("Challenger 2 Empirical Verification: Hooks, Concurrency, and False Positives", () => {
   let harness: PiTestHarness;
   let redactor: RedactorService;
@@ -254,13 +261,12 @@ describe("Challenger 2 Empirical Verification: Hooks, Concurrency, and False Pos
         expect(result.text).not.toContain(email);
         expect(result.text).not.toContain(key);
 
-        const simulatedLlmResponse = `Processing for [EMAIL_1] using token [API_KEY_1].`;
+        const emailTok = tokenIn(result.text, "EMAIL");
+        const keyTok = tokenIn(result.text, "API_KEY");
+        const simulatedLlmResponse = `Processing for ${emailTok} using token ${keyTok}.`;
         const restored = result.restore(simulatedLlmResponse);
 
-        expect(restored).toContain(email);
-        expect(restored).toContain(key);
-        expect(restored).not.toContain("[EMAIL_1]");
-        expect(restored).not.toContain("[API_KEY_1]");
+        expect(restored).toBe(`Processing for ${email} using token ${key}.`);
         return { i, email, key, result, restored };
       });
 
@@ -279,44 +285,48 @@ describe("Challenger 2 Empirical Verification: Hooks, Concurrency, and False Pos
         redactor.redact(`B: ${emailB} ${keyB}`),
       ]);
 
-      const restoredA = turnA.restore("A: [EMAIL_1] [API_KEY_1]");
-      const restoredB = turnB.restore("B: [EMAIL_1] [API_KEY_1]");
+      const tokA = `${tokenIn(turnA.text, "EMAIL")} ${tokenIn(turnA.text, "API_KEY")}`;
+      const tokB = `${tokenIn(turnB.text, "EMAIL")} ${tokenIn(turnB.text, "API_KEY")}`;
+      expect(tokA).not.toBe(tokB);
+      const restoredA = turnA.restore(`A: ${tokA}`);
+      const restoredB = turnB.restore(`B: ${tokB}`);
 
       expect(restoredA).toBe(`A: ${emailA} ${keyA}`);
       expect(restoredB).toBe(`B: ${emailB} ${keyB}`);
     });
 
-    it("verifies service-level restore behavior under rapid interleaved overlay turns", async () => {
+    it("verifies tokens stay stable and distinct across interleaved overlay turns", async () => {
       const res1 = await redactor.redact("Turn 1: contact alice@test.com with sk-alice1234567890abcdef12345");
       const res2 = await redactor.redact("Turn 2: contact bob@test.com with sk-bob1234567890abcdef12345");
 
-      expect(res1.restore("Email: [EMAIL_1], Key: [API_KEY_1]")).toBe("Email: alice@test.com, Key: sk-alice1234567890abcdef12345");
-      expect(res2.restore("Email: [EMAIL_1], Key: [API_KEY_1]")).toBe("Email: bob@test.com, Key: sk-bob1234567890abcdef12345");
+      const e1 = tokenIn(res1.text, "EMAIL");
+      const k1 = tokenIn(res1.text, "API_KEY");
+      const e2 = tokenIn(res2.text, "EMAIL");
+      const k2 = tokenIn(res2.text, "API_KEY");
+      expect(e1).not.toBe(e2);
+      expect(k1).not.toBe(k2);
 
-      // For overlay rules, lastRestoreMap overwrites cleanly
-      const serviceRestored = redactor.restore("Email: [EMAIL_1], Key: [API_KEY_1]");
-      expect(serviceRestored).toBe("Email: bob@test.com, Key: sk-bob1234567890abcdef12345");
+      // Any result (and the service) restores every token of the session, with no last-write-wins
+      expect(res1.restore(`Email: ${e1}, Key: ${k1}`)).toBe("Email: alice@test.com, Key: sk-alice1234567890abcdef12345");
+      expect(res2.restore(`Email: ${e2}, Key: ${k2}`)).toBe("Email: bob@test.com, Key: sk-bob1234567890abcdef12345");
+      expect(redactor.restore(`Email: ${e1}, Key: ${k1}`)).toBe("Email: alice@test.com, Key: sk-alice1234567890abcdef12345");
+      expect(redactor.restore(`Email: ${e2}, Key: ${k2}`)).toBe("Email: bob@test.com, Key: sk-bob1234567890abcdef12345");
     });
 
-    it("verifies service-level restore reflects latest turn without native entity shadowing", async () => {
-      // Turn 1 with phone number
+    it("verifies native entities get distinct stable tokens across turns (no shadowing)", async () => {
       const phone1 = "555-111-1111";
       const res1 = await redactor.redact(`Turn 1: contact me at ${phone1}`);
-      expect(res1.text).toContain("[PHONE_1]");
+      const t1 = tokenIn(res1.text, "PHONE");
 
-      // Turn 2 with different phone number
       const phone2 = "555-222-2222";
       const res2 = await redactor.redact(`Turn 2: contact me at ${phone2}`);
-      expect(res2.text).toContain("[PHONE_1]");
+      const t2 = tokenIn(res2.text, "PHONE");
+      expect(t1).not.toBe(t2);
 
-      // Result-level restore closures are correct and isolated
-      expect(res1.restore("Call [PHONE_1]")).toBe(`Call ${phone1}`);
-      expect(res2.restore("Call [PHONE_1]")).toBe(`Call ${phone2}`);
-
-      // Service-level restore:
-      // Verifies that service.restore restores using mappings from the most recent redaction (Turn 2)
-      const serviceRestored = redactor.restore("Call [PHONE_1]");
-      expect(serviceRestored).toBe(`Call ${phone2}`);
+      expect(res1.restore(`Call ${t1}`)).toBe(`Call ${phone1}`);
+      expect(res2.restore(`Call ${t2}`)).toBe(`Call ${phone2}`);
+      expect(redactor.restore(`Call ${t1}`)).toBe(`Call ${phone1}`);
+      expect(redactor.restore(`Call ${t2}`)).toBe(`Call ${phone2}`);
     });
   });
 });

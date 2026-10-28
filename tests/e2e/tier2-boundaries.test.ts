@@ -65,7 +65,7 @@ describe("Tier 2: Boundary & Corner Cases (Opaque-Box E2E)", () => {
       expect(result?.action).toBe("transform");
       expect(result?.text).not.toContain(email);
       // Ensure all occurrences were replaced
-      const matches = result?.text?.match(/\[(?:REDACTED:EMAIL|EMAIL(?:_\d+)?)\]/gi);
+      const matches = result?.text?.match(/\[(?:REDACTED:EMAIL|EMAIL(?:_\d+(?:#[a-z0-9]{4})?)?)\]/gi);
       expect(matches?.length).toBe(3);
     });
 
@@ -74,7 +74,7 @@ describe("Tier 2: Boundary & Corner Cases (Opaque-Box E2E)", () => {
       const result = await harness.triggerInput(`Primary: ${key}\nBackup: ${key}`);
       expect(result?.action).toBe("transform");
       expect(result?.text).not.toContain(key);
-      const matches = result?.text?.match(/\[(?:REDACTED:API_KEY|API_KEY(?:_\d+)?)\]/gi);
+      const matches = result?.text?.match(/\[(?:REDACTED:API_KEY|API_KEY(?:_\d+(?:#[a-z0-9]{4})?)?)\]/gi);
       expect(matches?.length).toBe(2);
     });
 
@@ -83,7 +83,7 @@ describe("Tier 2: Boundary & Corner Cases (Opaque-Box E2E)", () => {
       const result = await harness.triggerInput(`Ping ${ip} gateway at ${ip}`);
       expect(result?.action).toBe("transform");
       expect(result?.text).not.toContain(ip);
-      const matches = result?.text?.match(/\[(?:REDACTED:IP_ADDRESS|IP_ADDRESS(?:_\d+)?)\]/gi);
+      const matches = result?.text?.match(/\[(?:REDACTED:IP_ADDRESS|IP_ADDRESS(?:_\d+(?:#[a-z0-9]{4})?)?)\]/gi);
       expect(matches?.length).toBe(2);
     });
 
@@ -92,7 +92,7 @@ describe("Tier 2: Boundary & Corner Cases (Opaque-Box E2E)", () => {
       const result = await harness.triggerInput(`Day: ${phone}, Evening: ${phone}`);
       expect(result?.action).toBe("transform");
       expect(result?.text).not.toContain(phone);
-      const matches = result?.text?.match(/\[(?:REDACTED:PHONE|PHONE(?:_\d+)?)\]/gi);
+      const matches = result?.text?.match(/\[(?:REDACTED:PHONE|PHONE(?:_\d+(?:#[a-z0-9]{4})?)?)\]/gi);
       expect(matches?.length).toBe(2);
     });
 
@@ -101,7 +101,7 @@ describe("Tier 2: Boundary & Corner Cases (Opaque-Box E2E)", () => {
       const result = await harness.triggerInput(`Card 1: ${cc}, Retype: ${cc}`);
       expect(result?.action).toBe("transform");
       expect(result?.text).not.toContain(cc);
-      const matches = result?.text?.match(/\[(?:REDACTED:CREDIT_CARD|CREDIT_CARD(?:_\d+)?)\]/gi);
+      const matches = result?.text?.match(/\[(?:REDACTED:CREDIT_CARD|CREDIT_CARD(?:_\d+(?:#[a-z0-9]{4})?)?)\]/gi);
       expect(matches?.length).toBe(2);
     });
   });
