@@ -68,6 +68,7 @@ If the model then calls a tool with `[EMAIL_1#k7q2]` as an argument, the tool re
 | `/pii toggle` | Turn redaction on or off. |
 | `/pii enable` / `/pii disable` | Turn redaction on or off explicitly. |
 | `/pii rules` | List all rules and whether each is enabled. |
+| `/pii stats` | Show a usage board of redacted and restored items. "This run" counters reset when Pi restarts; protected-value counts come from the session vault. |
 
 The enabled state and disabled rules are stored in the session and survive reloads.
 

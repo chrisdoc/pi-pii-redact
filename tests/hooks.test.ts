@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { registerHooks } from "../src/hooks/index.js";
 import { RedactorService } from "../src/services/redactor.js";
+import { PiiStats } from "../src/services/stats.js";
 import type { RedactorConfig, RedactionResult } from "../src/types.js";
 import extensionEntry from "../src/index.js";
 import {
@@ -1017,5 +1018,56 @@ describe("registerHooks - Component Unit Tests", () => {
       const result = await mock.trigger("input", { text: "user@example.com" }, ctx.ctx);
       expect(result).toBeUndefined();
     });
+  });
+});
+
+describe("registerHooks - usage stats", () => {
+  const email = (n: number) => ({
+    text: "[EMAIL_1]",
+    hasRedactions: true,
+    count: n,
+    redactions: Array.from({ length: n }, () => ({
+      category: "email" as const,
+      ruleId: "email",
+      original: "a@b.co",
+      masked: "[EMAIL_1]",
+    })),
+    restore: (t: string) => t,
+  });
+
+  it("counts input and tool_result redactions by source, tool and category", async () => {
+    const mockPi = createMockExtensionAPI();
+    const { redactor } = createMockRedactor({ redactImpl: async () => email(2) });
+    const stats = new PiiStats();
+    registerHooks(mockPi.api, redactor, stats);
+    const { ctx } = createMockContext();
+
+    await mockPi.trigger("input", { text: "x" }, ctx);
+    await mockPi.trigger("tool_result", { toolName: "bash", content: [{ type: "text", text: "y" }] }, ctx);
+    await mockPi.trigger("context", { messages: [{ role: "user", content: "z" }] }, ctx);
+
+    const snap = stats.snapshot();
+    expect(snap.input).toEqual({ items: 2, prompts: 1 });
+    expect(snap.tool.byTool).toEqual({ bash: 2 });
+    expect(snap.categories).toEqual({ email: 4 });
+    expect(snap.context).toEqual({ requests: 1, items: 2 });
+    expect(snap.totalRedacted).toBe(4);
+  });
+
+  it("counts restores in tool_call args and assistant replies", async () => {
+    const mockPi = createMockExtensionAPI();
+    const fx = createMockRedactor();
+    const token = fx.vault.tokenFor("EMAIL", "a@b.co");
+    const stats = new PiiStats();
+    registerHooks(mockPi.api, fx.redactor, stats);
+
+    const input = { to: `${token} ${token}` };
+    await mockPi.trigger("tool_call", { input });
+    expect(input.to).toBe("a@b.co a@b.co");
+
+    await mockPi.trigger("message_end", {
+      message: { role: "assistant", content: [{ type: "text", text: `hi ${token}` }] },
+    });
+    expect(stats.snapshot().restored).toEqual({ toolArgs: 2, replies: 1 });
   });
 });

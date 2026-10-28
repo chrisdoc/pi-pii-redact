@@ -1,7 +1,7 @@
 import type { LoadOptions, Redact, RedactLabel } from "@desert-ant-labs/redact/native";
 import { Redact as NativeRedact } from "@desert-ant-labs/redact/native";
 import type { PiiCategory, PiiRule, RedactionDetail, RedactionResult, RedactorConfig } from "../types.js";
-import { PiiVault } from "./vault.js";
+import { PiiVault, type VaultEntry } from "./vault.js";
 import { defaultRules, findRuleByIdOrLabel, RULE_ID_TO_LABEL } from "../rules/default-rules.js";
 
 /** Configuration options for RedactorService initialization. */
@@ -206,8 +206,8 @@ export class RedactorService {
    * Restores vault tokens in text (e.g. an LLM response) back to their original sensitive values.
    * Tolerant of dropped brackets, case changes, and inner whitespace.
    */
-  public restore(processed: string): string {
-    return this.vault.restore(processed);
+  public restore(processed: string, onHit?: (entry: VaultEntry) => void): string {
+    return this.vault.restore(processed, onHit);
   }
 
   /**

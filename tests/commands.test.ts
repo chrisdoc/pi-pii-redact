@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import type { ExtensionAPI, ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
+import { visibleWidth } from "@earendil-works/pi-tui";
 import { registerPiiCommands } from "../src/commands/pii.js";
 import { RedactorService } from "../src/services/redactor.js";
 import type { PiiRule } from "../src/types.js";
@@ -33,7 +34,7 @@ describe("registerPiiCommands - Dedicated Component Unit Tests", () => {
       registerPiiCommands(api, redactor);
 
       const cmd = commands.get("pii");
-      expect(cmd?.description).toBe("Manage PII redaction (status, toggle, rules)");
+      expect(cmd?.description).toBe("Manage PII redaction (status, toggle, rules, stats)");
     });
 
     it("1.3 registers getArgumentCompletions function", () => {
@@ -67,39 +68,43 @@ describe("registerPiiCommands - Dedicated Component Unit Tests", () => {
   // Suite 2: Subcommand Autocompletion
   // ==========================================================================
   describe("2. Subcommand Autocompletion", () => {
-    it("2.1 returns all 5 subcommands for empty string prefix", () => {
+    it("2.1 returns all 6 subcommands for empty string prefix", () => {
       const { api, getCompletions } = createMockExtensionAPI();
       const { redactor } = createMockRedactorService();
       registerPiiCommands(api, redactor);
 
       const comps = getCompletions("pii", "");
-      expect(comps).toHaveLength(5);
+      expect(comps).toHaveLength(6);
       expect(comps).toEqual([
         { value: "status", label: "status" },
         { value: "toggle", label: "toggle" },
         { value: "rules", label: "rules" },
+        { value: "stats", label: "stats" },
         { value: "enable", label: "enable" },
         { value: "disable", label: "disable" },
       ]);
     });
 
-    it("2.2 returns all 5 subcommands for whitespace-only prefix", () => {
+    it("2.2 returns all 6 subcommands for whitespace-only prefix", () => {
       const { api, getCompletions } = createMockExtensionAPI();
       const { redactor } = createMockRedactorService();
       registerPiiCommands(api, redactor);
 
       const comps = getCompletions("pii", "   ");
-      expect(comps).toHaveLength(5);
-      expect(comps.map((c) => c.value)).toEqual(["status", "toggle", "rules", "enable", "disable"]);
+      expect(comps).toHaveLength(6);
+      expect(comps.map((c) => c.value)).toEqual(["status", "toggle", "rules", "stats", "enable", "disable"]);
     });
 
-    it("2.3 completes prefix 'st' to status", () => {
+    it("2.3 completes prefix 'st' to status and stats", () => {
       const { api, getCompletions } = createMockExtensionAPI();
       const { redactor } = createMockRedactorService();
       registerPiiCommands(api, redactor);
 
       const comps = getCompletions("pii", "st");
-      expect(comps).toEqual([{ value: "status", label: "status" }]);
+      expect(comps).toEqual([
+        { value: "status", label: "status" },
+        { value: "stats", label: "stats" },
+      ]);
     });
 
     it("2.4 completes prefix 't' and 'tog' to toggle", () => {
@@ -141,7 +146,7 @@ describe("registerPiiCommands - Dedicated Component Unit Tests", () => {
       const { redactor } = createMockRedactorService();
       registerPiiCommands(api, redactor);
 
-      expect(getCompletions("pii", "STAT")).toEqual([{ value: "status", label: "status" }]);
+      expect(getCompletions("pii", "STATU")).toEqual([{ value: "status", label: "status" }]);
       expect(getCompletions("pii", "TOGGLE")).toEqual([{ value: "toggle", label: "toggle" }]);
       expect(getCompletions("pii", "EN")).toEqual([{ value: "enable", label: "enable" }]);
     });
@@ -860,6 +865,93 @@ describe("registerPiiCommands - Dedicated Component Unit Tests", () => {
       const rulesMsg = notifySpy.mock.calls[1][0];
       expect(rulesMsg).toContain("• Email Addresses (email): disabled");
       expect(rulesMsg).toContain("• Common API Keys & Tokens (api-key-generic): enabled");
+    });
+  });
+
+  describe("/pii stats", () => {
+    it("offers 'stats' completion", () => {
+      const { api, getCompletions } = createMockExtensionAPI();
+      const { redactor } = createMockRedactorService();
+      registerPiiCommands(api, redactor);
+      expect(getCompletions("pii", "st").map((c) => c.value)).toContain("stats");
+    });
+
+    it("notifies plain text outside the TUI (RPC custom() is a no-op) and never leaks originals or tokens", async () => {
+      const { api, executeCommand } = createMockExtensionAPI();
+      const fx = createMockRedactorService();
+      const token = fx.vault.tokenFor("GIVEN_NAME", "Alice");
+      registerPiiCommands(api, fx.redactor);
+      const { ctx, customSpy, notifications } = createMockCommandContext({ withCustom: true });
+      (ctx as any).mode = "rpc";
+      await executeCommand("pii", "stats", ctx);
+      expect(customSpy).not.toHaveBeenCalled();
+      expect(notifications).toHaveLength(1);
+      expect(notifications[0].message).toContain("PII redaction usage");
+      expect(notifications[0].message).toContain("given name");
+      expect(notifications[0].message).not.toContain("Alice");
+      expect(notifications[0].message).not.toContain(token);
+    });
+
+    it("opens an overlay via ui.custom when a UI is available", async () => {
+      const { api, executeCommand } = createMockExtensionAPI();
+      const { redactor } = createMockRedactorService();
+      registerPiiCommands(api, redactor);
+      const { ctx, customSpy, notifications } = createMockCommandContext({ withCustom: true });
+      await executeCommand("pii", "stats", ctx);
+      expect(customSpy).toHaveBeenCalledTimes(1);
+      expect((customSpy.mock.calls[0] as any[])[1]).toEqual({ overlay: true });
+      expect(notifications).toHaveLength(0);
+    });
+
+    it("renders the overlay as a box whose rows all have the same width", async () => {
+      const { api, executeCommand } = createMockExtensionAPI();
+      const { redactor } = createMockRedactorService();
+      registerPiiCommands(api, redactor);
+      const { ctx, customSpy } = createMockCommandContext({ withCustom: true });
+      await executeCommand("pii", "stats", ctx);
+      const factory = (customSpy.mock.calls[0] as any[])[0];
+      const theme = { fg: (_c: string, t: string) => t, bold: (t: string) => t };
+      const done = vi.fn();
+      const component = factory({}, theme, {}, done);
+
+      for (const width of [120, 40]) {
+        const lines: string[] = component.render(width);
+        expect(lines[0].startsWith("╭")).toBe(true);
+        expect(lines[lines.length - 1].startsWith("╰")).toBe(true);
+        const widths = new Set(lines.map((l) => visibleWidth(l)));
+        expect(widths.size).toBe(1);
+        expect([...widths][0]).toBeLessThanOrEqual(width);
+      }
+
+      component.handleInput("q");
+      expect(done).toHaveBeenCalled();
+    });
+
+    it("fits a populated board into a short terminal and scrolls, keeping borders and hint", async () => {
+      const { api, executeCommand } = createMockExtensionAPI();
+      const fx = createMockRedactorService();
+      for (const [label, value] of [["EMAIL", "a@x.io"], ["PHONE", "555"], ["CITY", "Rome"], ["SURNAME", "Doe"], ["IP", "1.2.3.4"]]) {
+        fx.vault.tokenFor(label, value);
+      }
+      registerPiiCommands(api, fx.redactor);
+      const { ctx, customSpy } = createMockCommandContext({ withCustom: true });
+      await executeCommand("pii", "stats", ctx);
+      const factory = (customSpy.mock.calls[0] as any[])[0];
+      const theme = { fg: (_c: string, t: string) => t, bold: (t: string) => t };
+      const tui = { terminal: { rows: 24 }, requestRender: vi.fn() };
+      const component = factory(tui, theme, {}, vi.fn());
+
+      const first: string[] = component.render(80);
+      expect(first.length).toBeLessThanOrEqual(24);
+      expect(first[first.length - 1].startsWith("╰")).toBe(true);
+      expect(first[first.length - 2]).toContain("↑↓ scroll · Esc to close");
+      expect(first.join("\n")).not.toContain("Run counters reset");
+
+      for (let i = 0; i < 40; i++) component.handleInput("\x1b[B");
+      const last: string[] = component.render(80);
+      expect(last.length).toBe(first.length);
+      expect(last.join("\n")).toContain("Run counters reset");
+      expect(tui.requestRender).toHaveBeenCalled();
     });
   });
 });

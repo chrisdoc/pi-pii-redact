@@ -461,7 +461,10 @@ describe("Tier 1: Feature Coverage (Opaque-Box E2E)", () => {
 
     it("10.6 provides argument completions for slash command prefix", async () => {
       const completions = await harness.getCommandCompletions("st");
-      expect(completions).toEqual([{ value: "status", label: "status" }]);
+      expect(completions).toEqual([
+        { value: "status", label: "status" },
+        { value: "stats", label: "stats" },
+      ]);
 
       const allCompletions = await harness.getCommandCompletions("");
       const values = allCompletions.map((c) => c.value);

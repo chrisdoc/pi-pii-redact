@@ -110,15 +110,17 @@ export class PiiVault {
     return token;
   }
 
-  /** Replaces this vault's tokens (tolerant matching) with their originals. Unknown tokens are left unchanged. */
-  public restore(text: string): string {
+  /** Replaces this vault's tokens (tolerant matching) with their originals. Unknown tokens are left unchanged. `onHit` is called once per restored token. */
+  public restore(text: string, onHit?: (entry: VaultEntry) => void): string {
     if (!text || typeof text !== "string") return text ?? "";
     if (this.byToken.size === 0) return text;
     return text.replace(this.tolerantRegex, (match, l1, n1, l2, n2) => {
       const label = String(l1 ?? l2).toUpperCase();
       const n = parseInt(String(n1 ?? n2), 10);
       const entry = this.byKey.get(`${label}_${n}`);
-      return entry ? entry.original : match;
+      if (!entry) return match;
+      onHit?.(entry);
+      return entry.original;
     });
   }
 

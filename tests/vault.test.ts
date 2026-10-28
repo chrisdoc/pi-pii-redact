@@ -167,4 +167,13 @@ describe("PiiVault", () => {
     v.tokenFor("SURNAME", "Alice Smith");
     expect(v.knownOriginals().map((e) => e.original)).toEqual(["Alice Smith", "Alice"]);
   });
+
+  it("restore calls onHit once per restored token, not for unknown or foreign tokens", () => {
+    const v = new PiiVault("abcd");
+    const t = v.tokenFor("EMAIL", "alice@example.com");
+    const hits: string[] = [];
+    const out = v.restore(`${t} and ${t} and [EMAIL_9#abcd] and [EMAIL_1#zzzz]`, (e) => hits.push(e.original));
+    expect(out).toBe("alice@example.com and alice@example.com and [EMAIL_9#abcd] and [EMAIL_1#zzzz]");
+    expect(hits).toEqual(["alice@example.com", "alice@example.com"]);
+  });
 });

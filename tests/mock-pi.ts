@@ -28,6 +28,7 @@ export interface MockContextFixture {
   notifySpy: ReturnType<typeof vi.fn>;
   notifications: Array<{ message: string; type?: string }>;
   statuses: Map<string, string | undefined>;
+  customSpy: ReturnType<typeof vi.fn>;
 }
 
 export interface MockExtensionAPIFixture {
@@ -88,6 +89,8 @@ export function createMockContext(options?: {
   noUi?: boolean;
   missingSetStatus?: boolean;
   missingNotify?: boolean;
+  /** Adds a `ui.custom` spy (resolves immediately) to the interactive context. */
+  withCustom?: boolean;
   /** Session entries returned by ctx.sessionManager.getEntries(). */
   entries?: unknown[];
   /** Model returned as ctx.model (a plain object is enough for mocked compact()). */
@@ -97,6 +100,7 @@ export function createMockContext(options?: {
 }): MockContextFixture {
   const notifications: Array<{ message: string; type?: string }> = [];
   const statuses = new Map<string, string | undefined>();
+  const customSpy = vi.fn(async () => undefined);
 
   const setStatusSpy = vi.fn((key: string, text: string | undefined) => {
     statuses.set(key, text);
@@ -113,6 +117,7 @@ export function createMockContext(options?: {
       notifySpy,
       notifications,
       statuses,
+      customSpy,
     };
   }
 
@@ -128,6 +133,7 @@ export function createMockContext(options?: {
       notifySpy,
       notifications,
       statuses,
+      customSpy,
     };
   }
 
@@ -137,6 +143,9 @@ export function createMockContext(options?: {
   }
   if (!options?.missingNotify) {
     uiObj.notify = notifySpy;
+  }
+  if (options?.withCustom) {
+    uiObj.custom = customSpy;
   }
 
   const ctx = {
@@ -151,7 +160,7 @@ export function createMockContext(options?: {
     },
   } as unknown as ExtensionContext & ExtensionCommandContext;
 
-  return { ctx, setStatusSpy, notifySpy, notifications, statuses };
+  return { ctx, setStatusSpy, notifySpy, notifications, statuses, customSpy };
 }
 
 export const createMockCommandContext = createMockContext;
@@ -320,7 +329,7 @@ export function createMockRedactor(options?: {
     setVault: (v: PiiVault) => {
       vault = v;
     },
-    restore: (t: string) => vault.restore(t),
+    restore: (t: string, onHit?: any) => vault.restore(t, onHit),
     dispose: vi.fn(),
     toggleRule: (id: string, val?: boolean) => {
       const rule = rulesList.find((r) => r.id === id);

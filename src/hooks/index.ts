@@ -1,6 +1,8 @@
 import { compact, generateBranchSummary } from "@earendil-works/pi-coding-agent";
 import type { ExtensionAPI, ExtensionContext, ToolResultEventResult } from "@earendil-works/pi-coding-agent";
 import type { RedactorService } from "../services/redactor.js";
+import { PiiStats } from "../services/stats.js";
+import type { RedactionDetail } from "../types.js";
 import {
   mapContent,
   mapMessage,
@@ -14,17 +16,27 @@ import { loadConfig, loadVault, persistVaultDelta } from "./persist.js";
 
 type JsonValue = unknown;
 
-export function registerHooks(pi: ExtensionAPI, redactor: RedactorService): void {
+export function registerHooks(pi: ExtensionAPI, redactor: RedactorService, stats: PiiStats = new PiiStats()): void {
   const statusText = () => (redactor.isEnabled() ? "PII: On" : "PII: Off");
   const restore = (text: string) => redactor.restore(text);
+  /** Restore that adds each restored token to `bump`. */
+  const countingRestore = (bump: (n: number) => void) => (text: string) => {
+    let hits = 0;
+    const out = redactor.restore(text, () => {
+      hits++;
+    });
+    if (hits > 0) bump(hits);
+    return out;
+  };
   const vaultHasEntries = () => redactor.getVault().size > 0;
 
   /** Redacts one string and counts redactions, for use as a deep-walker callback. */
   const counter = () => {
-    const state = { count: 0 };
+    const state = { count: 0, details: [] as RedactionDetail[] };
     const fn = async (text: string): Promise<string> => {
       const result = await redactor.redact(text);
       state.count += result.count;
+      if (result.count > 0) state.details.push(...(result.redactions ?? []));
       return result.text;
     };
     return { state, fn };
@@ -75,6 +87,7 @@ export function registerHooks(pi: ExtensionAPI, redactor: RedactorService): void
     const result = await redactor.redact(event.text);
     persistVaultDelta(pi, redactor);
     if (result.hasRedactions) {
+      stats.recordRedaction("input", result.count, result.redactions);
       if (redactor.getConfig().notifyOnRedact) {
         ctx?.ui?.notify?.(`Redacted ${result.count} sensitive item(s) from input`, "info");
       }
@@ -88,7 +101,7 @@ export function registerHooks(pi: ExtensionAPI, redactor: RedactorService): void
     if (!event?.input || typeof event.input !== "object" || !vaultHasEntries()) {
       return undefined;
     }
-    restoreStringsInPlace(event.input, restore);
+    restoreStringsInPlace(event.input, countingRestore((n) => stats.recordToolArgRestore(n)));
     return undefined;
   });
 
@@ -97,7 +110,7 @@ export function registerHooks(pi: ExtensionAPI, redactor: RedactorService): void
     if (!event?.message || (event.message as any).role !== "assistant" || !vaultHasEntries()) {
       return undefined;
     }
-    const restored = await restoreAssistantMessage(event.message, restore);
+    const restored = await restoreAssistantMessage(event.message, countingRestore((n) => stats.recordReplyRestore(n)));
     return restored !== event.message ? { message: restored } : undefined;
   });
 
@@ -118,6 +131,7 @@ export function registerHooks(pi: ExtensionAPI, redactor: RedactorService): void
     persistVaultDelta(pi, redactor);
 
     if (content !== event.content || structuredContent !== event.structuredContent) {
+      stats.recordRedaction("tool", state.count, state.details, event.toolName || "unknown");
       if (redactor.getConfig().notifyOnRedact) {
         const toolLabel = event?.toolName ? `${event.toolName} output` : "tool output";
         ctx?.ui?.notify?.(`Redacted ${state.count} item(s) from ${toolLabel}`, "info");
@@ -138,9 +152,10 @@ export function registerHooks(pi: ExtensionAPI, redactor: RedactorService): void
       return undefined;
     }
 
-    const { fn } = counter();
+    const { state, fn } = counter();
     const { messages, changed } = await mapMessages(event.messages, fn);
     persistVaultDelta(pi, redactor);
+    if (changed) stats.recordRedaction("context", state.count);
     return changed ? { messages } : undefined;
   });
 
@@ -152,7 +167,7 @@ export function registerHooks(pi: ExtensionAPI, redactor: RedactorService): void
       const auth = await resolveModelAuth(ctx, "compaction");
       if (!auth) return { cancel: true };
 
-      const { fn } = counter();
+      const { state, fn } = counter();
       const prep = event.preparation;
       const preparation = {
         ...prep,
@@ -161,6 +176,8 @@ export function registerHooks(pi: ExtensionAPI, redactor: RedactorService): void
         previousSummary: prep.previousSummary ? await fn(prep.previousSummary) : prep.previousSummary,
       };
       const instructions = event.customInstructions ? await fn(event.customInstructions) : undefined;
+
+      stats.recordRedaction("summary", state.count, state.details);
 
       const result = await compact(preparation, auth.model, auth.apiKey, auth.headers, instructions, event.signal);
       return { compaction: { ...result, summary: restore(result.summary) } };
@@ -183,13 +200,15 @@ export function registerHooks(pi: ExtensionAPI, redactor: RedactorService): void
       const auth = await resolveModelAuth(ctx, "branch summary");
       if (!auth) return { cancel: true };
 
-      const { fn } = counter();
+      const { state, fn } = counter();
       const prep = event.preparation;
       const entries: any[] = [];
       for (const entry of prep.entriesToSummarize ?? []) {
         entries.push(await mapSessionEntry(entry, fn));
       }
       const instructions = prep.customInstructions ? await fn(prep.customInstructions) : undefined;
+
+      stats.recordRedaction("summary", state.count, state.details);
 
       const result = await generateBranchSummary(entries, {
         model: auth.model,
