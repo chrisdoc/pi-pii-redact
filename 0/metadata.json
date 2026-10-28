@@ -1,0 +1,110 @@
+{
+  "cli_version": "0.12.2",
+  "checkpoint_id": "01M61YRGMTYQVAMZ792MMX3ZZ5",
+  "session_id": "4cf4f342-ad5f-47d7-978e-faae2be4b30e",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-28T19:11:02.666987619Z",
+  "branch": "t3/reduce-test-execution-time",
+  "checkpoints_count": 9,
+  "save_step_count": 9,
+  "files_touched": [
+    "AGENTS.md",
+    "tests/e2e/tier2-boundaries.test.ts",
+    "tests/e2e/tier5-adversarial.test.ts",
+    "tests/empiric-challenge-2.test.ts",
+    "tests/setup-shared-model.ts",
+    "tests/stress-challenger.test.ts",
+    "vitest.config.ts"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5-5",
+  "turn_id": "eb97e082b8a7",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 110,
+    "cache_creation_tokens": 111816,
+    "cache_read_tokens": 3110520,
+    "output_tokens": 19712,
+    "api_call_count": 45,
+    "subagent_tokens": {
+      "input_tokens": 6,
+      "cache_creation_tokens": 21591,
+      "cache_read_tokens": 23272,
+      "output_tokens": 2119,
+      "api_call_count": 3
+    }
+  },
+  "redaction": {
+    "replacements": 26,
+    "layers": {
+      "betterleaks": 2,
+      "connection_string": 0,
+      "credential_key": 0,
+      "credential_value": 2,
+      "credentialed_uri": 0,
+      "entropy": 0,
+      "key_context": 8,
+      "provider_token": 14,
+      "shell_stdin": 0
+    }
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "prompt-skill-claude-code-full-send-2026-10-28T18:17:52.732008382Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "full-send"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "f1fccfb3a6db",
+      "timestamp": "2026-10-28T18:17:52.732008382Z",
+      "native": {
+        "command": "/full-send"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/full-send",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "claude-skill-toolu_01E1dQznN5eTyktPwHaW5xAo",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "sol-loop"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "eb97e082b8a7",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 177,
+        "end": 178,
+        "entry_ids": [
+          "ce3b311e-c3f8-4741-8dfb-94135a5fc271"
+        ],
+        "tool_use_id": "toolu_01E1dQznN5eTyktPwHaW5xAo"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01E1dQznN5eTyktPwHaW5xAo"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: sol-loop",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 9
+  }
+}
