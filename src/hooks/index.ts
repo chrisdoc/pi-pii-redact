@@ -30,7 +30,7 @@ export function registerHooks(pi: ExtensionAPI, redactor: RedactorService): void
       return undefined;
     }
 
-    if (!Array.isArray(event.content)) {
+    if (!event || !Array.isArray(event.content)) {
       return undefined;
     }
 
@@ -67,9 +67,17 @@ export function registerHooks(pi: ExtensionAPI, redactor: RedactorService): void
       return undefined;
     }
 
+    if (!event || !Array.isArray(event.messages)) {
+      return undefined;
+    }
+
     let modified = false;
     const sanitizedMessages = await Promise.all(
       event.messages.map(async (msg: any) => {
+        if (!msg || typeof msg !== "object") {
+          return msg;
+        }
+
         if (typeof msg.content === "string") {
           const result = await redactor.redact(msg.content);
           if (result.hasRedactions) {
@@ -80,7 +88,7 @@ export function registerHooks(pi: ExtensionAPI, redactor: RedactorService): void
           let blockModified = false;
           const newBlocks = await Promise.all(
             msg.content.map(async (block: any) => {
-              if (block && block.type === "text" && typeof block.text === "string") {
+              if (block && typeof block === "object" && block.type === "text" && typeof block.text === "string") {
                 const res = await redactor.redact(block.text);
                 if (res.hasRedactions) {
                   blockModified = true;
