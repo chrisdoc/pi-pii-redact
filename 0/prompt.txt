@@ -1,0 +1,18 @@
+<pasted_content id="3c81">
+jis 511ms
+   ✓ Tier 2: Boundary & Corner Cases (Opaque-Box E2E) > Dimension 4: Multilingual & Unicode Contexts > 4.5 redacts credit card surrounded by mathematical symbols and currency signs 496ms
+   ✓ Tier 2: Boundary & Corner Cases (Opaque-Box E2E) > Dimension 5: Extreme Lengths & Stress Inputs > 5.1 redacts email buried inside a 5,000-character payload 1992ms
+   × Tier 2: Boundary & Corner Cases (Opaque-Box E2E) > Dimension 5: Extreme Lengths & Stress Inputs > 5.2 redacts IP address in a tool result containing 200 log entries 5204ms
+     → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   ✓ Tier 2: Boundary & Corner Cases (Opaque-Box E2E) > Dimension 5: Extreme Lengths & Stress Inputs > 5.3 redacts PII positioned at the very end of a large multi-line string 3092ms
+   ✓ Tier 2: Boundary & Corner Cases (Opaque-Box E2E) > Dimension 5: Extreme Lengths & Stress Inputs > 5.5 handles conversation history with 30 alternating turns efficiently 834ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/e2e/tier2-boundaries.test.ts > Tier 2: Boundary & Corner Cases (Opaque-Box E2E) > Dimension 5: Extreme Lengths & Stress Inputs > 5.2 redacts IP address in a tool result containing 200 log entries
+ FAIL  tests/e2e/tier5-adversarial.test.ts > Tier 5: Adversarial Stress & Concurrency Hardening (Challenger 2) > 2. Complex Tool Result Payloads > 2.4 handles 100 alternating clean and sensitive tool result items
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+</pasted_content id="3c81">
