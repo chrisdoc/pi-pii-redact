@@ -279,10 +279,11 @@ export function createMockRedactor(options?: {
   const rulesList: PiiRule[] = options?.rules
     ? [...options.rules]
     : [
-        { id: "email", name: "Email Address", category: "email", enabled: true },
-        { id: "api-key", name: "API Key", category: "api-key", enabled: true },
-        { id: "ipv4", name: "IPv4 Address", category: "ip-address", enabled: true },
-        { id: "phone", name: "Phone Number", category: "phone", enabled: false },
+        { id: "email", name: "Email Addresses", category: "email", enabled: true },
+        { id: "api-key-generic", name: "Common API Keys & Tokens", category: "api-key", enabled: true },
+        { id: "ip-address", name: "IP Addresses", category: "ip-address", enabled: true },
+        { id: "phone-us", name: "Phone Numbers", category: "phone", enabled: true },
+        { id: "credit-card", name: "Credit Card Numbers", category: "credit-card", enabled: true },
       ];
   const getRulesSpy = vi.fn(() => rulesList);
 
