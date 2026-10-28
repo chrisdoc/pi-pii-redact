@@ -1,0 +1,61 @@
+# AGENTS.md
+
+This file provides guidance to coding agents working with code in this repository.
+
+## What this is
+
+A [Pi](https://github.com/earendil-works/pi) extension (published as `@chrisdoc/pi-pii-redact`) that replaces PII and secrets with stable per-session tokens like `[EMAIL_3#k7q2]` before anything reaches the LLM, and restores real values in tool-call arguments and assistant replies. Detection runs locally: the `@desert-ant-labs/redact` NER model plus regex overlay rules.
+
+The package ships TypeScript source directly (`main` and `pi.extensions` point at `src/index.ts`); there is no build step.
+
+## Commands
+
+```bash
+npm install
+npm run typecheck                         # tsc --noEmit (covers src/ only)
+npm test                                  # vitest run, all suites
+npx vitest run tests/vault.test.ts        # one file
+npx vitest run tests/e2e                  # e2e tiers only
+npx vitest run -t "restores tokens"       # tests matching a name
+pi -e .                                   # load the working copy into Pi
+```
+
+Most tests run the real on-device model on CPU. On first run it downloads (~25 MB) into `~/.cache/desert-ant-models`. `vitest.config.ts` sets a 30 s timeout and `fileParallelism: false` on purpose, because parallel files each load a model and oversubscribe the CPU. Don't change those to speed things up.
+
+CI (`.github/workflows/ci.yml`) runs typecheck and tests on Node 22 and 24.
+
+## Architecture
+
+`src/index.ts` creates one `RedactorService` and passes it to `registerHooks` (`src/hooks/index.ts`) and `registerPiiCommands` (`src/commands/pii.ts`).
+
+**`RedactorService` (`src/services/redactor.ts`)** owns the rules, the config, the lazily loaded native model, an LRU result cache and the session vault. `redact()` runs in this order:
+1. Splits enabled rules into regex overlay rules (those with a `pattern`) and native model labels.
+2. Fast path: replaces originals already in the vault with their tokens.
+3. Applies the regex overlays. `replaceOutsideTokens` never touches text overlapping an existing vault token.
+4. Runs native inference for the active labels, filtered by `minimumConfidence` (default 0.85).
+
+Anything that changes rules, the enabled state or the vault must clear the cache, as the existing setters do.
+
+**`PiiVault` (`src/services/vault.ts`)** is the two-way map between originals and tokens. The same original always gets the same token. Per-label counters only increase. A random per-vault nonce means text that merely looks like a token is never restored. Restore tolerates mangled tokens (lower case, missing brackets, extra spaces). Rules with a custom `mask` are one-way and never enter the vault.
+
+**Rules (`src/rules/default-rules.ts`)**: `MODEL_RULE_DEFINITIONS` maps the 22 native labels to `PiiRule`s (`ORG` is disabled by default), plus the regex overlays for API keys and similar. `toggleRule` accepts ids, native labels and aliases.
+
+**Hooks (`src/hooks/index.ts`)** handle the Pi events:
+- Redaction: `input`, `tool_result` (including `structuredContent`) and `context`. `context` re-redacts the whole history before every provider request.
+- Restore: `tool_call` restores arguments in place, and `message_end` restores the assistant reply. Both run even while redaction is off, as long as the vault has entries.
+- `session_before_compact` / `session_before_tree`: these call the model directly and bypass `context`, so the extension runs `compact` / `generateBranchSummary` itself on redacted input. **On any failure they return `{ cancel: true }`** and never fall back to plaintext.
+- `session_start` rebuilds the vault and config from session entries. `session_shutdown` disposes the model.
+
+**Message walkers (`src/hooks/messages.ts`)** deep-map strings through messages and content blocks. Invariants: never mutate the input, return the *same reference* when nothing changed (hooks use reference equality to decide whether to return a result), and leave assistant `thinking` blocks byte-identical because providers sign them.
+
+**Persistence (`src/hooks/persist.ts`)**: state lives in session custom entries. `pii-vault` entries are append-only deltas from `vault.takePendingDelta()`. Call `persistVaultDelta` after any redaction that may have minted tokens. The vault is rebuilt from *all* entries across branches so numbers are never reused. `pii-config` holds the latest enabled state plus disabled rule ids. Session files therefore contain plaintext originals by design; the extension protects what reaches the model, not what is on disk.
+
+## Tests
+
+- `tests/mock-pi.ts` provides `createMockExtensionAPI` (captures handlers and `appendEntry` as session entries), `createMockContext` and `createMockRedactor` (no model) for unit tests.
+- `tests/e2e/harness.ts` provides `PiTestHarness` for opaque-box tests through the public entry points, plus `assertRedacted*` matchers. The tiers cover features, boundaries, combinations, workflows and adversarial cases (`tier1` to `tier5`). The core assertion is that the original value is absent from the output and a placeholder is present.
+- `TEST_INFRA.md` / `TEST_READY.md` describe the e2e methodology. They reference `ORIGINAL_REQUEST.md` / `PROJECT.md`, which are not in the repo.
+
+## Releasing
+
+Use Changesets. Any PR that changes behavior needs a changeset (`npx changeset`, committed in `.changeset/`). Merging to `main` opens a "Version Packages" PR, and merging that publishes to npm via OIDC trusted publishing (`.github/workflows/publish.yml`). Don't hand-edit the `version` in `package.json` or `CHANGELOG.md`.
