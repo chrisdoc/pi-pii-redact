@@ -72,13 +72,31 @@ describe("RedactorService", () => {
     expect(recheck.text).toContain("[EMAIL_1]");
   });
 
-  it("supports restoring redacted native text", async () => {
+  it("supports restoring redacted native text and LLM responses via result.restore", async () => {
     const service = new RedactorService();
-    const result = await service.redact("Meeting with alice@corp.com tomorrow");
+    const prompt = "Register user bob@company.org with secret sk-1234567890abcdef1234567890 now.";
+    const result = await service.redact(prompt);
     expect(result.hasRedactions).toBe(true);
     expect(result.restore).toBeDefined();
-    const restored = result.restore!(result.text);
-    expect(restored).toBe("Meeting with alice@corp.com tomorrow");
+
+    // Simulate an LLM responding using the redacted placeholders
+    const llmResponse = "Confirmed: Account [EMAIL_1] provisioned with auth key [REDACTED:API_KEY].";
+    const restored = result.restore!(llmResponse);
+    expect(restored).toBe(
+      "Confirmed: Account bob@company.org provisioned with auth key sk-1234567890abcdef1234567890."
+    );
+  });
+
+  it("supports service-level restore method across native and overlay placeholders", async () => {
+    const service = new RedactorService();
+    const text = "Connect to developer@platform.net using token sk-9876543210fedcba9876543210 on 10.0.0.1";
+    await service.redact(text);
+
+    const llmAnswer = "I will connect to [EMAIL_1] using token [REDACTED:API_KEY] at host [IP_ADDRESS_1].";
+    const restored = service.restore(llmAnswer);
+    expect(restored).toBe(
+      "I will connect to developer@platform.net using token sk-9876543210fedcba9876543210 at host 10.0.0.1."
+    );
   });
 
   it("handles empty, whitespace, and nullish strings gracefully", async () => {
@@ -86,9 +104,12 @@ describe("RedactorService", () => {
     const resEmpty = await service.redact("");
     expect(resEmpty.hasRedactions).toBe(false);
     expect(resEmpty.text).toBe("");
+    expect(resEmpty.restore("hello")).toBe("hello");
 
     const resWhitespace = await service.redact("   ");
     expect(resWhitespace.hasRedactions).toBe(false);
+
+    expect(service.restore("")).toBe("");
   });
 
   it("introspects rules with getRules and getConfig", () => {
