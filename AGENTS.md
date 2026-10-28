@@ -26,7 +26,7 @@ CI (`.github/workflows/ci.yml`) runs typecheck and tests on Node 22 and 24.
 
 ## Architecture
 
-`src/index.ts` creates one `RedactorService` and passes it to `registerHooks` (`src/hooks/index.ts`) and `registerPiiCommands` (`src/commands/pii.ts`).
+`src/index.ts` creates one `RedactorService` and one `PiiStats` and passes both to `registerHooks` (`src/hooks/index.ts`) and `registerPiiCommands` (`src/commands/pii.ts`).
 
 **`RedactorService` (`src/services/redactor.ts`)** owns the rules, the config, the lazily loaded native model, an LRU result cache and the session vault. `redact()` runs in this order:
 1. Splits enabled rules into regex overlay rules (those with a `pattern`) and native model labels.
@@ -47,6 +47,8 @@ Anything that changes rules, the enabled state or the vault must clear the cache
 - `session_start` rebuilds the vault and config from session entries. `session_shutdown` disposes the model.
 
 **Message walkers (`src/hooks/messages.ts`)** deep-map strings through messages and content blocks. Invariants: never mutate the input, return the *same reference* when nothing changed (hooks use reference equality to decide whether to return a result), and leave assistant `thinking` blocks byte-identical because providers sign them.
+
+**Usage stats (`src/services/stats.ts`, `src/commands/stats-board.ts`)**: `PiiStats` holds in-memory counters for the current run, recorded by the hooks. `context` re-masking is counted separately and never added to totals, because it re-redacts the whole history each turn. `/pii stats` combines them with per-label counts from the vault and renders a board (a scrollable overlay in TUI mode, plain `notify` text otherwise). It shows counts only, never originals or tokens.
 
 **Persistence (`src/hooks/persist.ts`)**: state lives in session custom entries. `pii-vault` entries are append-only deltas from `vault.takePendingDelta()`. Call `persistVaultDelta` after any redaction that may have minted tokens. The vault is rebuilt from *all* entries across branches so numbers are never reused. `pii-config` holds the latest enabled state plus disabled rule ids. Session files therefore contain plaintext originals by design; the extension protects what reaches the model, not what is on disk.
 
