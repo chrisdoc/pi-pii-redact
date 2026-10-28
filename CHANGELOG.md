@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0
+
+### Minor Changes
+
+- [#12](https://github.com/chrisdoc/pi-pii-redact/pull/12) [`7aa48b6`](https://github.com/chrisdoc/pi-pii-redact/commit/7aa48b64243874bb918b46dc98c0569d4da75cba) Thanks [@chrisdoc](https://github.com/chrisdoc)! - Add `/pii stats` usage board showing how much PII was redacted and restored (this run) and how many unique values are protected in the session.
+
 ## 0.2.0
 
 ### Minor Changes
