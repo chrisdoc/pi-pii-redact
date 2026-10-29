@@ -2,6 +2,7 @@ import type { PiiCategory, PiiRule, RedactionDetail, RedactionResult, RedactorCo
 import type { NerEngine } from "./ner-engine.js";
 import { PiiVault, type VaultEntry } from "./vault.js";
 import { MaskerMini, type MaskerLoadOptions } from "./masker-mini/index.js";
+import { scanSecrets } from "./secrets/index.js";
 import { defaultRules, findRuleByIdOrLabel, RULE_ID_TO_LABEL } from "../rules/default-rules.js";
 
 /** Configuration options for RedactorService initialization. */
@@ -289,11 +290,15 @@ export class RedactorService {
     const activeRegexRules: PiiRule[] = [];
     const activeNativeLabels: string[] = [];
     const enabledVaultLabels = new Set<string>();
+    let secretsActive = false;
 
     for (const rule of this.rules.values()) {
       if (!rule.enabled) continue;
 
-      if (rule.pattern) {
+      if (rule.detector === "secret-scanner") {
+        secretsActive = true;
+        enabledVaultLabels.add(rule.nativeLabel ?? "SECRET");
+      } else if (rule.pattern) {
         activeRegexRules.push(rule);
         if (!rule.mask) enabledVaultLabels.add(this.overlayLabel(rule));
       } else {
@@ -324,7 +329,13 @@ export class RedactorService {
     // 2. Fast path: replace already-known originals with their tokens (longest first)
     currentText = this.applyKnownOriginals(currentText, enabledVaultLabels, allRedactions);
 
-    // 3. Overlay regex rules (API keys, IP addresses, emails, custom secrets)
+    // 3. Secret scanner: runs before the overlays so a key wins over the phone/IBAN/email
+    // rules that would otherwise claim parts of it.
+    if (secretsActive) {
+      currentText = await this.redactSecrets(currentText, allRedactions);
+    }
+
+    // 4. Overlay regex rules (API keys, IP addresses, emails, custom secrets)
     for (const rule of activeRegexRules) {
       const flags = rule.pattern!.flags.includes("g")
         ? rule.pattern!.flags
@@ -349,7 +360,7 @@ export class RedactorService {
       });
     }
 
-    // 4. Model inference for all active model labels in one call.
+    // 5. Model inference for all active model labels in one call.
     // CRITICAL: if activeNativeLabels is empty, do not call the model at all (and never pass
     // an empty label list to an engine, which could be read as "all labels").
     if (activeNativeLabels.length > 0) {
@@ -416,6 +427,44 @@ export class RedactorService {
       redactions: allRedactions.map((r) => ({ ...r })),
     });
     return this.buildResult(currentText, allRedactions);
+  }
+
+  /** Replaces secrets found by the secret scanner with vault tokens. */
+  private async redactSecrets(text: string, redactions: RedactionDetail[]): Promise<string> {
+    const spans = await scanSecrets(text);
+    if (spans.length === 0) return text;
+
+    const protectedSpans = this.vault.findTokens(text);
+    const rule = this.rules.get("secrets");
+    let out = "";
+    let cursor = 0;
+    const accepted: Array<{ original: string; token: string }> = [];
+    for (const span of spans) {
+      if (span.start < cursor) continue;
+      if (protectedSpans.some((s) => span.start < s.end && span.end > s.start)) continue;
+      const original = text.slice(span.start, span.end);
+      const token = this.vault.tokenFor("SECRET", original);
+      out += text.slice(cursor, span.start) + token;
+      cursor = span.end;
+      accepted.push({ original, token });
+      redactions.push({
+        category: rule?.category ?? "secret",
+        ruleId: rule?.id ?? "secrets",
+        original,
+        masked: token,
+        placeholder: token,
+        confidence: span.confidence === "high" ? 1.0 : span.confidence === "medium" ? 0.8 : 0.6,
+        start: span.start,
+        end: span.end,
+      });
+    }
+    out += text.slice(cursor);
+
+    // Repeated occurrences of the same secret get the same token (reported once at detection).
+    for (const { original, token } of accepted) {
+      out = this.replaceOutsideTokens(out, createEntityWordBoundaryRegex(original), () => token);
+    }
+    return out;
   }
 
   /** Replaces already-known vault originals (for enabled labels) with their tokens, longest first. */

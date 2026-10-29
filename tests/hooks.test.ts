@@ -952,7 +952,7 @@ describe("registerHooks - Component Unit Tests", () => {
       expect(result).toBeDefined();
       expect(result?.action).toBe("transform");
       expect(result?.text).toMatch(/\[EMAIL_\d+#[a-z0-9]{4}\]/);
-      expect(result?.text).toMatch(/\[API_KEY_\d+#[a-z0-9]{4}\]/);
+      expect(result?.text).toMatch(/\[(?:API_KEY|SECRET)_\d+#[a-z0-9]{4}\]/);
       expect(result?.text).not.toContain("developer@example.com");
       expect(result?.text).not.toContain("sk-1234567890abcdef1234567890");
       expect(notifySpy).toHaveBeenCalledTimes(1);
@@ -974,7 +974,7 @@ describe("registerHooks - Component Unit Tests", () => {
       expect(result).toBeDefined();
       expect(result?.content[0]).toBe(imageBlock);
       expect(result?.content[1].text).toMatch(/\[IP_ADDRESS_\d+#[a-z0-9]{4}\]/);
-      expect(result?.content[1].text).toMatch(/\[API_KEY_\d+#[a-z0-9]{4}\]/);
+      expect(result?.content[1].text).toMatch(/\[(?:API_KEY|SECRET)_\d+#[a-z0-9]{4}\]/);
       expect(result?.content[1].text).not.toContain("192.168.1.100");
       expect(result?.content[1].text).not.toContain("ghp_1234567890abcdef1234567890abcdef1234");
       expect(notifySpy).toHaveBeenCalledWith(expect.stringContaining("read_file output"), "info");

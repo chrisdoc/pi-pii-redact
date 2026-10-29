@@ -230,7 +230,7 @@ export function assertRedactedApiKey(text: string, original?: string) {
       throw new Error(`Expected text to NOT contain original API key "${original}", but found in: "${text}"`);
     }
   }
-  const match = text.match(/\[(?:REDACTED:API_KEY|API_KEY(?:_\d+(?:#[a-z0-9]{4})?)?)\]/i);
+  const match = text.match(/\[(?:REDACTED:API_KEY|API_KEY|SECRET)(?:_\d+(?:#[a-z0-9]{4})?)?\]/i);
   if (!match) {
     throw new Error(`Expected text to contain redacted API key placeholder, but got: "${text}"`);
   }

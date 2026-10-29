@@ -29,6 +29,7 @@ interface OrtSessionLike {
   release(): Promise<void>;
 }
 interface OrtLike {
+  env: { logLevel?: string };
   Tensor: new (type: "int64", data: BigInt64Array, dims: number[]) => unknown;
   InferenceSession: {
     create(path: string, options?: Record<string, unknown>): Promise<OrtSessionLike>;
@@ -95,6 +96,10 @@ export class MaskerMini implements NerEngine {
     const { Tokenizer } = await importRuntime<{
       Tokenizer: new (json: unknown, config: unknown) => TokenizerLike;
     }>("@huggingface/tokenizers");
+    // The global log level is read once, when the first session initialises the runtime. At the
+    // default ("warning") ORT writes environment warnings to stderr (e.g. GetPciBusId device
+    // discovery on Azure VMs), which would land on top of Pi's TUI.
+    ort.env.logLevel = "error";
     const readJson = (p: string) => JSON.parse(fs.readFileSync(p, "utf8"));
     const tokenizer = new Tokenizer(readJson(files.tokenizerPath), readJson(files.tokenizerConfigPath));
     const labels = buildLabelTable(readJson(files.configPath).id2label);

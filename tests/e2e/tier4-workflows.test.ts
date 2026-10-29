@@ -113,7 +113,8 @@ Emergency support contact for database incident: ${onCallPhone}`;
 
     // Secrets, IP, and Phone removed
     assertRedactedApiKey(sanitized, dbSecretToken);
-    assertRedactedIp(sanitized, dbHostIp);
+    // The secret scanner redacts the whole connection URI, including the host IP inside it.
+    expect(sanitized).not.toContain(dbHostIp);
     assertRedactedPhone(sanitized, onCallPhone);
 
     // Stack trace structure preserved

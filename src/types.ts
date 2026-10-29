@@ -17,6 +17,7 @@ export type PiiCategory =
   | "ip"
   | "credit-card"
   | "api-key"
+  | "secret"
   | "custom";
 
 /**
@@ -40,6 +41,13 @@ export interface PiiRule {
   builtin?: boolean;
   /** Model label requested for model-backed rules, or the vault label of an overlay rule. */
   nativeLabel?: NerLabel | (string & {});
+  /**
+   * Marks a rule backed by an external detector instead of a pattern or a model label.
+   * Such rules are never sent to the NER model as labels.
+   */
+  detector?: "secret-scanner";
+  /** Additional names accepted by `toggleRule`. */
+  aliases?: string[];
 }
 
 /**
