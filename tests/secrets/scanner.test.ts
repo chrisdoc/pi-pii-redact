@@ -9,7 +9,7 @@ const rulesetPath = vi.hoisted(() => {
   const file = path.join(fs.mkdtempSync(path.join(os.tmpdir(), "pii-ruleset-")), "ruleset.json");
   fs.writeFileSync(
     file,
-    JSON.stringify({ rules: [{ id: "kingfisher.x", source: "kingfisher" }, { id: "okta-access-token", source: "gitleaks" }] })
+    JSON.stringify({ rules: [{ id: "kingfisher.x", source: "kingfisher" }, { id: "okta-access-token", source: "gitleaks", regex: "(?i)[\\w.-]{0,50}?(?:okta)" }] })
   );
   return file;
 });

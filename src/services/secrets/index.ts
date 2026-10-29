@@ -14,30 +14,26 @@ let loadError: string | undefined;
 let loading: Promise<ScanString | null> | null = null;
 
 interface Ruleset {
-  rules?: Array<{ id?: string; source?: string }>;
+  rules?: Array<{ id?: string; source?: string; regex?: unknown }>;
   [key: string]: unknown;
 }
 
 /**
- * gitleaks rules we keep on top of the kingfisher set. The full bundled set compiles to ~660 MB
- * and takes ~4 s on first scan, almost all of it from the 222 gitleaks rules, while kingfisher
- * has its own rule for most providers. Without them the scanner needs ~170 MB and ~0.8 s; these
- * few close the gaps kingfisher has (GitHub tokens, Hugging Face, npm).
+ * gitleaks "keyword context" rules match a provider name followed by a value
+ * (`(?i)[\w.-]{0,50}?(?:okta)...`). Compiled, those ~100 rules take ~450 MB of memory and
+ * ~3 s on the first scan, and kingfisher covers most of the same providers. The other gitleaks
+ * rules are anchored on a distinctive key prefix (`glpat-`, `sk_live_`, `ghp_`, `hf_`, ...),
+ * are cheap, and catch keys kingfisher misses (it requires nearby context or higher entropy).
  */
-export const EXTRA_GITLEAKS_RULES: ReadonlySet<string> = new Set([
-  "github-pat",
-  "github-fine-grained-pat",
-  "github-oauth",
-  "github-app-token",
-  "github-refresh-token",
-  "huggingface-access-token",
-  "huggingface-organization-api-token",
-  "npm-access-token",
-]);
+const KEYWORD_CONTEXT = /\[\\w\.-\]\{0,50\}|\{0,50\}\?|^\(\?i\)\[\\w/;
 
-/** The bundled ruleset without the gitleaks rules (except EXTRA_GITLEAKS_RULES). */
+export function isKeywordContextRule(rule: { regex?: unknown }): boolean {
+  return typeof rule.regex === "string" && KEYWORD_CONTEXT.test(rule.regex);
+}
+
+/** The bundled ruleset without the expensive gitleaks keyword-context rules. */
 export function trimRuleset(full: Ruleset): Ruleset {
-  const rules = (full.rules ?? []).filter((r) => r.source !== "gitleaks" || EXTRA_GITLEAKS_RULES.has(r.id ?? ""));
+  const rules = (full.rules ?? []).filter((r) => r.source !== "gitleaks" || !isKeywordContextRule(r));
   return { ...full, rules };
 }
 
@@ -62,7 +58,7 @@ function loadScanner(): Promise<ScanString | null> {
         const scan = mod.scanString as unknown as ScanString;
         const full = JSON.parse(fs.readFileSync(String(mod.bundledConfigPath), "utf8")) as Ruleset;
         options = scanOptions(trimRuleset(full));
-        // The first scan compiles the ruleset (~0.8 s); pay it here, once, so callers awaiting
+        // The first scan compiles the ruleset (~1.3 s); pay it here, once, so callers awaiting
         // the load share it instead of each hitting the cold start.
         await scan("warm up", "input.txt", options);
         status = "ready";

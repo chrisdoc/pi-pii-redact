@@ -1,11 +1,14 @@
-import { trimRuleset, EXTRA_GITLEAKS_RULES } from "../../src/services/secrets/index.js";
+import { trimRuleset, isKeywordContextRule } from "../../src/services/secrets/index.js";
 import { describe, it, expect } from "vitest";
 import { lineStartOffsets, locateSecret } from "../../src/services/secrets/offsets.js";
 import { isPlausibleSecret, selectSpans, widenToToken, MIN_SECRET_LENGTH } from "../../src/services/secrets/select.js";
 import { passesSecretGate } from "../../src/services/secrets/gate.js";
 import type { SecretSpan } from "../../src/services/secrets/types.js";
+import { rand } from "./fake-keys.js";
 
-const SECRET = "Zq8vXk2LmN4pRt7W";
+// Generated at runtime: secret scanners (GitHub push protection, GitGuardian) flag
+// high-entropy literals in committed files.
+const SECRET = rand(16);
 
 function locate(text: string, secret: string, startLine: number, startColumn: number, endLine = startLine) {
   return locateSecret(text, lineStartOffsets(text), { secret, startLine, startColumn, endLine });
@@ -99,14 +102,19 @@ describe("widenToToken", () => {
   const slice = (text: string, s: SecretSpan) => text.slice(s.start, s.end);
 
   it("widens a span that captured only the tail of a key to the whole token", () => {
-    const text = "STRIPE_SECRET_KEY=sk_fake_51HxxFAKEFAKE1234567890abcdef\nPORT=3000";
-    expect(slice(text, widenToToken(text, at(text, "FAKEFAKE1234567890abcdef")))).toBe("sk_fake_51HxxFAKEFAKE1234567890abcdef");
+    const body = rand(24);
+    const key = `sk_fake_${body}`;
+    const text = `STRIPE_SECRET_KEY=${key}\nPORT=3000`;
+    expect(slice(text, widenToToken(text, at(text, body.slice(6))))).toBe(key);
   });
 
   it("does not cross '=', quotes, '@', ':' or whitespace", () => {
-    const text = 'password = "hunter2-correct-horse" url=postgres://admin:S3cr3t@db:5432';
-    expect(slice(text, widenToToken(text, at(text, "hunter2-correct-horse")))).toBe("hunter2-correct-horse");
-    expect(slice(text, widenToToken(text, at(text, "postgres://admin:S3cr3t@")))).toBe("postgres://admin:S3cr3t@");
+    const word = rand(8);
+    const pass = rand(10);
+    const url = `postgres://admin:${pass}@`;
+    const text = `password = "${word}-x" url=${url}db:5432`;
+    expect(slice(text, widenToToken(text, at(text, `${word}-x`)))).toBe(`${word}-x`);
+    expect(slice(text, widenToToken(text, at(text, url)))).toBe(url);
   });
 
   it("leaves private-key spans alone", () => {
@@ -165,19 +173,31 @@ describe("passesSecretGate", () => {
 });
 
 describe("trimRuleset", () => {
-  it("drops gitleaks rules except the kept extras and keeps everything else", () => {
+  it("drops only the gitleaks keyword-context rules and keeps everything else", () => {
     const full = {
       allowlists: [{ paths: ["x"] }],
       rules: [
-        { id: "kingfisher.anthropic.1", source: "kingfisher" },
-        { id: "github-pat", source: "gitleaks" },
-        { id: "okta-access-token", source: "gitleaks" },
+        { id: "kingfisher.anthropic.1", source: "kingfisher", regex: "(?i)[\\w.-]{0,50}?anthropic" },
+        { id: "gitlab-pat", source: "gitleaks", regex: "glpat-[\\w-]{20}" },
+        { id: "okta-access-token", source: "gitleaks", regex: "(?i)[\\w.-]{0,50}?(?:okta)(?:[ \\t\\w.-]{0,20})" },
         { id: "custom" },
       ],
     };
     const trimmed = trimRuleset(full);
-    expect(trimmed.rules?.map((r) => r.id)).toEqual(["kingfisher.anthropic.1", "github-pat", "custom"]);
+    expect(trimmed.rules?.map((r) => r.id)).toEqual(["kingfisher.anthropic.1", "gitlab-pat", "custom"]);
     expect(trimmed.allowlists).toBe(full.allowlists);
-    expect(EXTRA_GITLEAKS_RULES.has("huggingface-access-token")).toBe(true);
+  });
+
+  it("keeps the prefix-anchored provider rules of the installed ruleset", async () => {
+    const fs = await import("node:fs");
+    const { bundledConfigPath } = await import("@visulima/secret-scanner");
+    const full = JSON.parse(fs.readFileSync(bundledConfigPath, "utf8"));
+    const kept = new Set(trimRuleset(full).rules?.map((r) => r.id));
+    for (const id of ["gitlab-pat", "stripe-access-token", "github-pat", "huggingface-access-token", "npm-access-token"]) {
+      expect(kept.has(id)).toBe(true);
+    }
+    // Guard against a ruleset update silently bringing back the expensive rules.
+    const gitleaksKept = trimRuleset(full).rules?.filter((r) => r.source === "gitleaks" && isKeywordContextRule(r));
+    expect(gitleaksKept).toEqual([]);
   });
 });
