@@ -19,6 +19,7 @@ function runChild(env: NodeJS.ProcessEnv = {}) {
     await inst.redaction("Email john@example.com");
     process.stderr.write("stderr-restored\\n");
     inst.dispose();
+    process.stderr.write("disposed\\n");
   `;
   return spawnSync(
     process.execPath,
@@ -27,19 +28,24 @@ function runChild(env: NodeJS.ProcessEnv = {}) {
   );
 }
 
+// The child is sometimes killed by a signal on CI (x64) only; surface how it ended.
+function describeExit(result: ReturnType<typeof runChild>): string {
+  return `child exited with status=${result.status} signal=${result.signal}\nstderr:\n${result.stderr}`;
+}
+
 describe.runIf(process.platform === "linux" || process.platform === "darwin")(
   "withSilencedNativeStderr",
   () => {
     it("hides LiteRT setup logs and restores stderr afterwards", () => {
       const result = runChild({ PI_PII_REDACT_NATIVE_LOGS: "" });
-      expect(result.status).toBe(0);
+      expect(result.status, describeExit(result)).toBe(0);
       expect(result.stderr).not.toMatch(/(INFO|WARNING): /);
       expect(result.stderr).toContain("stderr-restored");
     });
 
     it("keeps native logs when PI_PII_REDACT_NATIVE_LOGS is set", () => {
       const result = runChild({ PI_PII_REDACT_NATIVE_LOGS: "1" });
-      expect(result.status).toBe(0);
+      expect(result.status, describeExit(result)).toBe(0);
       expect(result.stderr).toMatch(/(INFO|WARNING): /);
     });
   }
