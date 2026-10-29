@@ -21,7 +21,7 @@ describe("Tier 3: Cross-Feature Combinations & State Shifts (Opaque-Box E2E)", (
     const apiKey = "sk-1234567890abcdef1234567890";
     const ip = "10.128.4.99";
     const phone = "555-432-1098";
-    const creditCard = "4532-1234-5678-9012";
+    const creditCard = "4532-1234-5678-9014";
 
     const prompt = `Account setup for ${email}:
 API Key: ${apiKey}

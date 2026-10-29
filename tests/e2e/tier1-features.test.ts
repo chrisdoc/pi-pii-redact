@@ -186,28 +186,28 @@ describe("Tier 1: Feature Coverage (Opaque-Box E2E)", () => {
   // =========================================================================
   describe("Feature 5: Credit Card Redaction", () => {
     it("5.1 redacts 16-digit hyphen-separated credit card", async () => {
-      const cc = "4532-1234-5678-9012";
+      const cc = "4532-1234-5678-9014";
       const result = await harness.triggerInput(`Card payment: ${cc}`);
       expect(result?.action).toBe("transform");
       assertRedactedCreditCard(result?.text!, cc);
     });
 
     it("5.2 redacts 16-digit space-separated credit card", async () => {
-      const cc = "4532 1234 5678 9012";
+      const cc = "4532 1234 5678 9014";
       const result = await harness.triggerInput(`Billing number: ${cc}`);
       expect(result?.action).toBe("transform");
       assertRedactedCreditCard(result?.text!, cc);
     });
 
     it("5.3 redacts 16-digit contiguous credit card", async () => {
-      const cc = "4532123456789012";
+      const cc = "4532123456789014";
       const result = await harness.triggerInput(`Raw PAN: ${cc}`);
       expect(result?.action).toBe("transform");
       assertRedactedCreditCard(result?.text!, cc);
     });
 
     it("5.4 redacts Visa format credit card", async () => {
-      const cc = "4111-2222-3333-4444";
+      const cc = "4111-2222-3333-4448";
       const result = await harness.triggerInput(`Visa test card: ${cc}`);
       expect(result?.action).toBe("transform");
       assertRedactedCreditCard(result?.text!, cc);

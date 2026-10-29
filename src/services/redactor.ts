@@ -1,16 +1,15 @@
-import type { LoadOptions, Redact, RedactLabel } from "@desert-ant-labs/redact/native";
-import { Redact as NativeRedact } from "@desert-ant-labs/redact/native";
 import type { PiiCategory, PiiRule, RedactionDetail, RedactionResult, RedactorConfig } from "../types.js";
+import type { NerEngine } from "./ner-engine.js";
 import { PiiVault, type VaultEntry } from "./vault.js";
-import { withSilencedNativeStderr } from "./native-stderr.js";
+import { MaskerMini, type MaskerLoadOptions } from "./masker-mini/index.js";
 import { defaultRules, findRuleByIdOrLabel, RULE_ID_TO_LABEL } from "../rules/default-rules.js";
 
 /** Configuration options for RedactorService initialization. */
 export interface RedactorServiceOptions {
-  /** Optional options passed to Redact.load(...) (e.g. offline directory or cacheRoot). */
-  loadOptions?: LoadOptions;
-  /** Optional pre-instantiated or mock Redact engine (useful for unit testing). */
-  redactInstance?: Redact;
+  /** Optional options passed to MaskerMini.load(...) (offline directory or cacheRoot). */
+  loadOptions?: MaskerLoadOptions;
+  /** Optional pre-instantiated or mock NER engine (useful for unit testing). */
+  redactInstance?: NerEngine;
 }
 
 /** Escapes special regular expression characters in a string. */
@@ -42,22 +41,6 @@ function createEntityWordBoundaryRegex(original: string): RegExp {
   return new RegExp(`${leading}${escaped}${trailing}`, flags);
 }
 
-/**
- * Open-vocabulary linguistic labels susceptible to false-positive classification on common English words.
- * Calibrated with a higher confidence threshold (default 0.85) to eliminate non-PII false positives.
- */
-const OPEN_VOCABULARY_LABELS = new Set<string>([
-  "GIVEN_NAME",
-  "SURNAME",
-  "STREET_NAME",
-  "CITY",
-  "STATE",
-  "BUILDING_NUMBER",
-  "SECONDARY_ADDRESS",
-  "ORG",
-  "URL",
-]);
-
 /** Maximum number of cached redaction results (LRU). */
 const RESULT_CACHE_LIMIT = 500;
 
@@ -69,9 +52,9 @@ interface CachedResult {
 export class RedactorService {
   private rules: Map<string, PiiRule>;
   private config: RedactorConfig;
-  private loadOptions?: LoadOptions;
-  private instance: Redact | null = null;
-  private initPromise: Promise<Redact> | null = null;
+  private loadOptions?: MaskerLoadOptions;
+  private instance: NerEngine | null = null;
+  private initPromise: Promise<NerEngine> | null = null;
   private vault: PiiVault = new PiiVault();
   private cache: Map<string, CachedResult> = new Map();
   private cacheSig = "";
@@ -79,7 +62,7 @@ export class RedactorService {
   constructor(
     customRules: PiiRule[] = [],
     initialConfig?: Partial<RedactorConfig>,
-    options?: RedactorServiceOptions | LoadOptions
+    options?: RedactorServiceOptions | MaskerLoadOptions
   ) {
     this.rules = new Map();
     for (const rule of [...defaultRules, ...customRules]) {
@@ -92,7 +75,7 @@ export class RedactorService {
       maskToolResults: true,
       maskContextMessages: true,
       notifyOnRedact: true,
-      minimumConfidence: 0.85,
+      minimumConfidence: 0.55,
       ...initialConfig,
     };
 
@@ -104,7 +87,7 @@ export class RedactorService {
           this.instance = svcOpts.redactInstance;
         }
       } else {
-        this.loadOptions = options as LoadOptions;
+        this.loadOptions = options as MaskerLoadOptions;
       }
     }
   }
@@ -146,38 +129,29 @@ export class RedactorService {
   }
 
   /**
-   * Returns the initialized native Redact instance, loading it on demand if necessary.
+   * Returns the initialized NER engine, loading it on demand if necessary.
    * Concurrent calls await the same initialization promise.
    */
-  public async getRedactInstance(): Promise<Redact> {
+  public async getRedactInstance(): Promise<NerEngine> {
     if (this.instance) {
       return this.instance;
     }
     if (!this.initPromise) {
       this.initPromise = (async () => {
         try {
-          const loadOpts = {
-            ...this.loadOptions,
-            ...(this.config.modelDirectory && !this.loadOptions?.directory
-              ? { directory: this.config.modelDirectory }
-              : {}),
-          };
-          // LiteRT logs its engine setup to fd 2 on the first inference, which
-          // corrupts Pi's TUI. Load and warm up the model with that output muted.
-          const inst = await withSilencedNativeStderr(async () => {
-            const loaded = await NativeRedact.load(
-              Object.keys(loadOpts).length > 0 ? loadOpts : undefined
-            );
-            try {
-              await loaded.redaction("warm up");
-            } catch (error) {
-              loaded.dispose();
-              throw error;
-            }
-            return loaded;
-          });
-          this.instance = inst;
-          return inst;
+          const loadOpts: MaskerLoadOptions = { ...this.loadOptions };
+          if (this.config.modelDirectory && !loadOpts.directory) {
+            loadOpts.directory = this.config.modelDirectory;
+          }
+          const loaded = await MaskerMini.load(loadOpts);
+          try {
+            await loaded.redaction("warm up", { labels: ["GIVEN_NAME"] });
+          } catch (error) {
+            loaded.dispose();
+            throw error;
+          }
+          this.instance = loaded;
+          return loaded;
         } catch (error) {
           this.initPromise = null;
           throw error;
@@ -187,12 +161,12 @@ export class RedactorService {
     return this.initPromise;
   }
 
-  /** Eagerly initializes the native model. */
+  /** Eagerly initializes the model. */
   public async init(): Promise<void> {
     await this.getRedactInstance();
   }
 
-  /** Releases native engine resources. Safe to call multiple times. */
+  /** Releases model resources. Safe to call multiple times. */
   public dispose(): void {
     if (this.instance) {
       this.instance.dispose();
@@ -229,7 +203,7 @@ export class RedactorService {
   private replaceOutsideTokens(
     text: string,
     regex: RegExp,
-    fn: (match: string) => string | null
+    fn: (match: string, start: number, end: number) => string | null
   ): string {
     const spans = this.vault.findTokens(text);
     let out = "";
@@ -247,7 +221,7 @@ export class RedactorService {
         regex.lastIndex = start + 1;
         continue;
       }
-      const rep = fn(m[0]);
+      const rep = fn(m[0], start, end);
       if (rep === null) continue;
       out += text.slice(last, start) + rep;
       last = end;
@@ -313,7 +287,7 @@ export class RedactorService {
 
     // 1. Partition active rules into regex overlay rules vs native model labels
     const activeRegexRules: PiiRule[] = [];
-    const activeNativeLabels: RedactLabel[] = [];
+    const activeNativeLabels: string[] = [];
     const enabledVaultLabels = new Set<string>();
 
     for (const rule of this.rules.values()) {
@@ -326,7 +300,7 @@ export class RedactorService {
         const label =
           rule.nativeLabel ??
           RULE_ID_TO_LABEL[rule.id] ??
-          (rule.id.toUpperCase().replace(/-/g, "_") as RedactLabel);
+          (rule.id.toUpperCase().replace(/-/g, "_"));
         if (label) {
           activeNativeLabels.push(label);
           enabledVaultLabels.add(label);
@@ -357,7 +331,9 @@ export class RedactorService {
         : `${rule.pattern!.flags}g`;
       const regex = new RegExp(rule.pattern!.source, flags);
 
-      currentText = this.replaceOutsideTokens(currentText, regex, (match) => {
+      const source = currentText;
+      currentText = this.replaceOutsideTokens(currentText, regex, (match, start, end) => {
+        if (rule.validate && !rule.validate(match, { text: source, start, end })) return null;
         // Rules with a custom mask are one-way and never enter the vault.
         const masked = rule.mask
           ? rule.mask(match)
@@ -373,97 +349,65 @@ export class RedactorService {
       });
     }
 
-    // 4. Native ML inference if any native labels are active
-    // CRITICAL: If activeNativeLabels is empty, do NOT pass { labels: [] }, as
-    // @desert-ant-labs/redact treats an empty array as ALL labels enabled.
+    // 4. Model inference for all active model labels in one call.
+    // CRITICAL: if activeNativeLabels is empty, do not call the model at all (and never pass
+    // an empty label list to an engine, which could be read as "all labels").
     if (activeNativeLabels.length > 0) {
       const redactInstance = await this.getRedactInstance();
-      const openLabels = activeNativeLabels.filter((l) => OPEN_VOCABULARY_LABELS.has(l));
-      const structLabels = activeNativeLabels.filter((l) => !OPEN_VOCABULARY_LABELS.has(l));
+      const source = currentText;
+      const protectedSpans = vault.findTokens(source);
+      const result = await redactInstance.redaction(source, {
+        labels: activeNativeLabels,
+        minimumConfidence: this.config.minimumConfidence ?? 0.55,
+      });
 
-      const nativePasses: Array<{
-        labels: RedactLabel[];
-        confidence: number;
-      }> = [];
+      // Rebuild the text from item offsets so items overlapping existing tokens are dropped.
+      let rebuilt = "";
+      let cursor = 0;
+      const accepted: Array<{ original: string; token: string }> = [];
+      const items = [...result.items].sort((a, b) => (a.start ?? 0) - (b.start ?? 0));
+      for (const item of items) {
+        if (!item.original) continue;
+        let start = item.start;
+        let end = item.end;
+        if (
+          typeof start !== "number" ||
+          typeof end !== "number" ||
+          source.slice(start, end) !== item.original
+        ) {
+          start = source.indexOf(item.original, cursor);
+          end = start + item.original.length;
+        }
+        if (start < cursor) continue; // overlaps a previous item or is unlocatable
+        if (protectedSpans.some((s) => start < s.end && end > s.start)) continue;
 
-      // Only run structured pass if text contains digit patterns that could form numbers
-      let digitProbe = currentText;
-      for (const span of [...vault.findTokens(currentText)].reverse()) {
-        digitProbe = digitProbe.slice(0, span.start) + digitProbe.slice(span.end);
-      }
-      const hasDigitSequences = /\d{2,}/.test(digitProbe.replace(/\[[A-Z0-9_]+\]/g, ""));
-      if (structLabels.length > 0 && hasDigitSequences) {
-        nativePasses.push({
-          labels: structLabels,
-          confidence: Math.min(this.config.minimumConfidence ?? 0.85, 0.60),
+        const token = vault.tokenFor(item.label, item.original);
+        const matchingRule = this.findRuleForNativeLabel(item.label);
+        rebuilt += source.slice(cursor, start) + token;
+        cursor = end;
+        accepted.push({ original: item.original, token });
+        allRedactions.push({
+          category: matchingRule?.category ?? this.mapNativeLabelToCategory(item.label),
+          ruleId: matchingRule?.id ?? item.label.toLowerCase(),
+          original: item.original,
+          masked: token,
+          placeholder: token,
+          confidence: item.confidence,
+          start,
+          end,
         });
       }
-      if (openLabels.length > 0) {
-        nativePasses.push({
-          labels: openLabels,
-          confidence: this.config.minimumConfidence ?? 0.85,
-        });
-      }
+      currentText = rebuilt + source.slice(cursor);
 
-      for (const pass of nativePasses) {
-        const source = currentText;
-        const protectedSpans = vault.findTokens(source);
-        const passResult = await redactInstance.redaction(source, {
-          labels: pass.labels,
-          minimumConfidence: pass.confidence,
-        });
-
-        // Rebuild the text from item offsets so native placeholders are replaced by vault
-        // tokens and items overlapping existing tokens are dropped.
-        let rebuilt = "";
-        let cursor = 0;
-        const accepted: Array<{ original: string; token: string }> = [];
-        const items = [...passResult.items].sort(
-          (a, b) => (a.start ?? 0) - (b.start ?? 0)
+      // Sanitize repeated discrete occurrences of detected entities with the same token
+      // (no extra RedactionDetail entries: each occurrence is reported once at detection).
+      for (const { original, token } of accepted) {
+        if (original.trim().length <= 1) continue;
+        currentText = this.replaceOutsideTokens(
+          currentText,
+          createEntityWordBoundaryRegex(original),
+          () => token
         );
-        for (const item of items) {
-          if (!item.original) continue;
-          let start = item.start;
-          let end = item.end;
-          if (
-            typeof start !== "number" ||
-            typeof end !== "number" ||
-            source.slice(start, end) !== item.original
-          ) {
-            start = source.indexOf(item.original, cursor);
-            end = start + item.original.length;
-          }
-          if (start < cursor) continue; // overlaps a previous item or is unlocatable
-          if (protectedSpans.some((s) => start < s.end && end > s.start)) continue;
-
-          const token = vault.tokenFor(item.label, item.original);
-          const matchingRule = this.findRuleForNativeLabel(item.label);
-          rebuilt += source.slice(cursor, start) + token;
-          cursor = end;
-          accepted.push({ original: item.original, token });
-          allRedactions.push({
-            category: matchingRule?.category ?? this.mapNativeLabelToCategory(item.label),
-            ruleId: matchingRule?.id ?? item.label.toLowerCase(),
-            original: item.original,
-            masked: token,
-            placeholder: token,
-            confidence: item.confidence,
-            start,
-            end,
-          });
-        }
-        currentText = rebuilt + source.slice(cursor);
-
-        // Sanitize repeated discrete occurrences of detected entities with the same token
-        // (no extra RedactionDetail entries: each occurrence is reported once at detection).
-        for (const { original, token } of accepted) {
-          if (original.trim().length <= 1) continue;
-          currentText = this.replaceOutsideTokens(
-            currentText,
-            createEntityWordBoundaryRegex(original),
-            () => token
-          );
-        }
       }
     }
 
@@ -485,10 +429,12 @@ export class RedactorService {
       if (!enabledVaultLabels.has(entry.label)) continue;
       if (entry.original.trim().length <= 1 || !currentText.includes(entry.original)) continue;
       const rule = this.findRuleForNativeLabel(entry.label);
+      const source = currentText;
       currentText = this.replaceOutsideTokens(
-        currentText,
+        source,
         createEntityWordBoundaryRegex(entry.original),
-        () => {
+        (match, start, end) => {
+          if (rule?.validate && !rule.validate(match, { text: source, start, end })) return null;
           redactions.push({
             category: rule?.category ?? this.mapNativeLabelToCategory(entry.label),
             ruleId: rule?.id ?? entry.label.toLowerCase(),

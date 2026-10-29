@@ -7,7 +7,8 @@
   "files": [
     "src",
     "CHANGELOG.md",
-    "README.md"
+    "README.md",
+    "NOTICE"
   ],
   "keywords": [
     "pi-package",
@@ -47,8 +48,8 @@
     "changelogPath": "./CHANGELOG.md"
   },
   "dependencies": {
-    "@desert-ant-labs/redact": "4.2.1",
-    "koffi": "^2.16.3"
+    "@huggingface/tokenizers": "^0.2.0",
+    "onnxruntime-node": "^1.31.1"
   },
   "peerDependencies": {
     "@earendil-works/pi-agent-core": "*",

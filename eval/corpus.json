@@ -1,0 +1,5201 @@
+[
+ {
+  "id": "names-en-001",
+  "group": "names-en",
+  "lang": "en",
+  "text": "commit 3f2a9c1\nAuthor: Dan Whitfield <dan.whitfield@example.com>\nDate:   Tue Mar 12 10:14:02 2024\n\n    fix: handle empty cart",
+  "pii": [
+   {
+    "value": "Dan",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Whitfield",
+    "type": "SURNAME"
+   },
+   {
+    "value": "dan.whitfield@example.com",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "names-en-002",
+  "group": "names-en",
+  "lang": "en",
+  "text": "// TODO(rob): remove this once the migration lands",
+  "pii": [
+   {
+    "value": "rob",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-003",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Thanks @will, I'll rebase after Grace merges her PR.",
+  "pii": [
+   {
+    "value": "will",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Grace",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-004",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Review comment from Hope Alvarez: nit, please rename this variable.",
+  "pii": [
+   {
+    "value": "Hope",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Alvarez",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-005",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Ticket PAY-4412 assigned to Mark Fenwick, reporter Priya Raman.",
+  "pii": [
+   {
+    "value": "Mark",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Fenwick",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Priya",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Raman",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-006",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Hey Dan, can you look at the flaky test? Rob said it started failing Monday.",
+  "pii": [
+   {
+    "value": "Dan",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Rob",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-007",
+  "group": "names-en",
+  "lang": "en",
+  "text": "From: \"Katherine Holloway\" <k.holloway@example.org>\nSubject: Re: Q3 numbers",
+  "pii": [
+   {
+    "value": "Katherine",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Holloway",
+    "type": "SURNAME"
+   },
+   {
+    "value": "k.holloway@example.org",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "names-en-008",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Co-authored-by: Will Thackeray <will.t@example.net>",
+  "pii": [
+   {
+    "value": "Will",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Thackeray",
+    "type": "SURNAME"
+   },
+   {
+    "value": "will.t@example.net",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "names-en-009",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Please ask Grace Okafor for access to the staging cluster.",
+  "pii": [
+   {
+    "value": "Grace",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Okafor",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-010",
+  "group": "names-en",
+  "lang": "en",
+  "text": "git blame shows Hope Lindqvist last touched this line in 2022.",
+  "pii": [
+   {
+    "value": "Hope",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Lindqvist",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-011",
+  "group": "names-en",
+  "lang": "en",
+  "text": "@mark can you approve? I'm out until Thursday.",
+  "pii": [
+   {
+    "value": "mark",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-012",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Signed-off-by: Oliver Pemberton <oliver.pemberton@example.com>",
+  "pii": [
+   {
+    "value": "Oliver",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Pemberton",
+    "type": "SURNAME"
+   },
+   {
+    "value": "oliver.pemberton@example.com",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "names-en-013",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Meeting notes: Sarah will present the roadmap, James owns the infra section.",
+  "pii": [
+   {
+    "value": "Sarah",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "James",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-014",
+  "group": "names-en",
+  "lang": "en",
+  "text": "assignee: jessica.moreau",
+  "pii": [
+   {
+    "value": "jessica",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "moreau",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-015",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Customer Emily Hargreaves reports that the invoice PDF is blank.",
+  "pii": [
+   {
+    "value": "Emily",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Hargreaves",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-016",
+  "group": "names-en",
+  "lang": "en",
+  "text": "CODEOWNERS: /billing/ @tomasz @amelia",
+  "pii": [
+   {
+    "value": "tomasz",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "amelia",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-017",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Slack: <Jordan> deploy is green\n<Casey> nice, shipping it",
+  "pii": [
+   {
+    "value": "Jordan",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Casey",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-018",
+  "group": "names-en",
+  "lang": "en",
+  "text": "# Maintainer\n\nMaintained by Benjamin Archer (github.com/barcher).",
+  "pii": [
+   {
+    "value": "Benjamin",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Archer",
+    "type": "SURNAME"
+   },
+   {
+    "value": "barcher",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-019",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Per Hendricks's review, we should avoid the global lock.",
+  "pii": [
+   {
+    "value": "Hendricks",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-020",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Dear Ms. Whitcombe,\n\nThank you for contacting support.",
+  "pii": [
+   {
+    "value": "Whitcombe",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-021",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Dear Mr Delacroix, your order has shipped.",
+  "pii": [
+   {
+    "value": "Delacroix",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-022",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Reported-by: Nathan Brightwell",
+  "pii": [
+   {
+    "value": "Nathan",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Brightwell",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-023",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Reviewed-by: Charlotte Dunmore <cdunmore@example.com>",
+  "pii": [
+   {
+    "value": "Charlotte",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Dunmore",
+    "type": "SURNAME"
+   },
+   {
+    "value": "cdunmore@example.com",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "names-en-024",
+  "group": "names-en",
+  "lang": "en",
+  "text": "I talked to Hannah Pruitt yesterday and she agreed to take the on-call shift.",
+  "pii": [
+   {
+    "value": "Hannah",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Pruitt",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-025",
+  "group": "names-en",
+  "lang": "en",
+  "text": "FIXME(lucas): this breaks on Windows",
+  "pii": [
+   {
+    "value": "lucas",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-026",
+  "group": "names-en",
+  "lang": "en",
+  "text": "ping @ellie for the design tokens",
+  "pii": [
+   {
+    "value": "ellie",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-027",
+  "group": "names-en",
+  "lang": "en",
+  "text": "The bug was introduced by Victor Zielinski in the refactor.",
+  "pii": [
+   {
+    "value": "Victor",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Zielinski",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-028",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Interview feedback: candidate Fiona McAllister did well on the systems round.",
+  "pii": [
+   {
+    "value": "Fiona",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "McAllister",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-029",
+  "group": "names-en",
+  "lang": "en",
+  "text": "User Patrick O'Donnell filed a GDPR deletion request.",
+  "pii": [
+   {
+    "value": "Patrick",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "O'Donnell",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-030",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Hi team, Rachel Goldberg is joining us as a staff engineer next week.",
+  "pii": [
+   {
+    "value": "Rachel",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Goldberg",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-031",
+  "group": "names-en",
+  "lang": "en",
+  "text": "git log --format='%an' | sort -u\nAlice Marlowe\nBob Kessler\nDan Whitfield",
+  "pii": [
+   {
+    "value": "Alice",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Marlowe",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Bob",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Kessler",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Dan",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Whitfield",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-032",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Postmortem lead: Samuel Ingram. Incident commander: Laura Bishop.",
+  "pii": [
+   {
+    "value": "Samuel",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Ingram",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Laura",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Bishop",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-033",
+  "group": "names-en",
+  "lang": "en",
+  "text": "> Mark wrote:\n> can we ship Friday?\n\nYes, Mark, I think so.",
+  "pii": [
+   {
+    "value": "Mark",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-034",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Welcome back, Josephine! You have 3 new notifications.",
+  "pii": [
+   {
+    "value": "Josephine",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-035",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Order placed by Theodore Vance on 2024-05-02.",
+  "pii": [
+   {
+    "value": "Theodore",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Vance",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-036",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Pairing with will today, I'll update the PR afterwards.",
+  "pii": [
+   {
+    "value": "will",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-037",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Patient Margaret Ellsworth was seen in clinic for a follow-up.",
+  "pii": [
+   {
+    "value": "Margaret",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Ellsworth",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-038",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Please CC Gavin Holt on the release thread.",
+  "pii": [
+   {
+    "value": "Gavin",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Holt",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-039",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Name: Isabelle Fontaine\nRole: Designer",
+  "pii": [
+   {
+    "value": "Isabelle",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Fontaine",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-040",
+  "group": "names-en",
+  "lang": "en",
+  "text": "{\"author\": \"Dan Pryce\", \"reviewers\": [\"rob\", \"grace\"]}",
+  "pii": [
+   {
+    "value": "Dan",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Pryce",
+    "type": "SURNAME"
+   },
+   {
+    "value": "rob",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "grace",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-041",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Shoutout to Hope for fixing the CI cache!",
+  "pii": [
+   {
+    "value": "Hope",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-042",
+  "group": "names-en",
+  "lang": "en",
+  "text": "I think Mark Twain-Reyes is the right owner for this module.",
+  "pii": [
+   {
+    "value": "Mark",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Twain-Reyes",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-043",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Account holder: Liam Fitzgerald",
+  "pii": [
+   {
+    "value": "Liam",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Fitzgerald",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-044",
+  "group": "names-en",
+  "lang": "en",
+  "text": "My name is Zoe and I'm having trouble resetting my password.",
+  "pii": [
+   {
+    "value": "Zoe",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-045",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Hi, this is Carlos Mendes from the sales team.",
+  "pii": [
+   {
+    "value": "Carlos",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Mendes",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-046",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Thanks for the report, Nina Castellano. We've reproduced the issue.",
+  "pii": [
+   {
+    "value": "Nina",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Castellano",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-047",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Branch owner: Eleanor Strand",
+  "pii": [
+   {
+    "value": "Eleanor",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Strand",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-048",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Cc: Hugh Barlow, Imogen Ferris",
+  "pii": [
+   {
+    "value": "Hugh",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Barlow",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Imogen",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Ferris",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-049",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Looks good to me. — Dominic",
+  "pii": [
+   {
+    "value": "Dominic",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-050",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Jira: DEV-881 | Assignee: Rob Kingsley | Status: In Review",
+  "pii": [
+   {
+    "value": "Rob",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Kingsley",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-051",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Who is Wendy Nakamura-Lee and why does she have admin?",
+  "pii": [
+   {
+    "value": "Wendy",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Nakamura-Lee",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-052",
+  "group": "names-en",
+  "lang": "en",
+  "text": "@dkim @rpatel please take a look",
+  "pii": [
+   {
+    "value": "dkim",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "rpatel",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-053",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Maintainer: Georgia Whelan — reach her via the issue tracker.",
+  "pii": [
+   {
+    "value": "Georgia",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Whelan",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-054",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Thanks to contributors Ethan, Mia, Noah and Ava for this release!",
+  "pii": [
+   {
+    "value": "Ethan",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Mia",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Noah",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Ava",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-055",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Our CEO Douglas Prentiss announced the reorg this morning.",
+  "pii": [
+   {
+    "value": "Douglas",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Prentiss",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-056",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Reply from Brian Callahan: \"I'll handle the rollback.\"",
+  "pii": [
+   {
+    "value": "Brian",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Callahan",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-057",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Sent by Rosa Lindgren via the web form.",
+  "pii": [
+   {
+    "value": "Rosa",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Lindgren",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-058",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Tagging Dan and Grace for visibility.",
+  "pii": [
+   {
+    "value": "Dan",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Grace",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-059",
+  "group": "names-en",
+  "lang": "en",
+  "text": "On-call this week: Hope (primary), Mark (secondary).",
+  "pii": [
+   {
+    "value": "Hope",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Mark",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-en-060",
+  "group": "names-en",
+  "lang": "en",
+  "text": "Mentor: Julian Ashworth",
+  "pii": [
+   {
+    "value": "Julian",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Ashworth",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-001",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Assigned to Wang Wei in the Shanghai office.",
+  "pii": [
+   {
+    "value": "Wang",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Wei",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-002",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Reviewer: Xiaoming Li <xm.li@example.cn>",
+  "pii": [
+   {
+    "value": "Xiaoming",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Li",
+    "type": "SURNAME"
+   },
+   {
+    "value": "xm.li@example.cn",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-003",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Please forward this to Zhang Yue before Monday.",
+  "pii": [
+   {
+    "value": "Zhang",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Yue",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-004",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Commit by Hiroshi Tanaka: refactor parser",
+  "pii": [
+   {
+    "value": "Hiroshi",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Tanaka",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-005",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Contact Yamamoto-san Kenji about the Tokyo rollout.",
+  "pii": [
+   {
+    "value": "Yamamoto",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Kenji",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-006",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Hi, I'm Yuki Watanabe and I joined last week.",
+  "pii": [
+   {
+    "value": "Yuki",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Watanabe",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-007",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Candidate: Kim Min-jun, applying for backend role.",
+  "pii": [
+   {
+    "value": "Kim",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Min-jun",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-008",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Approved by Ji-woo Park.",
+  "pii": [
+   {
+    "value": "Ji-woo",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Park",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-009",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Customer Seo-yeon Choi requested a refund.",
+  "pii": [
+   {
+    "value": "Seo-yeon",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Choi",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-010",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Ticket owner: Arjun Venkataraman",
+  "pii": [
+   {
+    "value": "Arjun",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Venkataraman",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-011",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Thanks, Priyanka Chaudhary, for the quick fix!",
+  "pii": [
+   {
+    "value": "Priyanka",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Chaudhary",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-012",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Reported by Rajesh Subramaniam from Bangalore.",
+  "pii": [
+   {
+    "value": "Rajesh",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Subramaniam",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-013",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "TODO(ananya): add retry logic",
+  "pii": [
+   {
+    "value": "ananya",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-014",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Account: Mohammed Al-Farsi",
+  "pii": [
+   {
+    "value": "Mohammed",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Al-Farsi",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-015",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Approver Fatima Al-Mansour signed off on the budget.",
+  "pii": [
+   {
+    "value": "Fatima",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Al-Mansour",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-016",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Dear Omar Haddad, we received your application.",
+  "pii": [
+   {
+    "value": "Omar",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Haddad",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-017",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Pairing with Layla Khalil tomorrow.",
+  "pii": [
+   {
+    "value": "Layla",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Khalil",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-018",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Engineer Mehmet Yılmaz owns the payments service.",
+  "pii": [
+   {
+    "value": "Mehmet",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Yılmaz",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-019",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Contact: Elif Demir (Istanbul)",
+  "pii": [
+   {
+    "value": "Elif",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Demir",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-020",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Reviewed by Emeka Okonkwo.",
+  "pii": [
+   {
+    "value": "Emeka",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Okonkwo",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-021",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Customer Chiamaka Adeyemi called about the delayed order.",
+  "pii": [
+   {
+    "value": "Chiamaka",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Adeyemi",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-022",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Sign-off: Oluwaseun Balogun",
+  "pii": [
+   {
+    "value": "Oluwaseun",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Balogun",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-023",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Contributor Nguyen Van An opened a PR.",
+  "pii": [
+   {
+    "value": "Nguyen",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Van An",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-024",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Hi, my name is Linh Tran and I need to change my email.",
+  "pii": [
+   {
+    "value": "Linh",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Tran",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-025",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Assigned: Pham Thi Mai",
+  "pii": [
+   {
+    "value": "Pham",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Thi Mai",
+    "type": "GIVEN_NAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-026",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Attendee Santiago Hernández confirmed for Thursday.",
+  "pii": [
+   {
+    "value": "Santiago",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Hernández",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-027",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Customer: Valentina Rojas Gómez",
+  "pii": [
+   {
+    "value": "Valentina",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Rojas Gómez",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-028",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Pull request from Camila Fernández merged.",
+  "pii": [
+   {
+    "value": "Camila",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Fernández",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-029",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Reach out to Joaquín Villalobos for access.",
+  "pii": [
+   {
+    "value": "Joaquín",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Villalobos",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-030",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Sent by Mei-Ling Chen via support portal.",
+  "pii": [
+   {
+    "value": "Mei-Ling",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Chen",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-031",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Developer Tariq Rahman fixed the encoding bug.",
+  "pii": [
+   {
+    "value": "Tariq",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Rahman",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-032",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Lead: Aisha Bello",
+  "pii": [
+   {
+    "value": "Aisha",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Bello",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-033",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Contractor Siddharth Iyer starts on the 5th.",
+  "pii": [
+   {
+    "value": "Siddharth",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Iyer",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-034",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Meeting with Hyun-woo Jung at 3pm.",
+  "pii": [
+   {
+    "value": "Hyun-woo",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Jung",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-035",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Author: Kwame Mensah <kwame.mensah@example.gh>",
+  "pii": [
+   {
+    "value": "Kwame",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Mensah",
+    "type": "SURNAME"
+   },
+   {
+    "value": "kwame.mensah@example.gh",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-036",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Ask Ibrahim Yusuf about the Arabic localization.",
+  "pii": [
+   {
+    "value": "Ibrahim",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Yusuf",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-037",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Employee Takeshi Nakagawa requested leave.",
+  "pii": [
+   {
+    "value": "Takeshi",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Nakagawa",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-038",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Name on card: Deepika Malhotra",
+  "pii": [
+   {
+    "value": "Deepika",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Malhotra",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-039",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Hello Xin Zhao, your ticket has been escalated.",
+  "pii": [
+   {
+    "value": "Xin",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Zhao",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-040",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Beneficiary: Zainab Abubakar",
+  "pii": [
+   {
+    "value": "Zainab",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Abubakar",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "names-intl-041",
+  "group": "names-intl",
+  "lang": "en",
+  "text": "Great catch by Thanh Le!",
+  "pii": [
+   {
+    "value": "Thanh",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Le",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "euro-001",
+  "group": "euro",
+  "lang": "de",
+  "text": "Sehr geehrter Herr Schneider, Ihre Bestellung wird an Lindenstraße 14, 80331 München geliefert.",
+  "pii": [
+   {
+    "value": "Schneider",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Lindenstraße",
+    "type": "STREET_NAME"
+   },
+   {
+    "value": "14",
+    "type": "BUILDING_NUMBER"
+   },
+   {
+    "value": "80331",
+    "type": "ZIP_CODE"
+   },
+   {
+    "value": "München",
+    "type": "CITY"
+   }
+  ]
+ },
+ {
+  "id": "euro-002",
+  "group": "euro",
+  "lang": "de",
+  "text": "Mein Name ist Katrin Hoffmann und meine Telefonnummer ist +49 30 12345678.",
+  "pii": [
+   {
+    "value": "Katrin",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Hoffmann",
+    "type": "SURNAME"
+   },
+   {
+    "value": "+49 30 12345678",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "euro-003",
+  "group": "euro",
+  "lang": "de",
+  "text": "Bitte überweisen Sie den Betrag auf IBAN DE89 3704 0044 0532 0130 00 lautend auf Jürgen Weber.",
+  "pii": [
+   {
+    "value": "DE89 3704 0044 0532 0130 00",
+    "type": "IBAN"
+   },
+   {
+    "value": "Jürgen",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Weber",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "euro-004",
+  "group": "euro",
+  "lang": "de",
+  "text": "Die Steuer-ID von Frau Krause lautet 12 345 678 903 laut Schreiben vom Finanzamt.",
+  "pii": [
+   {
+    "value": "Krause",
+    "type": "SURNAME"
+   },
+   {
+    "value": "12 345 678 903",
+    "type": "TAX_ID"
+   }
+  ]
+ },
+ {
+  "id": "euro-005",
+  "group": "euro",
+  "lang": "de",
+  "text": "Geburtsdatum: 14.07.1985, wohnhaft in Hamburg, Elbchaussee 221.",
+  "pii": [
+   {
+    "value": "14.07.1985",
+    "type": "DATE_OF_BIRTH"
+   },
+   {
+    "value": "Hamburg",
+    "type": "CITY"
+   },
+   {
+    "value": "Elbchaussee",
+    "type": "STREET_NAME"
+   },
+   {
+    "value": "221",
+    "type": "BUILDING_NUMBER"
+   }
+  ]
+ },
+ {
+  "id": "euro-006",
+  "group": "euro",
+  "lang": "nl",
+  "text": "Beste Pieter van den Berg, uw pakket is bezorgd op Kerkstraat 7 in Utrecht.",
+  "pii": [
+   {
+    "value": "Pieter",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "van den Berg",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Kerkstraat",
+    "type": "STREET_NAME"
+   },
+   {
+    "value": "7",
+    "type": "BUILDING_NUMBER"
+   },
+   {
+    "value": "Utrecht",
+    "type": "CITY"
+   }
+  ]
+ },
+ {
+  "id": "euro-007",
+  "group": "euro",
+  "lang": "nl",
+  "text": "Mijn rekeningnummer is NL91ABNA0417164300 ten name van Sanne de Vries.",
+  "pii": [
+   {
+    "value": "NL91ABNA0417164300",
+    "type": "IBAN"
+   },
+   {
+    "value": "Sanne",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "de Vries",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "euro-008",
+  "group": "euro",
+  "lang": "nl",
+  "text": "Het burgerservicenummer (BSN) van de klant is 111222333.",
+  "pii": [
+   {
+    "value": "111222333",
+    "type": "NATIONAL_ID"
+   }
+  ]
+ },
+ {
+  "id": "euro-009",
+  "group": "euro",
+  "lang": "nl",
+  "text": "Bel mij op 06-12345678 of mail naar sanne.devries@example.nl.",
+  "pii": [
+   {
+    "value": "06-12345678",
+    "type": "PHONE"
+   },
+   {
+    "value": "sanne.devries@example.nl",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "euro-010",
+  "group": "euro",
+  "lang": "nl",
+  "text": "Postcode 1012 AB Amsterdam, Damrak 50, contactpersoon Joost Bakker.",
+  "pii": [
+   {
+    "value": "1012 AB",
+    "type": "ZIP_CODE"
+   },
+   {
+    "value": "Amsterdam",
+    "type": "CITY"
+   },
+   {
+    "value": "Damrak",
+    "type": "STREET_NAME"
+   },
+   {
+    "value": "50",
+    "type": "BUILDING_NUMBER"
+   },
+   {
+    "value": "Joost",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Bakker",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "euro-011",
+  "group": "euro",
+  "lang": "fr",
+  "text": "Bonjour Camille Lefèvre, votre colis arrivera au 12 rue des Lilas, 69003 Lyon.",
+  "pii": [
+   {
+    "value": "Camille",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Lefèvre",
+    "type": "SURNAME"
+   },
+   {
+    "value": "12",
+    "type": "BUILDING_NUMBER"
+   },
+   {
+    "value": "rue des Lilas",
+    "type": "STREET_NAME"
+   },
+   {
+    "value": "69003",
+    "type": "ZIP_CODE"
+   },
+   {
+    "value": "Lyon",
+    "type": "CITY"
+   }
+  ]
+ },
+ {
+  "id": "euro-012",
+  "group": "euro",
+  "lang": "fr",
+  "text": "Mon numéro de téléphone est +33 1 23 45 67 89, rappelez-moi demain.",
+  "pii": [
+   {
+    "value": "+33 1 23 45 67 89",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "euro-013",
+  "group": "euro",
+  "lang": "fr",
+  "text": "Veuillez virer la somme sur le compte FR14 2004 1010 0505 0001 3M02 606 de Étienne Marchand.",
+  "pii": [
+   {
+    "value": "FR14 2004 1010 0505 0001 3M02 606",
+    "type": "IBAN"
+   },
+   {
+    "value": "Étienne",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Marchand",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "euro-014",
+  "group": "euro",
+  "lang": "fr",
+  "text": "Numéro de sécurité sociale : 2 84 12 75 123 456 78, né le 12 décembre 1984.",
+  "pii": [
+   {
+    "value": "2 84 12 75 123 456 78",
+    "type": "NATIONAL_ID"
+   },
+   {
+    "value": "12 décembre 1984",
+    "type": "DATE_OF_BIRTH"
+   }
+  ]
+ },
+ {
+  "id": "euro-015",
+  "group": "euro",
+  "lang": "fr",
+  "text": "Écrivez à amelie.roux@example.fr pour toute réclamation concernant Amélie Roux.",
+  "pii": [
+   {
+    "value": "amelie.roux@example.fr",
+    "type": "EMAIL"
+   },
+   {
+    "value": "Amélie",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Roux",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "euro-016",
+  "group": "euro",
+  "lang": "es",
+  "text": "Estimada señora García, su pedido llegará a Calle de Alcalá 45, 28014 Madrid.",
+  "pii": [
+   {
+    "value": "García",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Calle de Alcalá",
+    "type": "STREET_NAME"
+   },
+   {
+    "value": "45",
+    "type": "BUILDING_NUMBER"
+   },
+   {
+    "value": "28014",
+    "type": "ZIP_CODE"
+   },
+   {
+    "value": "Madrid",
+    "type": "CITY"
+   }
+  ]
+ },
+ {
+  "id": "euro-017",
+  "group": "euro",
+  "lang": "es",
+  "text": "Me llamo Alejandro Ruiz Martín y mi teléfono es +34 612 345 678.",
+  "pii": [
+   {
+    "value": "Alejandro",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Ruiz Martín",
+    "type": "SURNAME"
+   },
+   {
+    "value": "+34 612 345 678",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "euro-018",
+  "group": "euro",
+  "lang": "es",
+  "text": "Mi DNI es 12345678Z y mi IBAN es ES91 2100 0418 4502 0005 1332.",
+  "pii": [
+   {
+    "value": "12345678Z",
+    "type": "NATIONAL_ID"
+   },
+   {
+    "value": "ES91 2100 0418 4502 0005 1332",
+    "type": "IBAN"
+   }
+  ]
+ },
+ {
+  "id": "euro-019",
+  "group": "euro",
+  "lang": "es",
+  "text": "El cliente Lucía Navarro nació el 3 de mayo de 1990 en Sevilla.",
+  "pii": [
+   {
+    "value": "Lucía",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Navarro",
+    "type": "SURNAME"
+   },
+   {
+    "value": "3 de mayo de 1990",
+    "type": "DATE_OF_BIRTH"
+   },
+   {
+    "value": "Sevilla",
+    "type": "CITY"
+   }
+  ]
+ },
+ {
+  "id": "euro-020",
+  "group": "euro",
+  "lang": "es",
+  "text": "Envíe la factura a lucia.navarro@example.es, por favor.",
+  "pii": [
+   {
+    "value": "lucia.navarro@example.es",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "euro-021",
+  "group": "euro",
+  "lang": "it",
+  "text": "Gentile signor Rossi, la spedizione arriverà in Via Roma 23, 20121 Milano.",
+  "pii": [
+   {
+    "value": "Rossi",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Via Roma",
+    "type": "STREET_NAME"
+   },
+   {
+    "value": "23",
+    "type": "BUILDING_NUMBER"
+   },
+   {
+    "value": "20121",
+    "type": "ZIP_CODE"
+   },
+   {
+    "value": "Milano",
+    "type": "CITY"
+   }
+  ]
+ },
+ {
+  "id": "euro-022",
+  "group": "euro",
+  "lang": "it",
+  "text": "Il mio nome è Giulia Bianchi, telefono +39 02 1234 5678.",
+  "pii": [
+   {
+    "value": "Giulia",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Bianchi",
+    "type": "SURNAME"
+   },
+   {
+    "value": "+39 02 1234 5678",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "euro-023",
+  "group": "euro",
+  "lang": "it",
+  "text": "Codice fiscale: RSSMRA85T10A562S intestato a Mario Rossi.",
+  "pii": [
+   {
+    "value": "RSSMRA85T10A562S",
+    "type": "TAX_ID"
+   },
+   {
+    "value": "Mario",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Rossi",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "euro-024",
+  "group": "euro",
+  "lang": "it",
+  "text": "Bonifico su IBAN IT60 X054 2811 1010 0000 0123 456 per Francesca Conti.",
+  "pii": [
+   {
+    "value": "IT60 X054 2811 1010 0000 0123 456",
+    "type": "IBAN"
+   },
+   {
+    "value": "Francesca",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Conti",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "euro-025",
+  "group": "euro",
+  "lang": "it",
+  "text": "Scrivimi a f.conti@example.it se hai domande.",
+  "pii": [
+   {
+    "value": "f.conti@example.it",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "euro-026",
+  "group": "euro",
+  "lang": "pl",
+  "text": "Szanowny Panie Kowalski, przesyłka trafi na ulicę Marszałkowska 10, 00-001 Warszawa.",
+  "pii": [
+   {
+    "value": "Kowalski",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Marszałkowska",
+    "type": "STREET_NAME"
+   },
+   {
+    "value": "10",
+    "type": "BUILDING_NUMBER"
+   },
+   {
+    "value": "00-001",
+    "type": "ZIP_CODE"
+   },
+   {
+    "value": "Warszawa",
+    "type": "CITY"
+   }
+  ]
+ },
+ {
+  "id": "euro-027",
+  "group": "euro",
+  "lang": "pl",
+  "text": "Nazywam się Agnieszka Wójcik, mój telefon to +48 601 234 567.",
+  "pii": [
+   {
+    "value": "Agnieszka",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Wójcik",
+    "type": "SURNAME"
+   },
+   {
+    "value": "+48 601 234 567",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "euro-028",
+  "group": "euro",
+  "lang": "pl",
+  "text": "Numer PESEL klienta: 44051401359.",
+  "pii": [
+   {
+    "value": "44051401359",
+    "type": "NATIONAL_ID"
+   }
+  ]
+ },
+ {
+  "id": "euro-029",
+  "group": "euro",
+  "lang": "pl",
+  "text": "Proszę o przelew na konto PL61 1090 1014 0000 0712 1981 2874, odbiorca Tomasz Nowak.",
+  "pii": [
+   {
+    "value": "PL61 1090 1014 0000 0712 1981 2874",
+    "type": "IBAN"
+   },
+   {
+    "value": "Tomasz",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Nowak",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "euro-030",
+  "group": "euro",
+  "lang": "pl",
+  "text": "Mail: a.wojcik@example.pl, data urodzenia 02.11.1992.",
+  "pii": [
+   {
+    "value": "a.wojcik@example.pl",
+    "type": "EMAIL"
+   },
+   {
+    "value": "02.11.1992",
+    "type": "DATE_OF_BIRTH"
+   }
+  ]
+ },
+ {
+  "id": "euro-031",
+  "group": "euro",
+  "lang": "pt",
+  "text": "Caro senhor Silva, a encomenda será entregue na Rua Augusta 100, 1100-048 Lisboa.",
+  "pii": [
+   {
+    "value": "Silva",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Rua Augusta",
+    "type": "STREET_NAME"
+   },
+   {
+    "value": "100",
+    "type": "BUILDING_NUMBER"
+   },
+   {
+    "value": "1100-048",
+    "type": "ZIP_CODE"
+   },
+   {
+    "value": "Lisboa",
+    "type": "CITY"
+   }
+  ]
+ },
+ {
+  "id": "euro-032",
+  "group": "euro",
+  "lang": "pt",
+  "text": "O meu nome é Beatriz Carvalho e o meu telemóvel é +351 912 345 678.",
+  "pii": [
+   {
+    "value": "Beatriz",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Carvalho",
+    "type": "SURNAME"
+   },
+   {
+    "value": "+351 912 345 678",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "euro-033",
+  "group": "euro",
+  "lang": "pt",
+  "text": "Transferência para o IBAN PT50 0002 0123 1234 5678 9015 4 em nome de João Pereira.",
+  "pii": [
+   {
+    "value": "PT50 0002 0123 1234 5678 9015 4",
+    "type": "IBAN"
+   },
+   {
+    "value": "João",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Pereira",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "euro-034",
+  "group": "euro",
+  "lang": "pt",
+  "text": "O CPF do cliente é 123.456.789-09.",
+  "pii": [
+   {
+    "value": "123.456.789-09",
+    "type": "TAX_ID"
+   }
+  ]
+ },
+ {
+  "id": "euro-035",
+  "group": "euro",
+  "lang": "pt",
+  "text": "Envie para joao.pereira@example.pt até sexta.",
+  "pii": [
+   {
+    "value": "joao.pereira@example.pt",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "euro-036",
+  "group": "euro",
+  "lang": "sv",
+  "text": "Hej Erik Lindström, ditt paket levereras till Drottninggatan 8, 111 51 Stockholm.",
+  "pii": [
+   {
+    "value": "Erik",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Lindström",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Drottninggatan",
+    "type": "STREET_NAME"
+   },
+   {
+    "value": "8",
+    "type": "BUILDING_NUMBER"
+   },
+   {
+    "value": "111 51",
+    "type": "ZIP_CODE"
+   },
+   {
+    "value": "Stockholm",
+    "type": "CITY"
+   }
+  ]
+ },
+ {
+  "id": "euro-037",
+  "group": "euro",
+  "lang": "sv",
+  "text": "Mitt personnummer är 850714-1234 och mitt telefonnummer är +46 70 123 45 67.",
+  "pii": [
+   {
+    "value": "850714-1234",
+    "type": "NATIONAL_ID"
+   },
+   {
+    "value": "+46 70 123 45 67",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "euro-038",
+  "group": "euro",
+  "lang": "sv",
+  "text": "Betala till IBAN SE45 5000 0000 0583 9825 7466, mottagare Astrid Johansson.",
+  "pii": [
+   {
+    "value": "SE45 5000 0000 0583 9825 7466",
+    "type": "IBAN"
+   },
+   {
+    "value": "Astrid",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Johansson",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "euro-039",
+  "group": "euro",
+  "lang": "sv",
+  "text": "Skicka e-post till astrid.j@example.se.",
+  "pii": [
+   {
+    "value": "astrid.j@example.se",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "euro-040",
+  "group": "euro",
+  "lang": "sv",
+  "text": "Kunden Olof Svensson bor i Göteborg.",
+  "pii": [
+   {
+    "value": "Olof",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Svensson",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Göteborg",
+    "type": "CITY"
+   }
+  ]
+ },
+ {
+  "id": "euro-041",
+  "group": "euro",
+  "lang": "da",
+  "text": "Kære Mette Jensen, din pakke bliver leveret til Vestergade 19, 1456 København.",
+  "pii": [
+   {
+    "value": "Mette",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Jensen",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Vestergade",
+    "type": "STREET_NAME"
+   },
+   {
+    "value": "19",
+    "type": "BUILDING_NUMBER"
+   },
+   {
+    "value": "1456",
+    "type": "ZIP_CODE"
+   },
+   {
+    "value": "København",
+    "type": "CITY"
+   }
+  ]
+ },
+ {
+  "id": "euro-042",
+  "group": "euro",
+  "lang": "da",
+  "text": "Mit CPR-nummer er 140785-1234 og mit telefonnummer er +45 20 12 34 56.",
+  "pii": [
+   {
+    "value": "140785-1234",
+    "type": "NATIONAL_ID"
+   },
+   {
+    "value": "+45 20 12 34 56",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "euro-043",
+  "group": "euro",
+  "lang": "da",
+  "text": "Overfør til IBAN DK50 0040 0440 1162 43 tilhørende Søren Andersen.",
+  "pii": [
+   {
+    "value": "DK50 0040 0440 1162 43",
+    "type": "IBAN"
+   },
+   {
+    "value": "Søren",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Andersen",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "euro-044",
+  "group": "euro",
+  "lang": "da",
+  "text": "Skriv til soren.andersen@example.dk for mere information.",
+  "pii": [
+   {
+    "value": "soren.andersen@example.dk",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "euro-045",
+  "group": "euro",
+  "lang": "cs",
+  "text": "Vážený pane Novák, zásilka bude doručena na Vodičkova 32, 110 00 Praha.",
+  "pii": [
+   {
+    "value": "Novák",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Vodičkova",
+    "type": "STREET_NAME"
+   },
+   {
+    "value": "32",
+    "type": "BUILDING_NUMBER"
+   },
+   {
+    "value": "110 00",
+    "type": "ZIP_CODE"
+   },
+   {
+    "value": "Praha",
+    "type": "CITY"
+   }
+  ]
+ },
+ {
+  "id": "euro-046",
+  "group": "euro",
+  "lang": "cs",
+  "text": "Jmenuji se Jana Svobodová, telefon +420 603 123 456.",
+  "pii": [
+   {
+    "value": "Jana",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Svobodová",
+    "type": "SURNAME"
+   },
+   {
+    "value": "+420 603 123 456",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "euro-047",
+  "group": "euro",
+  "lang": "cs",
+  "text": "Rodné číslo: 850714/1234.",
+  "pii": [
+   {
+    "value": "850714/1234",
+    "type": "NATIONAL_ID"
+   }
+  ]
+ },
+ {
+  "id": "euro-048",
+  "group": "euro",
+  "lang": "cs",
+  "text": "Účet CZ65 0800 0000 1920 0014 5399 patří Petr Dvořák.",
+  "pii": [
+   {
+    "value": "CZ65 0800 0000 1920 0014 5399",
+    "type": "IBAN"
+   },
+   {
+    "value": "Petr",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Dvořák",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "euro-049",
+  "group": "euro",
+  "lang": "cs",
+  "text": "Napište na petr.dvorak@example.cz, datum narození 5. 3. 1988.",
+  "pii": [
+   {
+    "value": "petr.dvorak@example.cz",
+    "type": "EMAIL"
+   },
+   {
+    "value": "5. 3. 1988",
+    "type": "DATE_OF_BIRTH"
+   }
+  ]
+ },
+ {
+  "id": "euro-050",
+  "group": "euro",
+  "lang": "de",
+  "text": "Hallo, ich bin Lukas aus Köln und brauche Hilfe mit meinem Konto.",
+  "pii": [
+   {
+    "value": "Lukas",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Köln",
+    "type": "CITY"
+   }
+  ]
+ },
+ {
+  "id": "euro-051",
+  "group": "euro",
+  "lang": "fr",
+  "text": "Le patient Hugo Girard, 47 ans, a été admis hier.",
+  "pii": [
+   {
+    "value": "Hugo",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Girard",
+    "type": "SURNAME"
+   },
+   {
+    "value": "47",
+    "type": "AGE"
+   }
+  ]
+ },
+ {
+  "id": "structured-001",
+  "group": "structured",
+  "lang": "en",
+  "text": "Call me on (555) 010-4421 after 5pm.",
+  "pii": [
+   {
+    "value": "(555) 010-4421",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "structured-002",
+  "group": "structured",
+  "lang": "en",
+  "text": "Phone: 555-010-7788",
+  "pii": [
+   {
+    "value": "555-010-7788",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "structured-003",
+  "group": "structured",
+  "lang": "en",
+  "text": "Tel: +1 415 555 0132",
+  "pii": [
+   {
+    "value": "+1 415 555 0132",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "structured-004",
+  "group": "structured",
+  "lang": "en",
+  "text": "Mobile +44 7700 900123 (UK)",
+  "pii": [
+   {
+    "value": "+44 7700 900123",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "structured-005",
+  "group": "structured",
+  "lang": "en",
+  "text": "Reach support at +44 20 7946 0958.",
+  "pii": [
+   {
+    "value": "+44 20 7946 0958",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "structured-006",
+  "group": "structured",
+  "lang": "en",
+  "text": "WhatsApp: +91 98765 43210",
+  "pii": [
+   {
+    "value": "+91 98765 43210",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "structured-007",
+  "group": "structured",
+  "lang": "en",
+  "text": "Contact number: +81 90-1234-5678",
+  "pii": [
+   {
+    "value": "+81 90-1234-5678",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "structured-008",
+  "group": "structured",
+  "lang": "en",
+  "text": "Fax +49 (0)89 1234567",
+  "pii": [
+   {
+    "value": "+49 (0)89 1234567",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "structured-009",
+  "group": "structured",
+  "lang": "en",
+  "text": "Phone 1-800-555-0199 ext. 4",
+  "pii": [
+   {
+    "value": "1-800-555-0199",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "structured-010",
+  "group": "structured",
+  "lang": "en",
+  "text": "Mobile: 0171 2345678",
+  "pii": [
+   {
+    "value": "0171 2345678",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "structured-011",
+  "group": "structured",
+  "lang": "en",
+  "text": "My cell is 555.010.2299.",
+  "pii": [
+   {
+    "value": "555.010.2299",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "structured-012",
+  "group": "structured",
+  "lang": "en",
+  "text": "Ring +61 2 5550 1234 for the Sydney office.",
+  "pii": [
+   {
+    "value": "+61 2 5550 1234",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "structured-013",
+  "group": "structured",
+  "lang": "en",
+  "text": "Card number: 4111 1111 1111 1111 exp 12/27",
+  "pii": [
+   {
+    "value": "4111 1111 1111 1111",
+    "type": "CREDIT_CARD"
+   }
+  ]
+ },
+ {
+  "id": "structured-014",
+  "group": "structured",
+  "lang": "en",
+  "text": "Payment failed for card 5500-0000-0000-0004.",
+  "pii": [
+   {
+    "value": "5500-0000-0000-0004",
+    "type": "CREDIT_CARD"
+   }
+  ]
+ },
+ {
+  "id": "structured-015",
+  "group": "structured",
+  "lang": "en",
+  "text": "Amex on file: 3782 822463 10005",
+  "pii": [
+   {
+    "value": "3782 822463 10005",
+    "type": "CREDIT_CARD"
+   }
+  ]
+ },
+ {
+  "id": "structured-016",
+  "group": "structured",
+  "lang": "en",
+  "text": "cc=4242424242424242&cvv=123",
+  "pii": [
+   {
+    "value": "4242424242424242",
+    "type": "CREDIT_CARD"
+   }
+  ]
+ },
+ {
+  "id": "structured-017",
+  "group": "structured",
+  "lang": "en",
+  "text": "Mastercard 5555 5555 5555 4444 was declined.",
+  "pii": [
+   {
+    "value": "5555 5555 5555 4444",
+    "type": "CREDIT_CARD"
+   }
+  ]
+ },
+ {
+  "id": "structured-018",
+  "group": "structured",
+  "lang": "en",
+  "text": "Visa: 4012888888881881",
+  "pii": [
+   {
+    "value": "4012888888881881",
+    "type": "CREDIT_CARD"
+   }
+  ]
+ },
+ {
+  "id": "structured-019",
+  "group": "structured",
+  "lang": "en",
+  "text": "Please wire to GB29NWBK60161331926819.",
+  "pii": [
+   {
+    "value": "GB29NWBK60161331926819",
+    "type": "IBAN"
+   }
+  ]
+ },
+ {
+  "id": "structured-020",
+  "group": "structured",
+  "lang": "en",
+  "text": "IBAN: GB29 NWBK 6016 1331 9268 19",
+  "pii": [
+   {
+    "value": "GB29 NWBK 6016 1331 9268 19",
+    "type": "IBAN"
+   }
+  ]
+ },
+ {
+  "id": "structured-021",
+  "group": "structured",
+  "lang": "en",
+  "text": "Refund to DE89370400440532013000 please.",
+  "pii": [
+   {
+    "value": "DE89370400440532013000",
+    "type": "IBAN"
+   }
+  ]
+ },
+ {
+  "id": "structured-022",
+  "group": "structured",
+  "lang": "en",
+  "text": "Account NL91 ABNA 0417 1643 00",
+  "pii": [
+   {
+    "value": "NL91 ABNA 0417 1643 00",
+    "type": "IBAN"
+   }
+  ]
+ },
+ {
+  "id": "structured-023",
+  "group": "structured",
+  "lang": "en",
+  "text": "Bank: FR1420041010050500013M02606",
+  "pii": [
+   {
+    "value": "FR1420041010050500013M02606",
+    "type": "IBAN"
+   }
+  ]
+ },
+ {
+  "id": "structured-024",
+  "group": "structured",
+  "lang": "en",
+  "text": "SSN: 078-05-1120",
+  "pii": [
+   {
+    "value": "078-05-1120",
+    "type": "SSN"
+   }
+  ]
+ },
+ {
+  "id": "structured-025",
+  "group": "structured",
+  "lang": "en",
+  "text": "Applicant social security number is 219-09-9999.",
+  "pii": [
+   {
+    "value": "219-09-9999",
+    "type": "SSN"
+   }
+  ]
+ },
+ {
+  "id": "structured-026",
+  "group": "structured",
+  "lang": "en",
+  "text": "ssn=123-45-6789",
+  "pii": [
+   {
+    "value": "123-45-6789",
+    "type": "SSN"
+   }
+  ]
+ },
+ {
+  "id": "structured-027",
+  "group": "structured",
+  "lang": "en",
+  "text": "ACH routing number 021000021 and account number 123456789012.",
+  "pii": [
+   {
+    "value": "021000021",
+    "type": "ROUTING_NUMBER"
+   },
+   {
+    "value": "123456789012",
+    "type": "BANK_ACCOUNT"
+   }
+  ]
+ },
+ {
+  "id": "structured-028",
+  "group": "structured",
+  "lang": "en",
+  "text": "Routing: 011401533, Acct: 000123456789",
+  "pii": [
+   {
+    "value": "011401533",
+    "type": "ROUTING_NUMBER"
+   },
+   {
+    "value": "000123456789",
+    "type": "BANK_ACCOUNT"
+   }
+  ]
+ },
+ {
+  "id": "structured-029",
+  "group": "structured",
+  "lang": "en",
+  "text": "Sort code 60-16-13 account 31926819",
+  "pii": [
+   {
+    "value": "60-16-13",
+    "type": "BANK_ACCOUNT"
+   },
+   {
+    "value": "31926819",
+    "type": "BANK_ACCOUNT"
+   }
+  ]
+ },
+ {
+  "id": "structured-030",
+  "group": "structured",
+  "lang": "en",
+  "text": "Passport number: X1234567",
+  "pii": [
+   {
+    "value": "X1234567",
+    "type": "PASSPORT"
+   }
+  ]
+ },
+ {
+  "id": "structured-031",
+  "group": "structured",
+  "lang": "en",
+  "text": "Passport No. C01X00T47 issued in 2019.",
+  "pii": [
+   {
+    "value": "C01X00T47",
+    "type": "PASSPORT"
+   }
+  ]
+ },
+ {
+  "id": "structured-032",
+  "group": "structured",
+  "lang": "en",
+  "text": "Driver's license: D123-4567-8901 (CA)",
+  "pii": [
+   {
+    "value": "D123-4567-8901",
+    "type": "DRIVERS_LICENSE"
+   }
+  ]
+ },
+ {
+  "id": "structured-033",
+  "group": "structured",
+  "lang": "en",
+  "text": "DL# S123456789012 expires 2027.",
+  "pii": [
+   {
+    "value": "S123456789012",
+    "type": "DRIVERS_LICENSE"
+   }
+  ]
+ },
+ {
+  "id": "structured-034",
+  "group": "structured",
+  "lang": "en",
+  "text": "Führerschein-Nr. B072RRE2I55",
+  "pii": [
+   {
+    "value": "B072RRE2I55",
+    "type": "DRIVERS_LICENSE"
+   }
+  ]
+ },
+ {
+  "id": "structured-035",
+  "group": "structured",
+  "lang": "en",
+  "text": "Tax ID: 98-7654321",
+  "pii": [
+   {
+    "value": "98-7654321",
+    "type": "TAX_ID"
+   }
+  ]
+ },
+ {
+  "id": "structured-036",
+  "group": "structured",
+  "lang": "en",
+  "text": "UK National Insurance number QQ 12 34 56 C",
+  "pii": [
+   {
+    "value": "QQ 12 34 56 C",
+    "type": "NATIONAL_ID"
+   }
+  ]
+ },
+ {
+  "id": "structured-037",
+  "group": "structured",
+  "lang": "en",
+  "text": "Dutch BSN 123456782 is required for the form.",
+  "pii": [
+   {
+    "value": "123456782",
+    "type": "NATIONAL_ID"
+   }
+  ]
+ },
+ {
+  "id": "structured-038",
+  "group": "structured",
+  "lang": "en",
+  "text": "BSN: 111222333",
+  "pii": [
+   {
+    "value": "111222333",
+    "type": "NATIONAL_ID"
+   }
+  ]
+ },
+ {
+  "id": "structured-039",
+  "group": "structured",
+  "lang": "en",
+  "text": "Aadhaar: 2345 6789 0123",
+  "pii": [
+   {
+    "value": "2345 6789 0123",
+    "type": "NATIONAL_ID"
+   }
+  ]
+ },
+ {
+  "id": "structured-040",
+  "group": "structured",
+  "lang": "en",
+  "text": "Client IP 203.0.113.42 blocked after 5 failed logins.",
+  "pii": [
+   {
+    "value": "203.0.113.42",
+    "type": "IP_ADDRESS"
+   }
+  ]
+ },
+ {
+  "id": "structured-041",
+  "group": "structured",
+  "lang": "en",
+  "text": "Last login from 198.51.100.17 at 09:12",
+  "pii": [
+   {
+    "value": "198.51.100.17",
+    "type": "IP_ADDRESS"
+   }
+  ]
+ },
+ {
+  "id": "structured-042",
+  "group": "structured",
+  "lang": "en",
+  "text": "IPv6: 2001:db8:85a3::8a2e:370:7334",
+  "pii": [
+   {
+    "value": "2001:db8:85a3::8a2e:370:7334",
+    "type": "IP_ADDRESS"
+   }
+  ]
+ },
+ {
+  "id": "structured-043",
+  "group": "structured",
+  "lang": "en",
+  "text": "X-Forwarded-For: 192.0.2.146",
+  "pii": [
+   {
+    "value": "192.0.2.146",
+    "type": "IP_ADDRESS"
+   }
+  ]
+ },
+ {
+  "id": "structured-044",
+  "group": "structured",
+  "lang": "en",
+  "text": "Device IMEI 490154203237518 was reported stolen.",
+  "pii": [
+   {
+    "value": "490154203237518",
+    "type": "IMEI"
+   }
+  ]
+ },
+ {
+  "id": "structured-045",
+  "group": "structured",
+  "lang": "en",
+  "text": "IMEI: 356938035643809",
+  "pii": [
+   {
+    "value": "356938035643809",
+    "type": "IMEI"
+   }
+  ]
+ },
+ {
+  "id": "structured-046",
+  "group": "structured",
+  "lang": "en",
+  "text": "Contact jane.doe@example.com for details.",
+  "pii": [
+   {
+    "value": "jane.doe@example.com",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "structured-047",
+  "group": "structured",
+  "lang": "en",
+  "text": "Email me: first.last+tag@sub.example.org",
+  "pii": [
+   {
+    "value": "first.last+tag@sub.example.org",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "structured-048",
+  "group": "structured",
+  "lang": "en",
+  "text": "To: j_smith99@example.co.uk",
+  "pii": [
+   {
+    "value": "j_smith99@example.co.uk",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "structured-049",
+  "group": "structured",
+  "lang": "en",
+  "text": "reply-to noreply-test@example.io is a bounce address",
+  "pii": [
+   {
+    "value": "noreply-test@example.io",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "structured-050",
+  "group": "structured",
+  "lang": "en",
+  "text": "OPENAI_API_KEY=sk-proj-AbCdEf1234567890GhIjKlMnOpQrStUvWxYz012345",
+  "pii": [
+   {
+    "value": "sk-proj-AbCdEf1234567890GhIjKlMnOpQrStUvWxYz012345",
+    "type": "API_KEY"
+   }
+  ]
+ },
+ {
+  "id": "structured-051",
+  "group": "structured",
+  "lang": "en",
+  "text": "token ghp_1A2b3C4d5E6f7G8h9I0jKlMnOpQrStUvWxYz leaked in logs",
+  "pii": [
+   {
+    "value": "ghp_1A2b3C4d5E6f7G8h9I0jKlMnOpQrStUvWxYz",
+    "type": "API_KEY"
+   }
+  ]
+ },
+ {
+  "id": "structured-052",
+  "group": "structured",
+  "lang": "en",
+  "text": "aws_access_key_id = AKIAIOSFODNN7EXAMPLE",
+  "pii": [
+   {
+    "value": "AKIAIOSFODNN7EXAMPLE",
+    "type": "API_KEY"
+   }
+  ]
+ },
+ {
+  "id": "structured-053",
+  "group": "structured",
+  "lang": "en",
+  "text": "Authorization: Bearer sk-live-9f8e7d6c5b4a39281706f5e4d3c2b1a0",
+  "pii": [
+   {
+    "value": "sk-live-9f8e7d6c5b4a39281706f5e4d3c2b1a0",
+    "type": "API_KEY"
+   }
+  ]
+ },
+ {
+  "id": "mixed-001",
+  "group": "mixed",
+  "lang": "en",
+  "text": "{\n  \"id\": 1042,\n  \"name\": \"Marta Kowalczyk\",\n  \"email\": \"marta.k@example.com\",\n  \"phone\": \"+48 512 345 678\",\n  \"address\": {\"street\": \"Polna 9\", \"city\": \"Kraków\", \"zip\": \"30-001\"},\n  \"plan\": \"pro\",\n  \"created_at\": \"2024-03-12T08:30:00Z\"\n}",
+  "pii": [
+   {
+    "value": "Marta",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Kowalczyk",
+    "type": "SURNAME"
+   },
+   {
+    "value": "marta.k@example.com",
+    "type": "EMAIL"
+   },
+   {
+    "value": "+48 512 345 678",
+    "type": "PHONE"
+   },
+   {
+    "value": "Polna",
+    "type": "STREET_NAME"
+   },
+   {
+    "value": "9",
+    "type": "BUILDING_NUMBER"
+   },
+   {
+    "value": "Kraków",
+    "type": "CITY"
+   },
+   {
+    "value": "30-001",
+    "type": "ZIP_CODE"
+   }
+  ]
+ },
+ {
+  "id": "mixed-002",
+  "group": "mixed",
+  "lang": "en",
+  "text": "customers:\n  - id: 17\n    first_name: Derek\n    last_name: Ashford\n    email: derek.ashford@example.net\n    tier: gold\n  - id: 18\n    first_name: Imani\n    last_name: Cooper\n    email: imani.c@example.net\n    tier: silver",
+  "pii": [
+   {
+    "value": "Derek",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Ashford",
+    "type": "SURNAME"
+   },
+   {
+    "value": "derek.ashford@example.net",
+    "type": "EMAIL"
+   },
+   {
+    "value": "Imani",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Cooper",
+    "type": "SURNAME"
+   },
+   {
+    "value": "imani.c@example.net",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "mixed-003",
+  "group": "mixed",
+  "lang": "en",
+  "text": "id,name,email,country\n101,Lena Fischer,lena.fischer@example.de,DE\n102,Tom Bradley,tbradley@example.com,US\n103,Aiko Sato,aiko.sato@example.jp,JP",
+  "pii": [
+   {
+    "value": "Lena",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Fischer",
+    "type": "SURNAME"
+   },
+   {
+    "value": "lena.fischer@example.de",
+    "type": "EMAIL"
+   },
+   {
+    "value": "Tom",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Bradley",
+    "type": "SURNAME"
+   },
+   {
+    "value": "tbradley@example.com",
+    "type": "EMAIL"
+   },
+   {
+    "value": "Aiko",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Sato",
+    "type": "SURNAME"
+   },
+   {
+    "value": "aiko.sato@example.jp",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "mixed-004",
+  "group": "mixed",
+  "lang": "en",
+  "text": "commit a1b2c3d4e5f60718293a4b5c6d7e8f9012345678\nAuthor: Priya Natarajan <priya.n@example.com>\nDate:   Mon Jan 8 16:02:11 2024 +0100\n\n    feat(auth): add refresh token rotation\n\ncommit 0f9e8d7c6b5a40312233445566778899aabbccdd\nAuthor: Luca Romano <luca@example.it>\nDate:   Fri Jan 5 09:41:55 2024 +0100\n\n    chore: bump deps",
+  "pii": [
+   {
+    "value": "Priya",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Natarajan",
+    "type": "SURNAME"
+   },
+   {
+    "value": "priya.n@example.com",
+    "type": "EMAIL"
+   },
+   {
+    "value": "Luca",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Romano",
+    "type": "SURNAME"
+   },
+   {
+    "value": "luca@example.it",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "mixed-005",
+  "group": "mixed",
+  "lang": "en",
+  "text": "SELECT id, name, email FROM users LIMIT 3;\n id |      name       |           email\n----+-----------------+---------------------------\n  1 | Hannah Berg     | hannah.berg@example.com\n  2 | Yusuf Demirci   | y.demirci@example.com\n(2 rows)",
+  "pii": [
+   {
+    "value": "Hannah",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Berg",
+    "type": "SURNAME"
+   },
+   {
+    "value": "hannah.berg@example.com",
+    "type": "EMAIL"
+   },
+   {
+    "value": "Yusuf",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Demirci",
+    "type": "SURNAME"
+   },
+   {
+    "value": "y.demirci@example.com",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "mixed-006",
+  "group": "mixed",
+  "lang": "en",
+  "text": "127.0.0.1 - - [12/Mar/2024:10:14:02 +0000] \"GET /health HTTP/1.1\" 200 2 \"-\" \"kube-probe/1.28\"\n203.0.113.55 - alice.wong@example.com [12/Mar/2024:10:14:07 +0000] \"POST /api/login HTTP/1.1\" 401 54\n198.51.100.9 - - [12/Mar/2024:10:14:09 +0000] \"GET /static/app.js HTTP/1.1\" 200 10432",
+  "pii": [
+   {
+    "value": "203.0.113.55",
+    "type": "IP_ADDRESS"
+   },
+   {
+    "value": "alice.wong@example.com",
+    "type": "EMAIL"
+   },
+   {
+    "value": "198.51.100.9",
+    "type": "IP_ADDRESS"
+   }
+  ]
+ },
+ {
+  "id": "mixed-007",
+  "group": "mixed",
+  "lang": "en",
+  "text": "## Support ticket #8841\n\n**Customer:** Brenda Oyelaran\n**Email:** brenda.o@example.com\n**Phone:** +1 212 555 0147\n\n### Issue\nCannot download invoice 2024-0312. Browser: Firefox 124.\n\n### Notes\nEscalated to tier 2.",
+  "pii": [
+   {
+    "value": "Brenda",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Oyelaran",
+    "type": "SURNAME"
+   },
+   {
+    "value": "brenda.o@example.com",
+    "type": "EMAIL"
+   },
+   {
+    "value": "+1 212 555 0147",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "mixed-008",
+  "group": "mixed",
+  "lang": "en",
+  "text": "# .env\nDATABASE_URL=postgres://app@db.internal:5432/app\nSTRIPE_SECRET_KEY=sk_fake_51HxxFAKEFAKEFAKEFAKE1234567890abcdef\nADMIN_EMAIL=ops-admin@example.com\nPORT=3000\nLOG_LEVEL=debug",
+  "pii": [
+   {
+    "value": "sk_fake_51HxxFAKEFAKEFAKEFAKE1234567890abcdef",
+    "type": "API_KEY"
+   },
+   {
+    "value": "ops-admin@example.com",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "mixed-009",
+  "group": "mixed",
+  "lang": "en",
+  "text": "{\"event\":\"signup\",\"user\":{\"email\":\"carla.mendez@example.com\",\"name\":\"Carla Méndez\",\"ip\":\"203.0.113.7\"},\"ts\":1710238502000}",
+  "pii": [
+   {
+    "value": "carla.mendez@example.com",
+    "type": "EMAIL"
+   },
+   {
+    "value": "Carla",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Méndez",
+    "type": "SURNAME"
+   },
+   {
+    "value": "203.0.113.7",
+    "type": "IP_ADDRESS"
+   }
+  ]
+ },
+ {
+  "id": "mixed-010",
+  "group": "mixed",
+  "lang": "en",
+  "text": "Name,DOB,SSN\nWalter Pruitt,1971-08-23,078-05-1120\nDolores Haines,1983-02-14,219-09-9999",
+  "pii": [
+   {
+    "value": "Walter",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Pruitt",
+    "type": "SURNAME"
+   },
+   {
+    "value": "1971-08-23",
+    "type": "DATE_OF_BIRTH"
+   },
+   {
+    "value": "078-05-1120",
+    "type": "SSN"
+   },
+   {
+    "value": "Dolores",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Haines",
+    "type": "SURNAME"
+   },
+   {
+    "value": "1983-02-14",
+    "type": "DATE_OF_BIRTH"
+   },
+   {
+    "value": "219-09-9999",
+    "type": "SSN"
+   }
+  ]
+ },
+ {
+  "id": "mixed-011",
+  "group": "mixed",
+  "lang": "en",
+  "text": "2024-03-12T10:14:02Z INFO  payment.processed order=ORD-77213 amount=49.99 card=4111 1111 1111 1111 customer=buyer@example.com duration=214ms",
+  "pii": [
+   {
+    "value": "4111 1111 1111 1111",
+    "type": "CREDIT_CARD"
+   },
+   {
+    "value": "buyer@example.com",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "mixed-012",
+  "group": "mixed",
+  "lang": "en",
+  "text": "2024-03-12T10:15:40Z WARN  auth.failed user=svc-admin@example.org src=192.0.2.88 attempts=5",
+  "pii": [
+   {
+    "value": "svc-admin@example.org",
+    "type": "EMAIL"
+   },
+   {
+    "value": "192.0.2.88",
+    "type": "IP_ADDRESS"
+   }
+  ]
+ },
+ {
+  "id": "mixed-013",
+  "group": "mixed",
+  "lang": "en",
+  "text": "Subject: Your order has shipped\n\nHi Nadia,\n\nYour order #55021 is on its way to:\n\nNadia Bouchard\n88 Maple Avenue\nToronto, ON M5V 2T6\n\nThanks!",
+  "pii": [
+   {
+    "value": "Nadia",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Bouchard",
+    "type": "SURNAME"
+   },
+   {
+    "value": "88",
+    "type": "BUILDING_NUMBER"
+   },
+   {
+    "value": "Maple Avenue",
+    "type": "STREET_NAME"
+   },
+   {
+    "value": "Toronto",
+    "type": "CITY"
+   },
+   {
+    "value": "ON",
+    "type": "STATE"
+   },
+   {
+    "value": "M5V 2T6",
+    "type": "ZIP_CODE"
+   }
+  ]
+ },
+ {
+  "id": "mixed-014",
+  "group": "mixed",
+  "lang": "en",
+  "text": "Ship to:\nGregory Linton\n1420 Oak Street Apt 5\nPortland, OR 97205\nPhone: (503) 555-0166",
+  "pii": [
+   {
+    "value": "Gregory",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Linton",
+    "type": "SURNAME"
+   },
+   {
+    "value": "1420",
+    "type": "BUILDING_NUMBER"
+   },
+   {
+    "value": "Oak Street",
+    "type": "STREET_NAME"
+   },
+   {
+    "value": "Portland",
+    "type": "CITY"
+   },
+   {
+    "value": "OR",
+    "type": "STATE"
+   },
+   {
+    "value": "97205",
+    "type": "ZIP_CODE"
+   },
+   {
+    "value": "(503) 555-0166",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "mixed-015",
+  "group": "mixed",
+  "lang": "en",
+  "text": "users:\n  - login: jsmith\n    email: j.smith@example.com\n    last_ip: 198.51.100.23\n    mfa: true",
+  "pii": [
+   {
+    "value": "jsmith",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "j.smith@example.com",
+    "type": "EMAIL"
+   },
+   {
+    "value": "198.51.100.23",
+    "type": "IP_ADDRESS"
+   }
+  ]
+ },
+ {
+  "id": "mixed-016",
+  "group": "mixed",
+  "lang": "en",
+  "text": "[2024-03-12 10:14:02] user=olga.petrova@example.ru action=password_reset ip=203.0.113.200 ua=\"Mozilla/5.0\"",
+  "pii": [
+   {
+    "value": "olga.petrova@example.ru",
+    "type": "EMAIL"
+   },
+   {
+    "value": "203.0.113.200",
+    "type": "IP_ADDRESS"
+   }
+  ]
+ },
+ {
+  "id": "mixed-017",
+  "group": "mixed",
+  "lang": "en",
+  "text": "PATCH /api/users/42 HTTP/1.1\nHost: api.example.com\nContent-Type: application/json\n\n{\"phone\": \"+1 646 555 0123\", \"dob\": \"1990-04-17\"}",
+  "pii": [
+   {
+    "value": "+1 646 555 0123",
+    "type": "PHONE"
+   },
+   {
+    "value": "1990-04-17",
+    "type": "DATE_OF_BIRTH"
+   }
+  ]
+ },
+ {
+  "id": "mixed-018",
+  "group": "mixed",
+  "lang": "en",
+  "text": "Applicant: Nicolas Dubois\nDate of birth: 03/09/1982\nPassport: AB1234567\nAddress: 12 Rue de la Paix, 75002 Paris",
+  "pii": [
+   {
+    "value": "Nicolas",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Dubois",
+    "type": "SURNAME"
+   },
+   {
+    "value": "03/09/1982",
+    "type": "DATE_OF_BIRTH"
+   },
+   {
+    "value": "AB1234567",
+    "type": "PASSPORT"
+   },
+   {
+    "value": "12",
+    "type": "BUILDING_NUMBER"
+   },
+   {
+    "value": "Rue de la Paix",
+    "type": "STREET_NAME"
+   },
+   {
+    "value": "75002",
+    "type": "ZIP_CODE"
+   },
+   {
+    "value": "Paris",
+    "type": "CITY"
+   }
+  ]
+ },
+ {
+  "id": "mixed-019",
+  "group": "mixed",
+  "lang": "en",
+  "text": "INSERT INTO patients (name, dob, ssn) VALUES ('Helen Marsh', '1965-11-30', '219-09-9999');",
+  "pii": [
+   {
+    "value": "Helen",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Marsh",
+    "type": "SURNAME"
+   },
+   {
+    "value": "1965-11-30",
+    "type": "DATE_OF_BIRTH"
+   },
+   {
+    "value": "219-09-9999",
+    "type": "SSN"
+   }
+  ]
+ },
+ {
+  "id": "mixed-020",
+  "group": "mixed",
+  "lang": "en",
+  "text": "[\n  {\"name\": \"Kofi Asante\", \"iban\": \"GB29NWBK60161331926819\"},\n  {\"name\": \"Ingrid Solberg\", \"iban\": \"DE89370400440532013000\"}\n]",
+  "pii": [
+   {
+    "value": "Kofi",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Asante",
+    "type": "SURNAME"
+   },
+   {
+    "value": "GB29NWBK60161331926819",
+    "type": "IBAN"
+   },
+   {
+    "value": "Ingrid",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Solberg",
+    "type": "SURNAME"
+   },
+   {
+    "value": "DE89370400440532013000",
+    "type": "IBAN"
+   }
+  ]
+ },
+ {
+  "id": "mixed-021",
+  "group": "mixed",
+  "lang": "en",
+  "text": "| id | customer | phone | status |\n|----|----------|-------|--------|\n| 1 | Albert Quinn | +1 303 555 0111 | active |\n| 2 | Mei Huang | +1 303 555 0112 | paused |",
+  "pii": [
+   {
+    "value": "Albert",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Quinn",
+    "type": "SURNAME"
+   },
+   {
+    "value": "+1 303 555 0111",
+    "type": "PHONE"
+   },
+   {
+    "value": "Mei",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Huang",
+    "type": "SURNAME"
+   },
+   {
+    "value": "+1 303 555 0112",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "mixed-022",
+  "group": "mixed",
+  "lang": "en",
+  "text": "Dear customer Sven Aronsson,\n\nWe could not charge 5500 0000 0000 0004. Please update your billing details at https://billing.example.com/update.\n\nRegards,\nBilling Team",
+  "pii": [
+   {
+    "value": "Sven",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Aronsson",
+    "type": "SURNAME"
+   },
+   {
+    "value": "5500 0000 0000 0004",
+    "type": "CREDIT_CARD"
+   }
+  ]
+ },
+ {
+  "id": "mixed-023",
+  "group": "mixed",
+  "lang": "en",
+  "text": "git shortlog -sne\n    42  Dan Whitfield <dan.whitfield@example.com>\n    17  Grace Osei <grace.osei@example.com>\n     3  dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+  "pii": [
+   {
+    "value": "Dan",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Whitfield",
+    "type": "SURNAME"
+   },
+   {
+    "value": "dan.whitfield@example.com",
+    "type": "EMAIL"
+   },
+   {
+    "value": "Grace",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Osei",
+    "type": "SURNAME"
+   },
+   {
+    "value": "grace.osei@example.com",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "mixed-024",
+  "group": "mixed",
+  "lang": "en",
+  "text": "Traceback (most recent call last):\n  File \"app/mailer.py\", line 31, in send\n    raise SMTPRecipientsRefused({'bounce.test@example.com': (550, b'No such user')})\nsmtplib.SMTPRecipientsRefused",
+  "pii": [
+   {
+    "value": "bounce.test@example.com",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "mixed-025",
+  "group": "mixed",
+  "lang": "en",
+  "text": "{\"level\":\"info\",\"msg\":\"user created\",\"email\":\"new.user@example.org\",\"first\":\"Jonas\",\"last\":\"Kreutzer\",\"id\":\"b3f1c2d4-8a7e-4f10-9c2b-1e2d3c4b5a69\"}",
+  "pii": [
+   {
+    "value": "new.user@example.org",
+    "type": "EMAIL"
+   },
+   {
+    "value": "Jonas",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Kreutzer",
+    "type": "SURNAME"
+   }
+  ]
+ },
+ {
+  "id": "mixed-026",
+  "group": "mixed",
+  "lang": "en",
+  "text": "curl -X POST https://api.example.com/v1/charges -H \"Authorization: Bearer sk-live-9f8e7d6c5b4a39281706f5e4d3c2b1a0\" -d email=pay@example.com -d amount=2000",
+  "pii": [
+   {
+    "value": "sk-live-9f8e7d6c5b4a39281706f5e4d3c2b1a0",
+    "type": "API_KEY"
+   },
+   {
+    "value": "pay@example.com",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "mixed-027",
+  "group": "mixed",
+  "lang": "en",
+  "text": "Meeting notes 2024-03-12\nAttendees: Fabian, Soraya Karimi, Dan\nAction: Fabian to email vendor@example.com by Friday.",
+  "pii": [
+   {
+    "value": "Fabian",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Soraya",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Karimi",
+    "type": "SURNAME"
+   },
+   {
+    "value": "Dan",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "vendor@example.com",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "mixed-028",
+  "group": "mixed",
+  "lang": "en",
+  "text": "New hire form\nName: Leona Whitaker\nStart: 2024-04-01\nHome address: 77 Cedar Lane, Austin, TX 78701\nEmergency contact: Roy Whitaker (512) 555-0188",
+  "pii": [
+   {
+    "value": "Leona",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Whitaker",
+    "type": "SURNAME"
+   },
+   {
+    "value": "77",
+    "type": "BUILDING_NUMBER"
+   },
+   {
+    "value": "Cedar Lane",
+    "type": "STREET_NAME"
+   },
+   {
+    "value": "Austin",
+    "type": "CITY"
+   },
+   {
+    "value": "TX",
+    "type": "STATE"
+   },
+   {
+    "value": "78701",
+    "type": "ZIP_CODE"
+   },
+   {
+    "value": "Roy",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "(512) 555-0188",
+    "type": "PHONE"
+   }
+  ]
+ },
+ {
+  "id": "mixed-029",
+  "group": "mixed",
+  "lang": "en",
+  "text": "Invoice INV-2024-0099\nBill to: Magnus Eklund\nIBAN: SE4550000000058398257466\nTotal: 1,240.00 EUR\nDue: 2024-04-15",
+  "pii": [
+   {
+    "value": "Magnus",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Eklund",
+    "type": "SURNAME"
+   },
+   {
+    "value": "SE4550000000058398257466",
+    "type": "IBAN"
+   }
+  ]
+ },
+ {
+  "id": "mixed-030",
+  "group": "mixed",
+  "lang": "en",
+  "text": "Zendesk | Requester: angry.customer@example.com | Subject: refund | Priority: high | Created: 2024-03-11 22:10",
+  "pii": [
+   {
+    "value": "angry.customer@example.com",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "mixed-031",
+  "group": "mixed",
+  "lang": "en",
+  "text": "kubectl logs api-7d9f -n prod | grep 401\ntime=\"2024-03-12T10:14:02Z\" level=warn msg=\"unauthorized\" remote=203.0.113.77 user=ci-bot@example.com",
+  "pii": [
+   {
+    "value": "203.0.113.77",
+    "type": "IP_ADDRESS"
+   },
+   {
+    "value": "ci-bot@example.com",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "mixed-032",
+  "group": "mixed",
+  "lang": "en",
+  "text": "Patient record\nName: Ruth Abernathy\nAge: 63\nDOB: 1960-12-02\nMRN: 00482913",
+  "pii": [
+   {
+    "value": "Ruth",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Abernathy",
+    "type": "SURNAME"
+   },
+   {
+    "value": "63",
+    "type": "AGE"
+   },
+   {
+    "value": "1960-12-02",
+    "type": "DATE_OF_BIRTH"
+   }
+  ]
+ },
+ {
+  "id": "mixed-033",
+  "group": "mixed",
+  "lang": "en",
+  "text": "user_profile = {\n    \"first_name\": \"Amir\",\n    \"last_name\": \"Hosseini\",\n    \"email\": \"amir.h@example.com\",\n    \"newsletter\": True,\n}",
+  "pii": [
+   {
+    "value": "Amir",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Hosseini",
+    "type": "SURNAME"
+   },
+   {
+    "value": "amir.h@example.com",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "mixed-034",
+  "group": "mixed",
+  "lang": "en",
+  "text": "Profile saved. Visit https://example.com/users/jdoe/settings?email=john.doe@example.com to review.",
+  "pii": [
+   {
+    "value": "jdoe",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "john.doe@example.com",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "mixed-035",
+  "group": "mixed",
+  "lang": "en",
+  "text": "Reset link sent to mary.jones@example.com: https://app.example.com/reset?token=Zm9vYmFyYmF6&email=mary.jones@example.com",
+  "pii": [
+   {
+    "value": "mary.jones@example.com",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "mixed-036",
+  "group": "mixed",
+  "lang": "en",
+  "text": "Delivery driver Kasper Nielsen (license DK-1234567) arrived at 5 Strandvejen, Aarhus.",
+  "pii": [
+   {
+    "value": "Kasper",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Nielsen",
+    "type": "SURNAME"
+   },
+   {
+    "value": "DK-1234567",
+    "type": "DRIVERS_LICENSE"
+   },
+   {
+    "value": "5",
+    "type": "BUILDING_NUMBER"
+   },
+   {
+    "value": "Strandvejen",
+    "type": "STREET_NAME"
+   },
+   {
+    "value": "Aarhus",
+    "type": "CITY"
+   }
+  ]
+ },
+ {
+  "id": "mixed-037",
+  "group": "mixed",
+  "lang": "en",
+  "text": "HR export:\nemployee,tax_id,salary\nBeatrice Lamont,52-1234567,82000\nCyrus Oduya,52-7654321,76000",
+  "pii": [
+   {
+    "value": "Beatrice",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Lamont",
+    "type": "SURNAME"
+   },
+   {
+    "value": "52-1234567",
+    "type": "TAX_ID"
+   },
+   {
+    "value": "Cyrus",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Oduya",
+    "type": "SURNAME"
+   },
+   {
+    "value": "52-7654321",
+    "type": "TAX_ID"
+   }
+  ]
+ },
+ {
+  "id": "mixed-038",
+  "group": "mixed",
+  "lang": "en",
+  "text": "Chat transcript\n[10:02] Agent Tom: How can I help?\n[10:03] Julia Brandt: my account julia.brandt@example.de is locked",
+  "pii": [
+   {
+    "value": "Tom",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Julia",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Brandt",
+    "type": "SURNAME"
+   },
+   {
+    "value": "julia.brandt@example.de",
+    "type": "EMAIL"
+   }
+  ]
+ },
+ {
+  "id": "mixed-039",
+  "group": "mixed",
+  "lang": "en",
+  "text": "Webhook payload: {\"customer\":{\"name\":\"Oscar Lindholm\",\"phone\":\"+46 8 123 456 78\"},\"imei\":\"490154203237518\"}",
+  "pii": [
+   {
+    "value": "Oscar",
+    "type": "GIVEN_NAME"
+   },
+   {
+    "value": "Lindholm",
+    "type": "SURNAME"
+   },
+   {
+    "value": "+46 8 123 456 78",
+    "type": "PHONE"
+   },
+   {
+    "value": "490154203237518",
+    "type": "IMEI"
+   }
+  ]
+ },
+ {
+  "id": "mixed-040",
+  "group": "mixed",
+  "lang": "en",
+  "text": "Alert: suspicious login for cfo@example.com from 2001:db8::ff00:42:8329 (new device).",
+  "pii": [
+   {
+    "value": "cfo@example.com",
+    "type": "EMAIL"
+   },
+   {
+    "value": "2001:db8::ff00:42:8329",
+    "type": "IP_ADDRESS"
+   }
+  ]
+ },
+ {
+  "id": "no-pii-001",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "TypeError: Cannot read properties of undefined (reading 'map')\n    at renderList (/app/src/components/List.js:42:18)\n    at processChild (/app/node_modules/react-dom/cjs/react-dom.development.js:16123:14)\n    at Object.<anonymous> (/app/src/index.js:9:1)",
+  "pii": []
+ },
+ {
+  "id": "no-pii-002",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Traceback (most recent call last):\n  File \"/usr/lib/python3.11/site-packages/requests/adapters.py\", line 486, in send\n    resp = conn.urlopen(method=request.method, url=url)\n  File \"manage.py\", line 22, in main\n    execute_from_command_line(sys.argv)\nConnectionError: HTTPSConnectionPool(host='api.example.com', port=443): Max retries exceeded",
+  "pii": []
+ },
+ {
+  "id": "no-pii-003",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Exception in thread \"main\" java.lang.NullPointerException: Cannot invoke \"String.length()\" because \"s\" is null\n\tat com.acme.util.Strings.trim(Strings.java:57)\n\tat com.acme.App.main(App.java:14)",
+  "pii": []
+ },
+ {
+  "id": "no-pii-004",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "panic: runtime error: index out of range [5] with length 3\n\ngoroutine 1 [running]:\nmain.process(0xc000012345, 0x5)\n\t/home/build/go/src/app/main.go:27 +0x1d5\nexit status 2",
+  "pii": []
+ },
+ {
+  "id": "no-pii-005",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "thread 'main' panicked at 'called Option::unwrap() on a None value', src/main.rs:18:37\nnote: run with RUST_BACKTRACE=1 environment variable to display a backtrace",
+  "pii": []
+ },
+ {
+  "id": "no-pii-006",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "error[E0382]: borrow of moved value: v\n  --> src/lib.rs:12:20\n   |\n10 |     let v = vec![1, 2, 3];\n11 |     let w = v;\n12 |     println!(\"{:?}\", v);\n   |                      ^ value borrowed here after move",
+  "pii": []
+ },
+ {
+  "id": "no-pii-007",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "src/index.ts:23:7 - error TS2322: Type 'string' is not assignable to type 'number'.\n\n23   const n: number = \"42\";\n         ~\n\nFound 1 error in src/index.ts:23",
+  "pii": []
+ },
+ {
+  "id": "no-pii-008",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "main.cpp:15:23: error: no match for 'operator<<' (operand types are 'std::ostream' and 'std::vector<int>')\n   15 |     std::cout << v << std::endl;",
+  "pii": []
+ },
+ {
+  "id": "no-pii-009",
+  "group": "no-pii",
+  "lang": "en",
+  "text": " FAIL  tests/cart.test.ts > Cart > applies discount\nAssertionError: expected 90 to be 100 // Object.is equality\n\n Test Files  1 failed | 4 passed (5)\n      Tests  1 failed | 31 passed (32)\n   Duration  2.41s",
+  "pii": []
+ },
+ {
+  "id": "no-pii-010",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "PASS src/utils/format.test.js\n  formatCurrency\n    ✓ formats 1234.5 as $1,234.50 (3 ms)\n    ✓ handles zero (1 ms)\nTests: 2 passed, 2 total\nTime: 1.208 s",
+  "pii": []
+ },
+ {
+  "id": "no-pii-011",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "added 1243 packages, and audited 1244 packages in 18s\n\n187 packages are looking for funding\n  run `npm fund` for details\n\nfound 0 vulnerabilities",
+  "pii": []
+ },
+ {
+  "id": "no-pii-012",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "npm WARN deprecated request@2.88.2: request has been deprecated, see https://github.com/request/request/issues/3142\nnpm ERR! code ERESOLVE\nnpm ERR! ERESOLVE could not resolve",
+  "pii": []
+ },
+ {
+  "id": "no-pii-013",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Collecting numpy==1.26.4\n  Downloading numpy-1.26.4-cp311-cp311-manylinux_2_17_x86_64.whl (18.2 MB)\nSuccessfully installed numpy-1.26.4 pandas-2.2.1",
+  "pii": []
+ },
+ {
+  "id": "no-pii-014",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "   Compiling serde v1.0.197\n   Compiling tokio v1.36.0\n    Finished dev [unoptimized + debuginfo] target(s) in 24.51s",
+  "pii": []
+ },
+ {
+  "id": "no-pii-015",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "docker run -d --name web -p 8080:80 -v /srv/data:/data nginx:1.25-alpine",
+  "pii": []
+ },
+ {
+  "id": "no-pii-016",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "CONTAINER ID   IMAGE          COMMAND                  CREATED        STATUS        PORTS                  NAMES\n3f2a9c1b7d4e   nginx:1.25     \"/docker-entrypoint.…\"   2 hours ago    Up 2 hours    0.0.0.0:8080->80/tcp   web",
+  "pii": []
+ },
+ {
+  "id": "no-pii-017",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "kubectl get pods -n production\nNAME                       READY   STATUS    RESTARTS   AGE\napi-7d9f8c6b5-x2k4p        1/1     Running   0          3d\nworker-5c8d7f9b4-q9z8m     0/1     CrashLoopBackOff   12   45m",
+  "pii": []
+ },
+ {
+  "id": "no-pii-018",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: api\nspec:\n  replicas: 3\n  template:\n    spec:\n      containers:\n        - name: api\n          image: registry.example.com/api:2.4.1\n          resources:\n            limits: {cpu: \"500m\", memory: 256Mi}",
+  "pii": []
+ },
+ {
+  "id": "no-pii-019",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "FROM node:20-alpine\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci --omit=dev\nEXPOSE 3000\nCMD [\"node\", \"dist/server.js\"]",
+  "pii": []
+ },
+ {
+  "id": "no-pii-020",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "SELECT o.id, o.total, c.name FROM orders o JOIN customers c ON c.id = o.customer_id WHERE o.created_at > '2024-03-01' ORDER BY o.total DESC LIMIT 10;",
+  "pii": []
+ },
+ {
+  "id": "no-pii-021",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "CREATE TABLE users (\n  id BIGSERIAL PRIMARY KEY,\n  first_name TEXT NOT NULL,\n  last_name TEXT NOT NULL,\n  email TEXT UNIQUE,\n  created_at TIMESTAMPTZ DEFAULT now()\n);",
+  "pii": []
+ },
+ {
+  "id": "no-pii-022",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "[server]\nhost = 0.0.0.0\nport = 8443\nworkers = 4\ntimeout = 30\n\n[database]\npool_size = 10",
+  "pii": []
+ },
+ {
+  "id": "no-pii-023",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "{\n  \"name\": \"my-app\",\n  \"version\": \"1.4.2\",\n  \"scripts\": {\"build\": \"tsc\", \"test\": \"vitest run\"},\n  \"dependencies\": {\"react\": \"^18.2.0\", \"next\": \"14.1.0\"}\n}",
+  "pii": []
+ },
+ {
+  "id": "no-pii-024",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "git checkout -b feature/PAY-4412-refund-flow\ngit add -A && git commit -m \"feat: add refund flow\"\ngit push -u origin feature/PAY-4412-refund-flow",
+  "pii": []
+ },
+ {
+  "id": "no-pii-025",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "* 3f2a9c1 (HEAD -> main, origin/main) fix: handle empty cart\n* b7c41de feat: add dark mode\n* 9a0d5f3 chore(release): 1.4.2",
+  "pii": []
+ },
+ {
+  "id": "no-pii-026",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Merge branch 'release/2024.03' into main\nRebase onto 0f9e8d7c6b5a40312233445566778899aabbccdd",
+  "pii": []
+ },
+ {
+  "id": "no-pii-027",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "## [1.4.2] - 2024-03-12\n### Fixed\n- Handle empty cart (#412)\n## [1.4.1] - 2024-02-28\n### Added\n- Dark mode",
+  "pii": []
+ },
+ {
+  "id": "no-pii-028",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "2024-03-12T10:14:02.123Z INFO server listening port=8080 pid=48213",
+  "pii": []
+ },
+ {
+  "id": "no-pii-029",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Mar 12 10:14:02 web-01 sshd[22871]: Accepted publickey for deploy from 10.0.4.17 port 51022 ssh2",
+  "pii": []
+ },
+ {
+  "id": "no-pii-030",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "[10:14:02] request id=req_9f8e7d took 214ms status=200 bytes=10432",
+  "pii": []
+ },
+ {
+  "id": "no-pii-031",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "epoch_ms=1710238502000 uuid=3b241101-e2bb-4255-8caf-4136c566a962 sha256=9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+  "pii": []
+ },
+ {
+  "id": "no-pii-032",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Order 4000123456789010 was placed (order number, not a card).",
+  "pii": []
+ },
+ {
+  "id": "no-pii-033",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Build number 555-0142 completed. Artifact id: 123456789.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-034",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Ticket reference 202403121014 resolved in 3 days.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-035",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Last run: 2024-03-12, next run: 2024-03-19 (weekly).",
+  "pii": []
+ },
+ {
+  "id": "no-pii-036",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "const getUserName = (user) => user.firstName + ' ' + user.lastName;\nexport function getEmail(userId: string): Promise<string> { return db.email(userId); }",
+  "pii": []
+ },
+ {
+  "id": "no-pii-037",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "def create_user(first_name, last_name, email):\n    user_id = uuid4()\n    return User(user_id=user_id, first_name=first_name, last_name=last_name, email=email)",
+  "pii": []
+ },
+ {
+  "id": "no-pii-038",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "std::vector<std::string> names;\nnames.push_back(\"x\");\nstd::unordered_map<int, std::pair<int, int>> m;",
+  "pii": []
+ },
+ {
+  "id": "no-pii-039",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "impl Foo::Bar {\n    pub fn new() -> Self { Foo::Bar::default() }\n}\nuse std::collections::HashMap;",
+  "pii": []
+ },
+ {
+  "id": "no-pii-040",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "type User struct {\n\tID        int64  `json:\"id\"`\n\tFirstName string `json:\"first_name\"`\n\tEmail     string `json:\"email\"`\n}",
+  "pii": []
+ },
+ {
+  "id": "no-pii-041",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "We deploy to us-east-1 and eu-central-1 (Frankfurt region); failover goes to the Washington region.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-042",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "terraform apply -var region=us-west-2 -var az=us-west-2a",
+  "pii": []
+ },
+ {
+  "id": "no-pii-043",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "The service runs in the Tokyo region (ap-northeast-1) and the Dublin region (eu-west-1).",
+  "pii": []
+ },
+ {
+  "id": "no-pii-044",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Our app is built with React and Next.js, hosted on Vercel, and iOS builds use Apple Xcode 15.3.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-045",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Switching from Jenkins to GitHub Actions; artifacts stored in Amazon S3 and Google Cloud Storage.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-046",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Solve for x: 3x^2 - 12x + 9 = 0, so x = 1 or x = 3. The integral of sin(x) from 0 to pi is 2.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-047",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "engines: node >=18.0.0 <23, npm ^9 || ^10, python >=3.9,<3.13",
+  "pii": []
+ },
+ {
+  "id": "no-pii-048",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "# Getting started\n\nInstall the CLI and run the init command.\n\n~~~bash\nnpx create-app my-project\ncd my-project && npm run dev\n~~~\n\nOpen http://localhost:3000 in your browser.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-049",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "## Troubleshooting\n\nIf the build hangs, clear the cache and retry. Known issue: #1129.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-050",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Error: connect ECONNREFUSED 127.0.0.1:5432\n    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1555:16)",
+  "pii": []
+ },
+ {
+  "id": "no-pii-051",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "HTTP/1.1 429 Too Many Requests\nRetry-After: 30\nX-RateLimit-Remaining: 0\nContent-Type: application/json",
+  "pii": []
+ },
+ {
+  "id": "no-pii-052",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)",
+  "pii": []
+ },
+ {
+  "id": "no-pii-053",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "pytest -x tests/test_api.py::test_login_rejects_bad_password -vv",
+  "pii": []
+ },
+ {
+  "id": "no-pii-054",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "ls -la /var/log\n-rw-r--r--  1 root root  48213 Mar 12 10:14 syslog\ndrwxr-xr-x  2 root root   4096 Mar 12 09:00 nginx",
+  "pii": []
+ },
+ {
+  "id": "no-pii-055",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Latency p50=12ms p90=48ms p99=212ms; throughput 1450 req/s; error rate 0.03%.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-056",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "The meeting is on 2024-03-12 at 14:30 UTC. Version 3.2.1 shipped on March 12th.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-057",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "rate(http_requests_total{job=\"api\",status=~\"5..\"}[5m]) > 0.05",
+  "pii": []
+ },
+ {
+  "id": "no-pii-058",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "0 3 * * 1-5 /usr/local/bin/backup.sh --full >> /var/log/backup.log 2>&1",
+  "pii": []
+ },
+ {
+  "id": "no-pii-059",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Total: 1,234,567.89 USD; tax 7.25%; discount code SPRING24; SKU AB-1234-XY.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-060",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Using Python 3.12.2, CUDA 12.1, PyTorch 2.2.1+cu121 on NVIDIA A100 80GB.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-061",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "GET /api/v2/orders?limit=50&offset=100&sort=-created_at HTTP/1.1",
+  "pii": []
+ },
+ {
+  "id": "no-pii-062",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "gRPC status: UNAVAILABLE (14): upstream connect error, retry in 250ms",
+  "pii": []
+ },
+ {
+  "id": "no-pii-063",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "The quick brown fox jumps over the lazy dog. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-064",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Order #1234567812345678 failed validation: checksum mismatch.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-065",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Tracking number 9400111899223197428490 is in transit.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-066",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Customer id 123456789 migrated to tenant 987654321.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-067",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "PR #4412 merged; closes #4398 and #4401.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-068",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Released v2.0.0-rc.1 on 2024-03-12; previous: v1.9.7 (2024-02-01).",
+  "pii": []
+ },
+ {
+  "id": "no-pii-069",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Build 20240312.4 succeeded in 3m 42s (agent pool: ubuntu-22.04).",
+  "pii": []
+ },
+ {
+  "id": "no-pii-070",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Call stack size exceeded after 10000 frames at depth 9998.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-071",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "pip install -r requirements.txt --no-cache-dir && python -m pytest -q",
+  "pii": []
+ },
+ {
+  "id": "no-pii-072",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "yarn workspace @acme/web add react-query@^5.0.0",
+  "pii": []
+ },
+ {
+  "id": "no-pii-073",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "cargo test --release -- --nocapture\nrunning 12 tests\ntest parser::tests::empty_input ... ok\ntest result: ok. 12 passed; 0 failed",
+  "pii": []
+ },
+ {
+  "id": "no-pii-074",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "go test ./... -race -count=1\nok  \tgithub.com/acme/api/internal/store\t1.842s\nFAIL\tgithub.com/acme/api/internal/queue\t0.512s",
+  "pii": []
+ },
+ {
+  "id": "no-pii-075",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "mvn -q clean verify -DskipITs\n[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile",
+  "pii": []
+ },
+ {
+  "id": "no-pii-076",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "systemctl status nginx\n● nginx.service - A high performance web server\n     Active: active (running) since Tue 2024-03-12 08:00:01 UTC; 2h 14min ago\n   Main PID: 1042 (nginx)",
+  "pii": []
+ },
+ {
+  "id": "no-pii-077",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "top - 10:14:02 up 12 days,  3:22,  1 user,  load average: 0.52, 0.48, 0.45\nTasks: 213 total,   1 running, 212 sleeping",
+  "pii": []
+ },
+ {
+  "id": "no-pii-078",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "ping -c 3 10.0.0.1\n64 bytes from 10.0.0.1: icmp_seq=1 ttl=64 time=0.412 ms",
+  "pii": []
+ },
+ {
+  "id": "no-pii-079",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "CIDR blocks: 10.0.0.0/16, 172.16.0.0/12, 192.168.0.0/24; gateway 192.168.0.1.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-080",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Listening on 0.0.0.0:3000 and [::]:3000 (dual stack).",
+  "pii": []
+ },
+ {
+  "id": "no-pii-081",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "SELECT COUNT(*) AS n, status FROM jobs WHERE created_at >= NOW() - INTERVAL '7 days' GROUP BY status;",
+  "pii": []
+ },
+ {
+  "id": "no-pii-082",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "UPDATE accounts SET balance = balance - 100.00 WHERE id = 42 AND balance >= 100.00;",
+  "pii": []
+ },
+ {
+  "id": "no-pii-083",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "ALTER TABLE orders ADD COLUMN shipped_at TIMESTAMPTZ;\nCREATE INDEX idx_orders_shipped ON orders (shipped_at);",
+  "pii": []
+ },
+ {
+  "id": "no-pii-084",
+  "group": "no-pii",
+  "lang": "en",
+  "text": ".btn { padding: 8px 16px; border-radius: 4px; color: #1a73e8; }\n@media (max-width: 768px) { .btn { padding: 4px 8px; } }",
+  "pii": []
+ },
+ {
+  "id": "no-pii-085",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "<form action=\"/signup\" method=\"post\">\n  <input type=\"email\" name=\"email\" placeholder=\"Email address\">\n  <input type=\"password\" name=\"password\">\n</form>",
+  "pii": []
+ },
+ {
+  "id": "no-pii-086",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "async function fetchUser(id) {\n  const res = await fetch(`/api/users/${id}`);\n  if (!res.ok) throw new Error('failed');\n  return res.json();\n}",
+  "pii": []
+ },
+ {
+  "id": "no-pii-087",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "@Entity\npublic class Customer {\n  @Id private Long id;\n  private String firstName;\n  private String lastName;\n  private String emailAddress;\n}",
+  "pii": []
+ },
+ {
+  "id": "no-pii-088",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "const SAMPLE = { firstName: 'string', lastName: 'string', age: 'number', phone: 'string' };",
+  "pii": []
+ },
+ {
+  "id": "no-pii-089",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "validate_email(address: str) -> bool: checks RFC 5322 format; see tests for examples.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-090",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Mask the phone number field in the UI and never log the SSN; see the privacy policy for details.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-091",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "jobs:\n  test:\n    runs-on: ubuntu-latest\n    strategy:\n      matrix:\n        node: [20, 22, 24]\n    steps:\n      - uses: actions/checkout@v4\n      - run: npm ci && npm test",
+  "pii": []
+ },
+ {
+  "id": "no-pii-092",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "services:\n  db:\n    image: postgres:16\n    ports: [\"5432:5432\"]\n    environment:\n      POSTGRES_PASSWORD: example\n      POSTGRES_DB: app",
+  "pii": []
+ },
+ {
+  "id": "no-pii-093",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "[tool.ruff]\nline-length = 100\nselect = [\"E\", \"F\", \"I\"]\n\n[tool.pytest.ini_options]\naddopts = \"-ra -q\"",
+  "pii": []
+ },
+ {
+  "id": "no-pii-094",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "resource \"aws_s3_bucket\" \"logs\" {\n  bucket = \"acme-logs-eu-central-1\"\n  tags   = { env = \"prod\", team = \"platform\" }\n}",
+  "pii": []
+ },
+ {
+  "id": "no-pii-095",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "server {\n    listen 443 ssl http2;\n    server_name api.example.com;\n    location / { proxy_pass http://127.0.0.1:3000; }\n}",
+  "pii": []
+ },
+ {
+  "id": "no-pii-096",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Visit https://example.com/docs/getting-started#install or http://localhost:8080/health.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-097",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Frankfurt, Dublin and Singapore are our three edge regions; Virginia hosts the primary database.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-098",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Latency from São Paulo to Oregon is about 180 ms on the public internet.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-099",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "The conference is in Berlin this year; talks cover Kubernetes, Terraform and Rust.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-100",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Install Xcode from the Mac App Store, then run xcode-select --install. Works with macOS Sonoma 14.4.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-101",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Microsoft Azure, Google Cloud, Amazon Web Services and Cloudflare all offer managed Kubernetes.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-102",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "We migrated from MongoDB to PostgreSQL and from Heroku to Fly.io; Stripe handles billing.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-103",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "The Pythagorean theorem states a^2 + b^2 = c^2. For n=5, the sum 1+2+3+4+5 = 15 and 5! = 120.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-104",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "e = mc^2; lim_{x->0} sin(x)/x = 1; matrix A in R^{3x3} has det(A) = -2.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-105",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "See RFC 9110 section 15.5.5 (404 Not Found) and ISO 8601 for the timestamp format.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-106",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Q: Why does my build fail on CI but pass locally?\nA: Usually a different Node version or a missing lockfile entry.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-107",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Refactor plan: extract the pricing module, add contract tests, then delete the legacy path. Estimated 3 sprints.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-108",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "The release is scheduled for Thursday. Please update the changelog before then.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-109",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Reminder: the maintenance window is 02:00-04:00 UTC on 2024-03-16. Expect brief downtime.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-110",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "WARN  deprecated API usage: Buffer() is deprecated, use Buffer.alloc() instead (DEP0005)",
+  "pii": []
+ },
+ {
+  "id": "no-pii-111",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Segmentation fault (core dumped)\n#0  0x00007ffff7a4d1c8 in raise () from /lib/x86_64-linux-gnu/libc.so.6\n#1  0x0000555555555189 in main () at main.c:7",
+  "pii": []
+ },
+ {
+  "id": "no-pii-112",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "java.lang.OutOfMemoryError: Java heap space\n\tat java.base/java.util.Arrays.copyOf(Arrays.java:3512)\n\tat com.acme.cache.Store.put(Store.java:88)",
+  "pii": []
+ },
+ {
+  "id": "no-pii-113",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "ModuleNotFoundError: No module named 'pandas'\nImportError: cannot import name 'foo' from 'bar' (/usr/lib/python3/dist-packages/bar/__init__.py)",
+  "pii": []
+ },
+ {
+  "id": "no-pii-114",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "FATAL: password authentication failed for user \"app\"\nLOG:  checkpoint complete: wrote 412 buffers (2.5%); write=0.103 s, total=0.221 s",
+  "pii": []
+ },
+ {
+  "id": "no-pii-115",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "random seed 1337; batch_size=64; lr=3e-4; epochs=20; val_acc=0.9412; loss=0.1873",
+  "pii": []
+ },
+ {
+  "id": "no-pii-116",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Bitcoin address example and base64: SGVsbG8sIFdvcmxkIQ== ; hex: 0xDEADBEEF; mac: 00:1A:2B:3C:4D:5E",
+  "pii": []
+ },
+ {
+  "id": "no-pii-117",
+  "group": "no-pii",
+  "lang": "de",
+  "text": "Das Update ist fertig. Bitte starten Sie den Server neu und prüfen Sie die Logs.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-118",
+  "group": "no-pii",
+  "lang": "fr",
+  "text": "Le déploiement a échoué : vérifiez la configuration et relancez la pipeline.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-119",
+  "group": "no-pii",
+  "lang": "nl",
+  "text": "De build is geslaagd; de tests duren ongeveer vier minuten.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-120",
+  "group": "no-pii",
+  "lang": "es",
+  "text": "El servidor se reinicia cada noche a las 03:00 para aplicar parches.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-121",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Phone-like constants: PORT_RANGE 5550100-5550199, TIMEOUT_MS 3000000000, MAX_ID 4294967295.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-122",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Version 1.234.567 of the schema (build 555-0100-77) is deprecated.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-123",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Alice and Bob exchange keys; Eve intercepts. Mallory modifies the message. (Cryptography example.)",
+  "pii": []
+ },
+ {
+  "id": "no-pii-124",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Dear maintainers, thank you for the library. A small request: please add TypeScript types.",
+  "pii": []
+ },
+ {
+  "id": "no-pii-125",
+  "group": "no-pii",
+  "lang": "en",
+  "text": "Marked as duplicate of #2210. Closing.",
+  "pii": []
+ }
+]

@@ -9,7 +9,7 @@ A [Pi](https://github.com/earendil-works/pi) extension that keeps personally ide
 
 Names, addresses, emails, phone numbers, card numbers, government IDs, API keys and more are replaced with stable tokens such as `[EMAIL_3#k7q2]` before anything is sent to the model. When the model uses those tokens in a tool call or a reply, the extension swaps the real values back in, so your tools still work on real data and you still read real values.
 
-Detection runs locally with the [`@desert-ant-labs/redact`](https://www.npmjs.com/package/@desert-ant-labs/redact) multilingual NER model plus regex rules. Nothing is sent to a third-party service for redaction.
+Detection runs locally with the [masker-mini](https://huggingface.co/divergentlabs/masker-mini) multilingual NER model (run through ONNX Runtime) plus deterministic rules using structural, context, and checksum validation as appropriate. Nothing is sent to a third-party service for redaction.
 
 ## Installation
 
@@ -21,7 +21,9 @@ pi install npm:@chrisdoc/pi-pii-redact
 
 This adds the package to your personal Pi settings (`~/.pi/agent/settings.json`), so it loads in every session. Start Pi as usual; the footer shows `PII: On` and redaction is active from the first prompt. Run `/pii status` to confirm.
 
-> On first use the redaction model (about 25 MB) is downloaded from Hugging Face and cached in `~/.cache/desert-ant-models`, so the first session takes a moment longer to start.
+> On first use the redaction model (about 22 MB) is downloaded from Hugging Face and cached in `~/.cache/pi-pii-redact`, so the first session takes a moment longer to start. See [The model](#the-model).
+>
+> Install size: `onnxruntime-node` bundles native binaries for all platforms, so the install is larger than the model alone.
 
 ### Other ways to install
 
@@ -74,16 +76,29 @@ The enabled state and disabled rules are stored in the session and survive reloa
 
 ## What gets redacted
 
-| Group | Rules |
-| --- | --- |
-| People | given names, surnames |
-| Addresses | street names, building numbers, apartment/suite, cities, states/provinces, ZIP/postal codes |
-| Contact | email addresses, phone numbers, URLs, IP addresses |
-| Financial | credit card numbers, bank account numbers, routing numbers, tax IDs |
-| Government IDs | national IDs, SSNs, passports, driver's licenses |
-| Devices | IMEI numbers |
-| Secrets | API keys and tokens (`sk-…`, GitHub `ghp_…`/`gho_…`/…, GitLab `glpat-…`, AWS `AKIA…`) |
-| Organizations | company and project names (**disabled by default** to avoid over-redacting code and docs) |
+Rules marked "model" use the masker-mini NER model; "rules" are deterministic regex rules whose candidates must pass a checksum or structural check (the model's own email, phone and card labels are not used).
+
+| Group | Rules | Source |
+| --- | --- | --- |
+| People | given names, surnames, ages (`age`) | model |
+| Addresses | street names, building numbers, cities, ZIP/postal codes | model |
+| Contact | email addresses, phone numbers, IPv4/IPv6 addresses | rules |
+| Financial | credit card numbers (Luhn), IBANs (mod-97), ABA routing numbers | rules |
+| Government IDs | `government-id` (national IDs, passports, tax IDs, driver's licenses) | model |
+|  | US SSNs, Dutch BSNs (`nl-bsn`, needs a BSN keyword nearby) | rules |
+| Devices | IMEI numbers (needs an "IMEI" keyword nearby) | rules |
+| Secrets | API keys and tokens (`sk-…`, GitHub `ghp_…`/`gho_…`/…, GitLab `glpat-…`, AWS `AKIA…`) | rules |
+| Dates | `date` (**disabled by default**: dates in logs and changelogs are noisy; enable it with `/pii toggle date`) | model |
+
+`passport`, `drivers-license` and `tax-id` are aliases of `government-id`, so toggling them toggles that rule. The `state`, `secondary-address`, `url` and `org` rules were removed because no detector backs them any more.
+
+## The model
+
+- masker-mini (int4, about 22 MB, Apache-2.0) from [divergentlabs/masker-mini](https://huggingface.co/divergentlabs/masker-mini), derived from Microsoft mDeBERTa-v3 / Multilingual-MiniLM (MIT). See [NOTICE](NOTICE).
+- It is downloaded on first use from a pinned Hugging Face revision, verified against pinned SHA-256 hashes and cached in `$XDG_CACHE_HOME/pi-pii-redact/masker-mini/<revision>/` (default `~/.cache/pi-pii-redact/...`).
+- Offline use: set `PI_PII_REDACT_MODEL_DIR` to a directory with the same file layout (`config.json`, `tokenizer.json`, `tokenizer_config.json`, `onnx/model_int4.onnx`). Nothing is downloaded and the hashes are still verified.
+- The default `minimumConfidence` is 0.55.
+- ONNX Runtime's telemetry is disabled (`ORT_DISABLE_TELEMETRY=1` is set before the runtime loads).
 
 ## Where redaction happens
 

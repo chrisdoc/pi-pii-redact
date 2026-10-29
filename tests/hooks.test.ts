@@ -89,6 +89,44 @@ describe("registerHooks - Component Unit Tests", () => {
       const { ctx } = createMockContext({ missingSetStatus: true });
       await expect(mockPi.trigger("session_start", {}, ctx)).resolves.not.toThrow();
     });
+
+    it.each([
+      [[], true],
+      [["passport"], true],
+      [["drivers-license"], true],
+      [["tax-id"], true],
+      [["passport", "tax-id"], true],
+      [["passport", "drivers-license"], true],
+      [["drivers-license", "tax-id"], true],
+      [["passport", "drivers-license", "tax-id"], false],
+      [["PASSPORT", "DRIVERS_LICENSE", "TAX_ID"], false],
+      [["passport", "driver_license", "tax-id"], false],
+      [["passport", "drivers-license", "driver-license"], true],
+      [["government-id"], false],
+      [["government-id", "passport"], false],
+    ])("1.6 restores government-id from disabled rules %j (enabled: %s)", async (disabledRules, enabled) => {
+      const redactor = new RedactorService();
+      registerHooks(mockPi.api, redactor);
+
+      const ctx = {
+        sessionManager: {
+          getEntries: () => [
+            {
+              type: "custom",
+              customType: "pii-config",
+              data: {
+                enabled: true,
+                disabledRules,
+              },
+            },
+          ],
+        },
+      } as any;
+
+      await mockPi.trigger("session_start", {}, ctx);
+      const govRule = redactor.getRules().find((r) => r.id === "government-id");
+      expect(govRule?.enabled).toBe(enabled);
+    });
   });
 
   // --------------------------------------------------------------------------

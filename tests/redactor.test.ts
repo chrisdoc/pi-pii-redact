@@ -141,7 +141,7 @@ describe("RedactorService", () => {
   it("introspects rules with getRules and getConfig", () => {
     const service = new RedactorService();
     const rules = service.getRules();
-    expect(rules.length).toBe(23);
+    expect(rules.length).toBe(19);
     const config = service.getConfig();
     expect(config.enabled).toBe(true);
     expect(config.maskUserInputs).toBe(true);
@@ -289,6 +289,19 @@ describe("RedactorService", () => {
       expect(tokenOf(r1.text, "GIVEN_NAME")).toBe(tokenOf(r2.text, "GIVEN_NAME"));
       expect(r2.hasRedactions).toBe(true);
       expect(r2.count).toBe(1);
+    });
+
+    it("revalidates context-gated rules in known originals fast path", async () => {
+      const service = new RedactorService([], {}, { redactInstance: fakeEngine(() => []) as any });
+      // Unhyphenated 9-digit SSN requires context (e.g. "ssn") to be redacted
+      const r1 = await service.redact("My ssn is 123456789");
+      expect(r1.hasRedactions).toBe(true);
+      expect(r1.text).toContain("[SSN_");
+
+      // In later call without context keywords, 123456789 should not be replaced blindly
+      const r2 = await service.redact("Order number 123456789 placed");
+      expect(r2.hasRedactions).toBe(false);
+      expect(r2.text).toBe("Order number 123456789 placed");
     });
 
     it("dispose keeps the vault for restore", async () => {

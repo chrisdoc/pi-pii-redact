@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { Redact } from "@desert-ant-labs/redact/native";
+import { MaskerMini } from "../src/services/masker-mini/index.js";
 import { realLoad } from "./setup-shared-model.js";
 import { RedactorService } from "../src/services/redactor.js";
 
@@ -13,7 +13,7 @@ describe("Challenger 1 Stress & Adversarial Test Suite", () => {
       const payload =
         "Security incident report filed by Alice Smith (alice.smith@corp.example.com, phone +1-555-0144). " +
         "Unauthorized access from 192.168.10.45 using compromised token sk-1234567890abcdef1234567890. " +
-        "Customer card 4532-0150-1234-5678 was queried.";
+        "Customer card 4532-0150-1234-5671 was queried.";
 
       const result = await service.redact(payload);
 
@@ -25,7 +25,7 @@ describe("Challenger 1 Stress & Adversarial Test Suite", () => {
       expect(result.text).not.toContain("+1-555-0144");
       expect(result.text).not.toContain("192.168.10.45");
       expect(result.text).not.toContain("sk-1234567890abcdef1234567890");
-      expect(result.text).not.toContain("4532-0150-1234-5678");
+      expect(result.text).not.toContain("4532-0150-1234-5671");
 
       // Verify restoration restores all items accurately
       const restored = result.restore(result.text);
@@ -192,7 +192,7 @@ describe("Challenger 1 Stress & Adversarial Test Suite", () => {
 
       // Disable all rules that do NOT have a custom regex pattern (i.e. all native rules) and email
       for (const rule of service.getRules()) {
-        if (!rule.pattern || rule.id === "email") {
+        if (!rule.pattern || rule.id === "email" || rule.id === "phone") {
           service.toggleRule(rule.id, false);
         }
       }
@@ -212,7 +212,7 @@ describe("Challenger 1 Stress & Adversarial Test Suite", () => {
 
       // Disable all native rules and email
       for (const rule of service.getRules()) {
-        if (!rule.pattern || rule.id === "email") {
+        if (!rule.pattern || rule.id === "email" || rule.id === "phone") {
           service.toggleRule(rule.id, false);
         }
       }
@@ -288,7 +288,7 @@ describe("Challenger 1 Stress & Adversarial Test Suite", () => {
 
     it("handles re-initialization cleanly after dispose()", async () => {
       // Bypass the shared model for this test so dispose() and reload are real.
-      const loadSpy = vi.mocked(Redact.load);
+      const loadSpy = vi.mocked(MaskerMini.load);
       loadSpy.mockImplementationOnce(realLoad).mockImplementationOnce(realLoad);
       const callsBefore = loadSpy.mock.calls.length;
       const service = new RedactorService();

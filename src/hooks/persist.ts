@@ -48,7 +48,20 @@ export function loadConfig(entries: readonly CustomEntryLike[], redactor: Redact
   if (!latest || typeof latest.enabled !== "boolean") return;
   redactor.setEnabled(latest.enabled);
   if (Array.isArray(latest.disabledRules)) {
-    const disabled = new Set(latest.disabledRules);
+    // Keep government-id active unless all three legacy rules were disabled.
+    const disabled = new Set(
+      latest.disabledRules
+        .filter((id): id is string => typeof id === "string")
+        .map((id) => {
+          const lower = id.toLowerCase().replace(/_/g, "-");
+          if (lower === "driver-license") return "drivers-license";
+          if (lower === "passport" || lower === "drivers-license" || lower === "tax-id") return lower;
+          return id;
+        })
+    );
+    if (["passport", "drivers-license", "tax-id"].every((id) => disabled.has(id))) {
+      disabled.add("government-id");
+    }
     for (const rule of redactor.getRules()) {
       redactor.toggleRule(rule.id, !disabled.has(rule.id));
     }

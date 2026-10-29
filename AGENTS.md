@@ -4,7 +4,7 @@ This file provides guidance to coding agents working with code in this repositor
 
 ## What this is
 
-A [Pi](https://github.com/earendil-works/pi) extension (published as `@chrisdoc/pi-pii-redact`) that replaces PII and secrets with stable per-session tokens like `[EMAIL_3#k7q2]` before anything reaches the LLM, and restores real values in tool-call arguments and assistant replies. Detection runs locally: the `@desert-ant-labs/redact` NER model plus regex overlay rules.
+A [Pi](https://github.com/earendil-works/pi) extension (published as `@chrisdoc/pi-pii-redact`) that replaces PII and secrets with stable per-session tokens like `[EMAIL_3#k7q2]` before anything reaches the LLM, and restores real values in tool-call arguments and assistant replies. Detection runs locally: the masker-mini NER model (ONNX Runtime) plus deterministic, validator-backed regex overlay rules.
 
 The package ships TypeScript source directly (`main` and `pi.extensions` point at `src/index.ts`); there is no build step.
 
@@ -20,7 +20,7 @@ npx vitest run -t "restores tokens"       # tests matching a name
 pi -e .                                   # load the working copy into Pi
 ```
 
-Most tests run the real on-device model on CPU. `tests/setup-shared-model.ts` loads it once per test file and shares it across services (`dispose()` is a no-op there), so tests that assert model-disposal behavior see the shared instance. On first run it downloads (~25 MB) into `~/.cache/desert-ant-models`. `vitest.config.ts` sets a 30 s timeout and `fileParallelism: false` on purpose, because parallel files each load a model and oversubscribe the CPU. Don't change those to speed things up.
+Most tests run the real on-device model on CPU. `tests/setup-shared-model.ts` loads it once per test file and shares it across services (`dispose()` is a no-op there), so tests that assert model-disposal behavior see the shared instance. On first run it downloads the pinned model (~22 MB) into `~/.cache/pi-pii-redact` (or set `PI_PII_REDACT_MODEL_DIR` to use a local copy). `vitest.config.ts` sets a 30 s timeout and `fileParallelism: false` on purpose, because parallel files each load a model and oversubscribe the CPU. Don't change those to speed things up.
 
 CI (`.github/workflows/ci.yml`) runs typecheck and tests on Node 22 and 24.
 
@@ -28,17 +28,19 @@ CI (`.github/workflows/ci.yml`) runs typecheck and tests on Node 22 and 24.
 
 `src/index.ts` creates one `RedactorService` and one `PiiStats` and passes both to `registerHooks` (`src/hooks/index.ts`) and `registerPiiCommands` (`src/commands/pii.ts`).
 
-**`RedactorService` (`src/services/redactor.ts`)** owns the rules, the config, the lazily loaded native model, an LRU result cache and the session vault. `redact()` runs in this order:
-1. Splits enabled rules into regex overlay rules (those with a `pattern`) and native model labels.
+**`RedactorService` (`src/services/redactor.ts`)** owns the rules, the config, the lazily loaded masker-mini model, an LRU result cache and the session vault. `redact()` runs in this order:
+1. Splits enabled rules into regex overlay rules (those with a `pattern`) and model labels.
 2. Fast path: replaces originals already in the vault with their tokens.
 3. Applies the regex overlays. `replaceOutsideTokens` never touches text overlapping an existing vault token.
-4. Runs native inference for the active labels, filtered by `minimumConfidence` (default 0.85).
+4. Runs ONE model call for all active model labels, filtered by `minimumConfidence` (default 0.55). No call is made when no model label is active.
 
 Anything that changes rules, the enabled state or the vault must clear the cache, as the existing setters do.
 
 **`PiiVault` (`src/services/vault.ts`)** is the two-way map between originals and tokens. The same original always gets the same token. Per-label counters only increase. A random per-vault nonce means text that merely looks like a token is never restored. Restore tolerates mangled tokens (lower case, missing brackets, extra spaces). Rules with a custom `mask` are one-way and never enter the vault.
 
-**Rules (`src/rules/default-rules.ts`)**: `MODEL_RULE_DEFINITIONS` maps the 22 native labels to `PiiRule`s (`ORG` is disabled by default), plus the regex overlays for API keys and similar. `toggleRule` accepts ids, native labels and aliases.
+**Rules (`src/rules/default-rules.ts`)**: `MODEL_RULE_DEFINITIONS` holds the model-backed rules (given-name, surname, street-name, building-number, city, zip-code, government-id, age, and `date`, which is disabled by default) and the deterministic overlays with `validate` functions from `src/rules/validators.ts` (email, bank-account/IBAN, imei, credit-card, ssn, routing-number, ip-address, phone). `DETERMINISTIC_RULES` adds `nl-bsn`; `SECRET_RULES` adds API keys. The model's EMAIL/PHONE/CREDIT_CARD labels are never requested. `passport`, `drivers-license` and `tax-id` are aliases of `government-id`. `toggleRule` accepts ids, labels and aliases.
+
+**Model engine (`src/services/masker-mini/`)**: `MaskerMini` implements the minimal `NerEngine` interface (`src/services/ner-engine.ts`, which also defines `NerLabel`); tests inject fakes through `RedactorServiceOptions.redactInstance`. `model-files.ts` pins the Hugging Face revision and SHA-256 of the int4 files, downloads into `$XDG_CACHE_HOME/pi-pii-redact/masker-mini/<rev>/` (default `~/.cache`), or uses `RedactorConfig.modelDirectory` / `PI_PII_REDACT_MODEL_DIR` (hashes still verified, never downloads). `tokenize.ts` aligns tokens to original offsets, `chunk.ts` windows long texts, `decode.ts` does BIOES decoding, `postprocess.ts` cleans spans (edge punctuation, numeric spans glued into identifiers, partial-word names), `merge.ts` filters and de-duplicates. `onnxruntime-node` and `@huggingface/tokenizers` are loaded with a dynamic import; `ORT_DISABLE_TELEMETRY=1` is set right before it (ORT's Linux telemetry writes under `~/.cache/Microsoft`), and `tests/masker-mini/telemetry.test.ts` checks that in a child process. Source must stay Node strip-only TypeScript compatible (no enums, namespaces or parameter properties). `eval/` holds a labelled corpus and scorer (see `eval/README.md`).
 
 **Hooks (`src/hooks/index.ts`)** handle the Pi events:
 - Redaction: `input`, `tool_result` (including `structuredContent`) and `context`. `context` re-redacts the whole history before every provider request.
