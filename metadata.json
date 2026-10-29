@@ -1,0 +1,46 @@
+{
+  "cli_version": "0.12.2",
+  "checkpoint_id": "01M63ACAWKZ0A4J2AJ7HGWP735",
+  "strategy": "manual-commit",
+  "branch": "t3/masker-mini-backend",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".changeset/masker-mini-engine.md",
+    "README.md",
+    "eval/build-corpus.mjs",
+    "eval/compare.ts",
+    "eval/run.ts",
+    "src/hooks/persist.ts",
+    "src/rules/default-rules.ts",
+    "src/services/masker-mini/merge.ts",
+    "src/services/masker-mini/model-files.ts",
+    "src/services/masker-mini/tokenize.ts",
+    "src/services/redactor.ts",
+    "tests/hooks.test.ts",
+    "tests/masker-mini/integration.test.ts",
+    "tests/masker-mini/units.test.ts",
+    "tests/redactor.test.ts"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "redaction": {
+    "replacements": 18,
+    "layers": {
+      "betterleaks": 8,
+      "connection_string": 0,
+      "credential_key": 0,
+      "credential_value": 0,
+      "credentialed_uri": 0,
+      "entropy": 10,
+      "key_context": 0,
+      "provider_token": 0,
+      "shell_stdin": 0
+    }
+  }
+}
