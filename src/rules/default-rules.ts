@@ -222,6 +222,17 @@ export const MODEL_RULE_DEFINITIONS: readonly ModelRuleDefinition[] = [
  */
 export const SECRET_RULES: readonly PiiRule[] = [
   {
+    id: "secrets",
+    name: "Secrets & credentials",
+    category: "secret",
+    nativeLabel: "SECRET",
+    detector: "secret-scanner",
+    aliases: ["secret", "credentials"],
+    enabled: true,
+    builtin: true,
+    description: "API keys, tokens, private keys and credentials in URLs, found by an offline secret scanner",
+  },
+  {
     id: "api-key-generic",
     name: "Common API Keys & Tokens",
     category: "api-key",
@@ -303,6 +314,7 @@ export function getActiveModelLabels(rules: Iterable<PiiRule>): string[] {
   const labels: string[] = [];
   for (const rule of rules) {
     if (!rule.enabled) continue;
+    if (rule.detector) continue;
     const label = rule.nativeLabel ?? RULE_ID_TO_LABEL[rule.id];
     if (label) {
       labels.push(label);
@@ -325,6 +337,7 @@ export function findRuleByIdOrLabel(
 
   for (const rule of rules) {
     if (rule.id === trimmed || rule.id === lower) return rule;
+    if (rule.aliases?.includes(lower)) return rule;
     const ruleLabel = rule.nativeLabel;
     if (ruleLabel && (ruleLabel === upper || ruleLabel === targetLabel)) return rule;
   }

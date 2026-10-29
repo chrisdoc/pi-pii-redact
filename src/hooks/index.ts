@@ -13,6 +13,7 @@ import {
   restoreStringsInPlace,
 } from "./messages.js";
 import { loadConfig, loadVault, persistVaultDelta } from "./persist.js";
+import { warmUpSecretScanner } from "../services/secrets/index.js";
 
 type JsonValue = unknown;
 
@@ -70,6 +71,10 @@ export function registerHooks(pi: ExtensionAPI, redactor: RedactorService, stats
     if (ctx?.sessionManager) {
       loadVault(entries, redactor);
       loadConfig(entries, redactor);
+    }
+    // The secret scanner's first scan takes seconds; warm it in the background.
+    if (redactor.isEnabled() && redactor.getRules().some((r) => r.id === "secrets" && r.enabled)) {
+      warmUpSecretScanner();
     }
     ctx?.ui?.setStatus?.("pii-redact", statusText());
   });

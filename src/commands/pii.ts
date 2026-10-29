@@ -2,6 +2,7 @@ import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import type { RedactorService } from "../services/redactor.js";
 import { matchesKey, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 import { persistConfig } from "../hooks/persist.js";
+import { getSecretScannerError, getSecretScannerStatus } from "../services/secrets/index.js";
 import { PiiStats } from "../services/stats.js";
 import { renderStatsLines, type BoardStyle, type StatsBoardData } from "./stats-board.js";
 
@@ -132,8 +133,15 @@ export function registerPiiCommands(pi: ExtensionAPI, redactor: RedactorService,
       // Default: status
       const state = redactor.isEnabled() ? "ACTIVE" : "INACTIVE";
       const activeRules = redactor.getRules().filter((r) => r.enabled).length;
+      const scanner = getSecretScannerStatus();
+      const scannerLine =
+        scanner === "ready"
+          ? "ready"
+          : scanner === "unavailable"
+            ? `unavailable: ${getSecretScannerError() ?? "unknown reason"}`
+            : "not loaded yet";
       ctx.ui.notify(
-        `PII Redactor status: ${state}\nActive rules: ${activeRules}/${redactor.getRules().length}`,
+        `PII Redactor status: ${state}\nActive rules: ${activeRules}/${redactor.getRules().length}\nSecret scanner: ${scannerLine}`,
         "info"
       );
     },

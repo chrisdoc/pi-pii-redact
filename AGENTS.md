@@ -29,10 +29,13 @@ CI (`.github/workflows/ci.yml`) runs typecheck and tests on Node 22 and 24.
 `src/index.ts` creates one `RedactorService` and one `PiiStats` and passes both to `registerHooks` (`src/hooks/index.ts`) and `registerPiiCommands` (`src/commands/pii.ts`).
 
 **`RedactorService` (`src/services/redactor.ts`)** owns the rules, the config, the lazily loaded masker-mini model, an LRU result cache and the session vault. `redact()` runs in this order:
-1. Splits enabled rules into regex overlay rules (those with a `pattern`) and model labels.
+1. Splits enabled rules into regex overlay rules (those with a `pattern`), the secret-scanner rule (`detector: "secret-scanner"`, never sent to the model) and model labels.
 2. Fast path: replaces originals already in the vault with their tokens.
-3. Applies the regex overlays. `replaceOutsideTokens` never touches text overlapping an existing vault token.
-4. Runs ONE model call for all active model labels, filtered by `minimumConfidence` (default 0.55). No call is made when no model label is active.
+3. Secrets: `scanSecrets` (`src/services/secrets/`) replaces keys/tokens/private keys with `[SECRET_n#...]` tokens, before the overlays so a key wins over phone/IBAN/email rules.
+4. Applies the regex overlays. `replaceOutsideTokens` never touches text overlapping an existing vault token.
+5. Runs ONE model call for all active model labels, filtered by `minimumConfidence` (default 0.55). No call is made when no model label is active.
+
+**Secret scanner (`src/services/secrets/`)** wraps `@visulima/secret-scanner` (native, loaded lazily with dynamic import; a load failure only marks it `unavailable`, see `getSecretScannerStatus()`). Never enable its `validate` option (it would send secrets to provider APIs) and never write to stdout/stderr from it (Pi's TUI). Only the kingfisher rules plus `EXTRA_GITLEAKS_RULES` are compiled (the full bundled set costs ~660 MB and ~4 s cold start); the first scan is paid once during load and warmed at `session_start`. A regex pre-gate skips the ~25 ms per-call cost for text that cannot hold a secret. Spans that cover only part of a key-like token are widened to the whole token. Findings are mapped to offsets by searching for `finding.secret` near the reported line/column, then filtered (min length 8, no whitespace except private keys); overlaps resolve by confidence, then narrowest. Tests must generate realistic provider keys at runtime (`tests/secrets/fake-keys.ts`) because GitHub push protection rejects committed ones.
 
 Anything that changes rules, the enabled state or the vault must clear the cache, as the existing setters do.
 

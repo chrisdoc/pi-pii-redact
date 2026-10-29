@@ -8,7 +8,13 @@ import { resolveMaskerFiles } from "../../src/services/masker-mini/model-files.j
 const LOADER = new URL("../../eval/ts-resolve.mjs", import.meta.url).href;
 const ENGINE = new URL("../../src/services/masker-mini/index.ts", import.meta.url).href;
 
+const SECRETS = new URL("../../src/services/secrets/index.ts", import.meta.url).href;
+
 const CHILD = `
+const { scanSecrets, getSecretScannerStatus } = await import(${JSON.stringify(SECRETS)});
+const fake = "Zq8vXk2LmN4pRt7WbY3cHd9E";
+const spans = await scanSecrets("DATABASE_PASSWORD=" + fake + " and password = \\"" + fake + "-x\\"");
+if (spans.length === 0 || getSecretScannerStatus() !== "ready") throw new Error("secret scanner did not run: " + getSecretScannerStatus());
 const { MaskerMini } = await import(${JSON.stringify(ENGINE)});
 const model = await MaskerMini.load();
 const { items } = await model.redaction("Mein Name ist Jürgen Müller", { labels: ["GIVEN_NAME", "SURNAME"], minimumConfidence: 0.5 });
@@ -42,7 +48,8 @@ describe("onnxruntime telemetry and clean exit", () => {
           ["--import", LOADER, "--experimental-strip-types", "--no-warnings", "--input-type=module", "-e", CHILD],
           { env, encoding: "utf8", timeout: 60_000 }
         );
-        expect(result.stderr).not.toMatch(/Error/);
+        expect(result.stderr).toBe("");
+        expect(result.stdout).toBe("");
         expect(result.signal).toBeNull();
         expect(result.status).toBe(0);
         expect(findMicrosoftDirs(home)).toEqual([]);

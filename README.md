@@ -87,10 +87,22 @@ Rules marked "model" use the masker-mini NER model; "rules" are deterministic re
 | Government IDs | `government-id` (national IDs, passports, tax IDs, driver's licenses) | model |
 |  | US SSNs, Dutch BSNs (`nl-bsn`, needs a BSN keyword nearby) | rules |
 | Devices | IMEI numbers (needs an "IMEI" keyword nearby) | rules |
-| Secrets | API keys and tokens (`sk-…`, GitHub `ghp_…`/`gho_…`/…, GitLab `glpat-…`, AWS `AKIA…`) | rules |
+| Secrets | `secrets`: provider API keys, tokens, JWTs, private keys, credentials in connection URLs (see [Secret detection](#secret-detection)) | secret scanner |
+|  | `api-key-generic`: `sk-…`, GitHub `ghp_…`, GitLab `glpat-…`, AWS `AKIA…` (fallback if the scanner is unavailable) | rules |
 | Dates | `date` (**disabled by default**: dates in logs and changelogs are noisy; enable it with `/pii toggle date`) | model |
 
 `passport`, `drivers-license` and `tax-id` are aliases of `government-id`, so toggling them toggles that rule. The `state`, `secondary-address`, `url` and `org` rules were removed because no detector backs them any more.
+
+## Secret detection
+
+The `secrets` rule ("Secrets & credentials", on by default) uses [`@visulima/secret-scanner`](https://www.npmjs.com/package/@visulima/secret-scanner), a Rust port of gitleaks-style detection. It runs the bundled kingfisher rules (about 870) plus a few gitleaks rules (GitHub, Hugging Face, npm); the rest of the gitleaks set is left out because it would add about 500 MB of memory and several seconds of start-up for little extra coverage. It finds API keys for Anthropic, OpenAI, Stripe, AWS, Hugging Face, Slack, SendGrid, Google, GitLab and GitHub, JWTs, PEM private keys, credentials in URLs such as `postgres://user:pass@host`, and `password = "..."` style assignments. Matches become `[SECRET_n#xxxx]` tokens that are restored in tool-call arguments and assistant replies like any other token.
+
+- Offline only: the scanner runs locally and its credential validation (which would send secrets to provider APIs or connect to databases) is hard-coded off.
+- Cost: about 170 MB of memory and a ~0.8 s warm-up, started in the background when a session starts. After that every scanner call has a fixed cost of about 25 ms; a cheap pre-check (long token-like runs, PEM headers, URL credentials, `password=`/`token:` style assignments) skips the call for text that cannot contain a secret.
+- Noise control: matches shorter than 8 characters and matches containing whitespace (except private keys) are dropped.
+- Known gaps: `npm_` tokens and the AWS documentation example key are not detected by the scanner.
+- Toggle it with `/pii toggle secrets` (aliases `secret`, `credentials`). `/pii status` shows whether the scanner loaded. If its native binding is unavailable on your platform, secret detection is skipped and the regex-based `api-key-generic` rule still applies; all PII detection keeps working.
+- Requires Node `^22.14.0 || >=24.10.0`.
 
 ## The model
 
