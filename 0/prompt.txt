@@ -1,0 +1,6 @@
+Continue where you left off.
+
+---
+
+Note: the T3 server restarted, and this background work was cancelled before it finished. It will not report back on its own, so resume or restart what you still need and wait for its result:
+- shell: git status --short && free -m | head -2 && npm test 2>&1 | grep -E "Test Files|Tests |×|Duration" (id byvf5w9x5)
