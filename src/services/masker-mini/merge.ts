@@ -22,12 +22,18 @@ export function dedupeSpans(spans: readonly Span[]): Span[] {
     .sort((a, b) => b.confidence - a.confidence || b.end - b.start - (a.end - a.start) || a.start - b.start);
   const kept: Span[] = [];
   for (const s of ranked) {
-    const existing = kept.find((k) => s.start < k.end && k.start < s.end);
-    if (!existing) {
+    const overlaps = kept.filter((k) => s.start < k.end && k.start < s.end);
+    if (!overlaps.length) {
       kept.push({ ...s });
     } else {
+      const existing = overlaps[0];
       existing.start = Math.min(existing.start, s.start);
       existing.end = Math.max(existing.end, s.end);
+      for (const other of overlaps.slice(1)) {
+        existing.start = Math.min(existing.start, other.start);
+        existing.end = Math.max(existing.end, other.end);
+        kept.splice(kept.indexOf(other), 1);
+      }
     }
   }
   return kept.sort((a, b) => a.start - b.start || a.end - b.end);

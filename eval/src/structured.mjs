@@ -29,6 +29,7 @@ export const structured = [
   "SSN: ⟦SSN|078-05-1120⟧",
   "Applicant social security number is ⟦SSN|219-09-9999⟧.",
   "ssn=⟦SSN|123-45-6789⟧",
+  // Domestic-account challenge fixtures measure gaps; the bank-account rule detects only IBANs.
   "ACH routing number ⟦RN|021000021⟧ and account number ⟦BA|123456789012⟧.",
   "Routing: ⟦RN|011401533⟧, Acct: ⟦BA|000123456789⟧",
   "Sort code ⟦BA|60-16-13⟧ account ⟦BA|31926819⟧",

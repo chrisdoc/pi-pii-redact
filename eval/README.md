@@ -21,7 +21,7 @@ Case shape: `{ id, group, lang, text, pii: [{ value, type }] }`; every `value` o
 | no-pii | 125 | dev text with nothing personal: stack traces, compiler/test/package output, docker/k8s, SQL, configs, git, versions, timestamps, ids, hashes, code identifiers, infra regions, math, near-misses |
 
 Types: GIVEN_NAME, SURNAME, STREET_NAME, BUILDING_NUMBER, CITY, ZIP_CODE, STATE, EMAIL, PHONE, CREDIT_CARD, IBAN,
-BANK_ACCOUNT (non-IBAN), ROUTING_NUMBER, SSN, PASSPORT, DRIVERS_LICENSE, TAX_ID, NATIONAL_ID, IP_ADDRESS, IMEI,
+BANK_ACCOUNT, ROUTING_NUMBER, SSN, PASSPORT, DRIVERS_LICENSE, TAX_ID, NATIONAL_ID, IP_ADDRESS, IMEI,
 DATE_OF_BIRTH, AGE, URL_WITH_PII, API_KEY. (URL_WITH_PII is defined but currently unused.)
 
 ### Labelling conventions
@@ -31,7 +31,7 @@ DATE_OF_BIRTH, AGE, URL_WITH_PII, API_KEY. (URL_WITH_PII is defined but currentl
 - Lowercase handles that are a person's name (`@rob`, `TODO(ananya)`) are GIVEN_NAME.
 - Cities only count when they are a person's location (home or delivery city). Cloud regions and "Frankfurt region" style infra mentions are no-pii.
 - Dutch BSN, French NIR, Spanish DNI, Polish PESEL, Swedish personnummer, Danish CPR, Czech rodne cislo, Aadhaar and UK NINO are NATIONAL_ID. German Steuer-ID, Italian codice fiscale, Brazilian CPF, US EIN-style ids are TAX_ID.
-- Sort code + UK account number are BANK_ACCOUNT.
+- `IBAN` labels IBAN fixtures. `BANK_ACCOUNT` labels the domestic-account challenge fixtures in `structured-027` through `structured-029` (US account numbers and a UK sort code/account pair). These measure detection gaps; the current `bank-account` rule detects only IBANs, so the fixtures do not establish domestic-account support.
 - Private/loopback IPs (`10.0.0.1`, `127.0.0.1`, `192.168.x.x`), URLs on localhost, bot noreply addresses (dependabot), and crypto placeholder names (Alice/Bob/Eve) are NOT labelled. A backend that redacts them is scored as a false positive; this is a judgment call.
 - Public figures are not used.
 - Passwords embedded in connection strings were avoided, so credentials are only labelled when API_KEY-shaped.

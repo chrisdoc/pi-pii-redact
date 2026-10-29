@@ -69,6 +69,16 @@ const diffs: string[] = [];
 const rank: Record<string, number> = { caught: 0, partial: 1, leaked: 2 };
 let improved = 0, regressed = 0, newFp = 0, goneFp = 0;
 const fpKey = (f: any) => `${f.ruleId}|${f.original}`;
+const unmatchedFps = (left: any[], right: any[]) => {
+  const remaining = new Map<string, number>();
+  for (const f of right) remaining.set(fpKey(f), (remaining.get(fpKey(f)) ?? 0) + 1);
+  return left.filter((f) => {
+    const key = fpKey(f), count = remaining.get(key) ?? 0;
+    if (count === 0) return true;
+    remaining.set(key, count - 1);
+    return false;
+  });
+};
 for (const ca of A.cases) {
   const cb = byIdB.get(ca.id);
   if (!cb) continue;
@@ -82,9 +92,8 @@ for (const ca of A.cases) {
     if (rank[pb.status] < rank[pa.status]) improved++; else regressed++;
     lines.push(`- ${pa.type} "${pa.value}": A ${pa.status} -> B ${pb.status}`);
   }
-  const fa2 = new Set<string>(ca.fps.map(fpKey)), fb2 = new Set<string>(cb.fps.map(fpKey));
-  for (const f of cb.fps) if (!fa2.has(fpKey(f))) { newFp++; lines.push(`- new FP in B: ${f.ruleId} "${f.original}"`); }
-  for (const f of ca.fps) if (!fb2.has(fpKey(f))) { goneFp++; lines.push(`- FP removed in B: ${f.ruleId} "${f.original}"`); }
+  for (const f of unmatchedFps(cb.fps, ca.fps)) { newFp++; lines.push(`- new FP in B: ${f.ruleId} "${f.original}"`); }
+  for (const f of unmatchedFps(ca.fps, cb.fps)) { goneFp++; lines.push(`- FP removed in B: ${f.ruleId} "${f.original}"`); }
   if (!lines.length) continue;
   diffs.push(`### ${ca.id} (${ca.group}/${ca.lang})\n\n${lines.join("\n")}\n\nInput:\n${fence(ca.text)}\nA output:\n${fence(ca.output)}\nB output:\n${fence(cb.output)}`);
 }

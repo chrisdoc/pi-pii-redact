@@ -113,6 +113,17 @@ describe("alignPieces", () => {
     const ps = [{ id: 5, piece: "▁a" }, { id: 3, piece: "[UNK]" }, { id: 6, piece: "▁b" }];
     expect(alignPieces(text, ps)).toEqual([[0, 1], null, [text.length - 1, text.length]]);
   });
+  it("preserves a name through BIOES decoding after more than 32 emoji", () => {
+    const prefix = "😀".repeat(40) + " ";
+    const text = prefix + "Anna";
+    const ps = [{ id: 3, piece: "[UNK]" }, ...pieces("▁An", "na")];
+    const ranges = alignPieces(text, ps);
+    expect(ranges).toEqual([null, [prefix.length, prefix.length + 2], [prefix.length + 2, text.length]]);
+    const nameTable = buildLabelTable({ "0": "O", "1": "B-GIVEN_NAME", "2": "E-GIVEN_NAME" });
+    const spans = decodeBioes(ranges.map((range, i) => p(i, range)), nameTable, text);
+    expect(spans).toEqual([{ label: "GIVEN_NAME", start: prefix.length, end: text.length, confidence: 1 }]);
+    expect(text.slice(spans[0].start, spans[0].end)).toBe("Anna");
+  });
 });
 
 describe("normalizeWithMap / tokenizeWithOffsets", () => {
@@ -153,6 +164,18 @@ describe("filterSpans / dedupeSpans / argmaxSoftmax", () => {
       s("A", 0, 8, 0.9), s("A", 10, 12, 0.7),
     ]);
     expect(dedupeSpans([s("A", 0, 5, 0.9), s("A", 0, 8, 0.9)])).toEqual([s("A", 0, 8, 0.9)]);
+  });
+  it("merges a span bridging separate clusters and preserves the best metadata", () => {
+    const spans = [s("CITY", 0, 4, 0.9), s("SURNAME", 8, 12, 0.95), s("GIVEN_NAME", 3, 9, 0.7)];
+    const before = spans.map((span) => ({ ...span }));
+    expect(dedupeSpans(spans)).toEqual([s("SURNAME", 0, 12, 0.95)]);
+    expect(spans).toEqual(before);
+  });
+  it("merges overlap chains while keeping touching spans separate", () => {
+    expect(dedupeSpans([
+      s("A", 0, 3, 0.95), s("B", 4, 7, 0.9), s("C", 8, 11, 0.85),
+      s("D", 2, 5, 0.8), s("E", 6, 9, 0.7), s("F", 11, 14, 0.6),
+    ])).toEqual([s("A", 0, 11, 0.95), s("F", 11, 14, 0.6)]);
   });
   it("computes softmax of the argmax class", () => {
     const [k, prob] = argmaxSoftmax([0, 0, 5, 0, 99, 99], 0, 4);

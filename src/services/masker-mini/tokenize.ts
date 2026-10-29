@@ -16,7 +16,6 @@ export interface Piece {
 export const SPECIAL_IDS: ReadonlySet<number> = new Set([0, 1, 2, 3, 63895]);
 /** Whitespace, control and format characters the tokenizer's normalizer drops or turns into spaces. */
 const SKIPPABLE = /[\s\p{Cc}\p{Cf}]/u;
-/** How far past the cursor a piece may be searched after an unknown token. */
 
 export interface Normalized {
   text: string;
@@ -58,7 +57,7 @@ export function normalizeWithMap(text: string): Normalized {
  * (in normalized coordinates) or null per piece. Special/unknown/empty pieces and
  * pieces not found at the cursor get null and do not advance it. After an unknown
  * token (which swallows an unknown number of characters) the next piece may be
- * found a short distance ahead.
+ * found later in the remaining text.
  */
 export function alignPieces(
   normalized: string,
