@@ -57,32 +57,32 @@
       "transcript": "/0/full.jsonl",
       "compact_transcript": "/0/transcript.jsonl",
       "content_hash": "/0/content_hash.txt",
-      "prompt": "/0/prompt.txt"
+      "prompt": ""
     }
   ],
   "token_usage": {
-    "input_tokens": 206,
-    "cache_creation_tokens": 188811,
-    "cache_read_tokens": 14502407,
-    "output_tokens": 91521,
-    "api_call_count": 92,
+    "input_tokens": 4,
+    "cache_creation_tokens": 3620,
+    "cache_read_tokens": 524607,
+    "output_tokens": 1154,
+    "api_call_count": 2,
     "subagent_tokens": {
-      "input_tokens": 216,
-      "cache_creation_tokens": 413163,
-      "cache_read_tokens": 5763792,
-      "output_tokens": 175046,
-      "api_call_count": 107
+      "input_tokens": 16,
+      "cache_creation_tokens": 23362,
+      "cache_read_tokens": 127427,
+      "output_tokens": 5310,
+      "api_call_count": 8
     }
   },
   "redaction": {
-    "replacements": 123,
+    "replacements": 145,
     "layers": {
-      "betterleaks": 76,
+      "betterleaks": 88,
       "connection_string": 0,
       "credential_key": 0,
-      "credential_value": 31,
+      "credential_value": 37,
       "credentialed_uri": 4,
-      "entropy": 66,
+      "entropy": 85,
       "key_context": 11,
       "provider_token": 19,
       "shell_stdin": 0
