@@ -1,26 +1,44 @@
-import type { RedactLabel } from "@desert-ant-labs/redact/native";
+import type { NerLabel } from "../services/ner-engine.js";
 import type { PiiCategory, PiiRule } from "../types.js";
+import * as v from "./validators.js";
 
 /**
- * Metadata definition for mapping between native @desert-ant-labs/redact labels
+ * Metadata definition for mapping between masker-mini labels (or overlay vault labels)
  * and extension PiiRule records.
  */
 export interface ModelRuleDefinition {
   id: string;
   name: string;
   category: PiiCategory;
-  nativeLabel: RedactLabel;
+  nativeLabel: NerLabel | (string & {});
   enabled: boolean;
   description: string;
   pattern?: RegExp;
   mask?: (match: string) => string;
+  validate?: PiiRule["validate"];
   aliases?: string[];
 }
 
+const IBAN_PATTERN =
+  /(?<![A-Za-z0-9])(?:[A-Za-z]{2}[0-9]{2}(?: [A-Za-z0-9]{4})+(?: [A-Za-z0-9]{1,3})?|[A-Za-z]{2}[0-9]{2}[A-Za-z0-9]{11,30})(?![A-Za-z0-9])/g;
+
+/** Dotted-decimal IPv4 (not part of a longer dotted sequence) or colon-hex IPv6 candidates. */
+const IP_PATTERN =
+  /(?<![0-9]|[0-9]\.)(?:[0-9]{1,3}\.){3}[0-9]{1,3}(?![0-9]|\.[0-9])|(?<![0-9A-Fa-f:])[0-9A-Fa-f]{0,4}(?::[0-9A-Fa-f]{0,4}){2,7}(?:%[A-Za-z0-9]+)?(?![0-9A-Fa-f:])/g;
+
 /**
- * Canonical definitions for all 22 native labels in @desert-ant-labs/redact.
- * Exactly 21 labels are enabled by default (matching DEFAULT_LABELS).
- * "ORG" is disabled by default to avoid over-redacting company and project names.
+ * Loose phone candidates: optional `+`/`00` prefix, then digit groups (or parenthesised groups)
+ * joined by a single space, dot or hyphen. `validators.phone` makes the final decision.
+ */
+const PHONE_PATTERN =
+  /(?<![\w+.\-/:@$\u20ac\u00a3])(?:\+|00)?(?:\([0-9]{1,5}\)|[0-9]{1,15})(?:(?:[ .-]|(?<=\))|(?=\())(?:\([0-9]{1,5}\)|[0-9]{1,15})){0,7}(?![\w@]|[.,\-:/][0-9])/g;
+
+/**
+ * Canonical rule definitions. Rules without a `pattern` are model-backed (masker-mini labels
+ * GIVEN_NAME, SURNAME, STREET_NAME, BUILDING_NUMBER, CITY, ZIP_CODE, GOVERNMENT_ID, AGE, DATE);
+ * rules with a `pattern` are deterministic overlays. The model's own EMAIL, PHONE and
+ * CREDIT_CARD labels are never requested because the deterministic rules own those.
+ * "date" is disabled by default (dates in logs and changelogs would be noisy).
  */
 export const MODEL_RULE_DEFINITIONS: readonly ModelRuleDefinition[] = [
   // --- Personal Identification ---
@@ -59,28 +77,12 @@ export const MODEL_RULE_DEFINITIONS: readonly ModelRuleDefinition[] = [
     description: "Building, house, or street numbers",
   },
   {
-    id: "secondary-address",
-    name: "Secondary Addresses",
-    category: "SECONDARY_ADDRESS",
-    nativeLabel: "SECONDARY_ADDRESS",
-    enabled: true,
-    description: "Apartment, suite, unit, or floor numbers",
-  },
-  {
     id: "city",
     name: "Cities",
     category: "CITY",
     nativeLabel: "CITY",
     enabled: true,
     description: "City, municipality, or town names",
-  },
-  {
-    id: "state",
-    name: "States / Provinces",
-    category: "STATE",
-    nativeLabel: "STATE",
-    enabled: true,
-    description: "State, province, or region names",
   },
   {
     id: "zip-code",
@@ -91,7 +93,7 @@ export const MODEL_RULE_DEFINITIONS: readonly ModelRuleDefinition[] = [
     description: "Postal codes and ZIP codes across international formats",
   },
 
-  // --- Contact & Communications ---
+  // --- Deterministic overlay rules (order matters: earlier rules win on overlapping text) ---
   {
     id: "email",
     name: "Email Addresses",
@@ -99,25 +101,8 @@ export const MODEL_RULE_DEFINITIONS: readonly ModelRuleDefinition[] = [
     nativeLabel: "EMAIL",
     enabled: true,
     pattern: /\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}\b/g,
+    validate: (m) => v.email(m),
     description: "Electronic mail addresses",
-  },
-  {
-    id: "phone",
-    name: "Phone Numbers",
-    category: "phone",
-    nativeLabel: "PHONE",
-    enabled: true,
-    description: "Telephone and mobile phone numbers (international and local)",
-  },
-
-  // --- Financial Identifiers ---
-  {
-    id: "credit-card",
-    name: "Credit Card Numbers",
-    category: "credit-card",
-    nativeLabel: "CREDIT_CARD",
-    enabled: true,
-    description: "Payment card numbers validated by Luhn algorithm and IIN patterns",
   },
   {
     id: "bank-account",
@@ -125,77 +110,9 @@ export const MODEL_RULE_DEFINITIONS: readonly ModelRuleDefinition[] = [
     category: "BANK_ACCOUNT",
     nativeLabel: "BANK_ACCOUNT",
     enabled: true,
+    pattern: IBAN_PATTERN,
+    validate: (m) => v.iban(m),
     description: "International and domestic bank account numbers (including IBAN)",
-  },
-  {
-    id: "routing-number",
-    name: "Bank Routing Numbers",
-    category: "ROUTING_NUMBER",
-    nativeLabel: "ROUTING_NUMBER",
-    enabled: true,
-    description: "Financial routing transit numbers (ABA, transit codes)",
-  },
-
-  // --- Network & Digital Identifiers ---
-  {
-    id: "ip-address",
-    name: "IP Addresses",
-    category: "ip",
-    nativeLabel: "IP_ADDRESS",
-    enabled: true,
-    pattern: /\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b/g,
-    description: "IPv4 and IPv6 network addresses",
-    aliases: ["ipv4", "ip"],
-  },
-  {
-    id: "url",
-    name: "URLs & Web Addresses",
-    category: "URL",
-    nativeLabel: "URL",
-    enabled: true,
-    description: "HTTP/HTTPS URLs, domains, and web addresses",
-  },
-
-  // --- Government & National Identifiers ---
-  {
-    id: "government-id",
-    name: "Government IDs",
-    category: "GOVERNMENT_ID",
-    nativeLabel: "GOVERNMENT_ID",
-    enabled: true,
-    description: "National identification numbers and civil registry IDs",
-  },
-  {
-    id: "passport",
-    name: "Passport Numbers",
-    category: "PASSPORT",
-    nativeLabel: "PASSPORT",
-    enabled: true,
-    description: "International passport numbers",
-  },
-  {
-    id: "drivers-license",
-    name: "Driver's License Numbers",
-    category: "DRIVERS_LICENSE",
-    nativeLabel: "DRIVERS_LICENSE",
-    enabled: true,
-    description: "Driver's license and motor vehicle permit identifiers",
-  },
-  {
-    id: "tax-id",
-    name: "Tax ID Numbers",
-    category: "TAX_ID",
-    nativeLabel: "TAX_ID",
-    enabled: true,
-    description: "Taxpayer identification numbers (EIN, ITIN, international TIN)",
-  },
-  {
-    id: "ssn",
-    name: "Social Security Numbers",
-    category: "SSN",
-    nativeLabel: "SSN",
-    enabled: true,
-    description: "US Social Security Numbers and national insurance numbers",
   },
   {
     id: "imei",
@@ -203,18 +120,100 @@ export const MODEL_RULE_DEFINITIONS: readonly ModelRuleDefinition[] = [
     category: "IMEI",
     nativeLabel: "IMEI",
     enabled: true,
+    pattern: /(?<![0-9])[0-9](?:[ -]?[0-9]){14}(?![0-9])/g,
+    validate: (m, c) => v.imei(m) && v.hasContext(c.text, c.start, /imei/i),
     description: "International Mobile Equipment Identity 15-digit hardware numbers",
+  },
+  {
+    id: "credit-card",
+    name: "Credit Card Numbers",
+    category: "credit-card",
+    nativeLabel: "CREDIT_CARD",
+    enabled: true,
+    pattern: /(?<![0-9])[0-9](?:[ -]?[0-9]){12,18}(?![0-9])/g,
+    validate: (m) => v.luhn(m) && !v.allSameDigit(m),
+    description: "Payment card numbers validated by Luhn algorithm and IIN patterns",
+  },
+  {
+    id: "ssn",
+    name: "Social Security Numbers",
+    category: "SSN",
+    nativeLabel: "SSN",
+    enabled: true,
+    pattern: /(?<![0-9])(?:[0-9]{3}-[0-9]{2}-[0-9]{4}|[0-9]{9})(?![0-9])/g,
+    validate: (m, c) => v.ssn(m) && (m.includes("-") || v.hasContext(c.text, c.start, /ssn|social security/i)),
+    description: "US Social Security Numbers and national insurance numbers",
+  },
+  {
+    id: "routing-number",
+    name: "Bank Routing Numbers",
+    category: "ROUTING_NUMBER",
+    nativeLabel: "ROUTING_NUMBER",
+    enabled: true,
+    pattern: /(?<![0-9])[0-9]{9}(?![0-9])/g,
+    validate: (m, c) => v.abaRoutingNumber(m) && v.hasContext(c.text, c.start, /routing|\baba\b|\brtn\b/i),
+    description: "Financial routing transit numbers (ABA, transit codes)",
+  },
+  {
+    id: "ip-address",
+    name: "IP Addresses",
+    category: "ip",
+    nativeLabel: "IP_ADDRESS",
+    enabled: true,
+    pattern: IP_PATTERN,
+    validate: (m) => (m.includes(":") ? v.ipv6(m) : v.ipv4(m)),
+    description: "IPv4 and IPv6 network addresses",
+    aliases: ["ipv4", "ip"],
+  },
+  {
+    id: "phone",
+    name: "Phone Numbers",
+    category: "phone",
+    nativeLabel: "PHONE",
+    enabled: true,
+    pattern: PHONE_PATTERN,
+    validate: (m) => v.phone(m),
+    description: "Telephone and mobile phone numbers (international and local)",
+  },
+
+
+  // --- Government identifiers, age and dates (model-backed) ---
+  {
+    id: "government-id",
+    name: "Government IDs",
+    category: "GOVERNMENT_ID",
+    nativeLabel: "GOVERNMENT_ID",
+    enabled: true,
+    description: "Government-issued IDs: national ID, passport, tax ID, driver's license and SSN-like numbers",
+    aliases: [
+      "passport",
+      "drivers-license",
+      "driver-license",
+      "drivers_license",
+      "driver_license",
+      "tax-id",
+      "tax_id",
+      "government_id",
+    ],
+  },
+  {
+    id: "age",
+    name: "Ages",
+    category: "AGE",
+    nativeLabel: "AGE",
+    enabled: true,
+    description: "Ages of people (e.g. \"34 years old\")",
+  },
+  {
+    id: "date",
+    name: "Dates",
+    category: "DATE",
+    nativeLabel: "DATE",
+    enabled: false,
+    description: "Dates, including dates of birth (disabled by default: noisy in logs and changelogs)",
   },
 
   // --- Organization / Corporate (Disabled by default) ---
-  {
-    id: "org",
-    name: "Organizations & Companies",
-    category: "ORG",
-    nativeLabel: "ORG",
-    enabled: false,
-    description: "Commercial and institutional organization names (disabled by default in DEFAULT_LABELS)",
-  },
 ];
 
 /**
@@ -234,20 +233,37 @@ export const SECRET_RULES: readonly PiiRule[] = [
 ];
 
 /**
- * Fast lookup map from RedactLabel to canonical rule ID.
+ * Deterministic rules with no native model label (the model is not consulted for them).
  */
-export const LABEL_TO_RULE_ID: Readonly<Record<RedactLabel, string>> = Object.freeze(
+export const DETERMINISTIC_RULES: readonly PiiRule[] = [
+  {
+    id: "nl-bsn",
+    name: "Dutch BSN",
+    category: "GOVERNMENT_ID",
+    pattern: /(?<![0-9])[0-9]{9}(?![0-9])/g,
+    validate: (m, c) =>
+      v.bsn(m) && v.hasContext(c.text, c.start, /\bbsn\b|burgerservicenummer|\brsin\b|sofi/i),
+    enabled: true,
+    builtin: true,
+    description: "Dutch citizen service numbers (9 digits, elfproef) next to a BSN keyword",
+  },
+];
+
+/**
+ * Fast lookup map from label to canonical rule ID.
+ */
+export const LABEL_TO_RULE_ID: Readonly<Record<string, string>> = Object.freeze(
   MODEL_RULE_DEFINITIONS.reduce<Record<string, string>>((acc, def) => {
     acc[def.nativeLabel] = def.id;
     return acc;
-  }, {}) as Record<RedactLabel, string>
+  }, {})
 );
 
 /**
- * Fast lookup map from rule ID (and legacy aliases) to RedactLabel.
+ * Fast lookup map from rule ID (and legacy aliases) to label.
  */
-export const RULE_ID_TO_LABEL: Readonly<Record<string, RedactLabel>> = Object.freeze(
-  MODEL_RULE_DEFINITIONS.reduce<Record<string, RedactLabel>>((acc, def) => {
+export const RULE_ID_TO_LABEL: Readonly<Record<string, string>> = Object.freeze(
+  MODEL_RULE_DEFINITIONS.reduce<Record<string, string>>((acc, def) => {
     acc[def.id] = def.nativeLabel;
     if (def.aliases) {
       for (const alias of def.aliases) {
@@ -259,9 +275,8 @@ export const RULE_ID_TO_LABEL: Readonly<Record<string, RedactLabel>> = Object.fr
 );
 
 /**
- * Default rule set containing all 22 native model rules plus the secret token overlay rule.
- * 22 rules are enabled by default (21 native labels + api-key-generic).
- * 1 rule ("org") is disabled by default.
+ * Default rule set: the model-backed rules, the deterministic overlay rules and the secret
+ * token overlay rule. Only "date" is disabled by default.
  */
 export const defaultRules: PiiRule[] = [
   ...MODEL_RULE_DEFINITIONS.map((def): PiiRule => ({
@@ -274,16 +289,18 @@ export const defaultRules: PiiRule[] = [
     nativeLabel: def.nativeLabel,
     ...(def.pattern ? { pattern: def.pattern } : {}),
     ...(def.mask ? { mask: def.mask } : {}),
+    ...(def.validate ? { validate: def.validate } : {}),
   })),
+  ...DETERMINISTIC_RULES.map((rule): PiiRule => ({ ...rule })),
   ...SECRET_RULES.map((rule): PiiRule => ({ ...rule })),
 ];
 
 /**
- * Returns all active RedactLabel instances from an iterable of PiiRules.
+ * Returns all active model labels from an iterable of PiiRules.
  * If all native rules are disabled, returns an empty array.
  */
-export function getActiveModelLabels(rules: Iterable<PiiRule>): RedactLabel[] {
-  const labels: RedactLabel[] = [];
+export function getActiveModelLabels(rules: Iterable<PiiRule>): string[] {
+  const labels: string[] = [];
   for (const rule of rules) {
     if (!rule.enabled) continue;
     const label = rule.nativeLabel ?? RULE_ID_TO_LABEL[rule.id];
@@ -304,7 +321,7 @@ export function findRuleByIdOrLabel(
   const trimmed = query.trim();
   const lower = trimmed.toLowerCase();
   const upper = trimmed.toUpperCase();
-  const targetLabel = RULE_ID_TO_LABEL[lower] ?? (upper as RedactLabel);
+  const targetLabel = RULE_ID_TO_LABEL[lower] ?? RULE_ID_TO_LABEL[lower.replace(/_/g, "-")] ?? upper;
 
   for (const rule of rules) {
     if (rule.id === trimmed || rule.id === lower) return rule;

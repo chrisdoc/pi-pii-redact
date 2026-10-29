@@ -97,7 +97,7 @@ describe("Tier 2: Boundary & Corner Cases (Opaque-Box E2E)", () => {
     });
 
     it("2.5 redacts all occurrences of repeated identical credit cards", async () => {
-      const cc = "4111-2222-3333-4444";
+      const cc = "4111-2222-3333-4448";
       const result = await harness.triggerInput(`Card 1: ${cc}, Retype: ${cc}`);
       expect(result?.action).toBe("transform");
       expect(result?.text).not.toContain(cc);
@@ -196,7 +196,7 @@ describe("Tier 2: Boundary & Corner Cases (Opaque-Box E2E)", () => {
     });
 
     it("4.5 redacts credit card surrounded by mathematical symbols and currency signs", async () => {
-      const cc = "4532-1234-5678-9012";
+      const cc = "4532-1234-5678-9014";
       const result = await harness.triggerInput(`Total: €150.00 / ¥20,000 → Charged on: ${cc} (±0.05%)`);
       expect(result?.action).toBe("transform");
       expect(result?.text).not.toContain(cc);

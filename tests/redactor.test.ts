@@ -141,7 +141,7 @@ describe("RedactorService", () => {
   it("introspects rules with getRules and getConfig", () => {
     const service = new RedactorService();
     const rules = service.getRules();
-    expect(rules.length).toBe(23);
+    expect(rules.length).toBe(19);
     const config = service.getConfig();
     expect(config.enabled).toBe(true);
     expect(config.maskUserInputs).toBe(true);

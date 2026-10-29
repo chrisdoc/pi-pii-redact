@@ -1,0 +1,18 @@
+@chrisdoc/pi-pii-redact
+Copyright (c) Christoph Kieslich, MIT License (see package.json).
+
+This package downloads and runs third-party software and models:
+
+masker-mini (https://huggingface.co/divergentlabs/masker-mini)
+  Copyright divergentlabs. Licensed under the Apache License, Version 2.0.
+  Derived from Microsoft mDeBERTa-v3 / Multilingual-MiniLM (MIT License).
+  The model files are not bundled; they are downloaded on first use from a pinned
+  revision and verified by SHA-256.
+
+swift-masker validator port
+  The checksum validators in src/rules/validators.ts are a port of the validators
+  in swift-masker. Copyright 2026 Offchain Studio. Licensed under the Apache
+  License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0).
+
+onnxruntime-node and @huggingface/tokenizers are used as dependencies under their
+own licenses (MIT and Apache-2.0 respectively).

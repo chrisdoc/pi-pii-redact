@@ -34,8 +34,8 @@ jobs:
         id: model-cache
         uses: actions/cache/restore@v6
         with:
-          path: ~/.cache/desert-ant-models
-          key: desert-ant-models-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          path: ~/.cache/pi-pii-redact
+          key: pi-pii-redact-model-${{ runner.os }}-${{ hashFiles('src/services/masker-mini/model-files.ts') }}
 
       - name: Install dependencies
         run: npm ci
@@ -43,14 +43,14 @@ jobs:
       # Download once up front: parallel test workers racing to download into the same cache fail.
       - name: Download redaction model
         if: steps.model-cache.outputs.cache-hit != 'true'
-        run: node --input-type=module -e "const { Redact } = await import('@desert-ant-labs/redact/native'); const r = await Redact.load(); r.dispose();"
+        run: node --experimental-strip-types --no-warnings --input-type=module -e "const m = await import('./src/services/masker-mini/model-files.ts'); await m.resolveMaskerFiles();"
 
       # Saved before tests so a failing test run still keeps the model cached.
       - name: Save redaction model cache
         if: steps.model-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v6
         with:
-          path: ~/.cache/desert-ant-models
+          path: ~/.cache/pi-pii-redact
           key: ${{ steps.model-cache.outputs.cache-primary-key }}
 
       - name: Typecheck

@@ -1,14 +1,17 @@
-import type { RedactLabel, RedactionItem, Redaction } from "@desert-ant-labs/redact/native";
+import type { NerLabel } from "./services/ner-engine.js";
 
-export type { RedactLabel, RedactionItem, Redaction };
+export type { NerLabel };
 
 /**
- * Supported PII categories, encompassing all 22 native labels from
- * @desert-ant-labs/redact/native (DEFAULT_LABELS and ALL_LABELS), as well
- * as legacy and extension-specific categories.
+ * Supported PII categories: the labels emitted by the masker-mini model, the
+ * categories of the deterministic rules, and extension-specific categories.
  */
 export type PiiCategory =
-  | RedactLabel
+  | NerLabel
+  | "BANK_ACCOUNT"
+  | "IMEI"
+  | "SSN"
+  | "ROUTING_NUMBER"
   | "email"
   | "phone"
   | "ip"
@@ -27,10 +30,16 @@ export interface PiiRule {
   category: PiiCategory;
   pattern?: RegExp;
   mask?: (match: string) => string;
+  /**
+   * Optional acceptance check for overlay rules. A regex match for which this returns false
+   * is left untouched (no token, no redaction detail).
+   */
+  validate?: (match: string, context: { text: string; start: number; end: number }) => boolean;
   enabled: boolean;
   description?: string;
   builtin?: boolean;
-  nativeLabel?: RedactLabel;
+  /** Model label requested for model-backed rules, or the vault label of an overlay rule. */
+  nativeLabel?: NerLabel | (string & {});
 }
 
 /**
@@ -74,7 +83,7 @@ export interface RedactorConfig {
   maskContextMessages: boolean;
   notifyOnRedact: boolean;
   /**
-   * Minimum neural confidence threshold (0.0 to 1.0). Default is 0.85 (calibrated to eliminate NER false positives).
+   * Minimum neural confidence threshold (0.0 to 1.0). Default is 0.55 (calibrated on the eval/ corpus).
    */
   minimumConfidence?: number;
   /**
