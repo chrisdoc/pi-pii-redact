@@ -429,10 +429,12 @@ export class RedactorService {
       if (!enabledVaultLabels.has(entry.label)) continue;
       if (entry.original.trim().length <= 1 || !currentText.includes(entry.original)) continue;
       const rule = this.findRuleForNativeLabel(entry.label);
+      const source = currentText;
       currentText = this.replaceOutsideTokens(
-        currentText,
+        source,
         createEntityWordBoundaryRegex(entry.original),
-        () => {
+        (match, start, end) => {
+          if (rule?.validate && !rule.validate(match, { text: source, start, end })) return null;
           redactions.push({
             category: rule?.category ?? this.mapNativeLabelToCategory(entry.label),
             ruleId: rule?.id ?? entry.label.toLowerCase(),

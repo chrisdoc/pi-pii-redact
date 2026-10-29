@@ -23,7 +23,13 @@ function parseArgs(argv: string[]) {
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === "--out") a.out = argv[++i];
     else if (argv[i] === "--label") a.label = argv[++i];
-    else if (argv[i] === "--limit") a.limit = Number(argv[++i]);
+    else if (argv[i] === "--limit") {
+      const val = Number(argv[++i]);
+      if (!Number.isInteger(val) || val <= 0) {
+        throw new Error(`--limit must be a positive integer, got "${argv[i]}"`);
+      }
+      a.limit = val;
+    }
     else if (argv[i] === "--group") a.group = argv[++i];
     else throw new Error(`unknown argument ${argv[i]}`);
   }

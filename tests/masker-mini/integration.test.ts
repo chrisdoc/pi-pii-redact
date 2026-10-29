@@ -58,6 +58,12 @@ describe("masker-mini (real model)", () => {
     expect(text.slice(...last.range!)).toMatch(/a$/);
   });
 
+  it("preserves spans after long unknown runs (>32 emoji)", async () => {
+    const text = "😀".repeat(40) + " Anna Schmidt";
+    const { items } = await model.redaction(text, { labels: ["GIVEN_NAME", "SURNAME"], minimumConfidence: 0.5 });
+    expect(items.some((i) => i.original === "Anna")).toBe(true);
+  });
+
   it("detects a German name with correct offsets", async () => {
     const text = "Mein Name ist Jürgen Müller";
     const { items } = await model.redaction(text, { labels, minimumConfidence: 0.5 });

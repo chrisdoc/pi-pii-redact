@@ -89,6 +89,30 @@ describe("registerHooks - Component Unit Tests", () => {
       const { ctx } = createMockContext({ missingSetStatus: true });
       await expect(mockPi.trigger("session_start", {}, ctx)).resolves.not.toThrow();
     });
+
+    it("1.6 migrates legacy disabled rules (passport, drivers-license, tax-id) to government-id", async () => {
+      const redactor = new RedactorService();
+      registerHooks(mockPi.api, redactor);
+
+      const ctx = {
+        sessionManager: {
+          getEntries: () => [
+            {
+              type: "custom",
+              customType: "pii-config",
+              data: {
+                enabled: true,
+                disabledRules: ["passport", "tax-id"],
+              },
+            },
+          ],
+        },
+      } as any;
+
+      await mockPi.trigger("session_start", {}, ctx);
+      const govRule = redactor.getRules().find((r) => r.id === "government-id");
+      expect(govRule?.enabled).toBe(false);
+    });
   });
 
   // --------------------------------------------------------------------------

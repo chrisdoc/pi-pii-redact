@@ -9,7 +9,7 @@ A [Pi](https://github.com/earendil-works/pi) extension that keeps personally ide
 
 Names, addresses, emails, phone numbers, card numbers, government IDs, API keys and more are replaced with stable tokens such as `[EMAIL_3#k7q2]` before anything is sent to the model. When the model uses those tokens in a tool call or a reply, the extension swaps the real values back in, so your tools still work on real data and you still read real values.
 
-Detection runs locally with the [masker-mini](https://huggingface.co/divergentlabs/masker-mini) multilingual NER model (run through ONNX Runtime) plus deterministic, checksum-validated rules. Nothing is sent to a third-party service for redaction.
+Detection runs locally with the [masker-mini](https://huggingface.co/divergentlabs/masker-mini) multilingual NER model (run through ONNX Runtime) plus deterministic, structural- and checksum-validated rules. Nothing is sent to a third-party service for redaction.
 
 ## Installation
 

@@ -1,4 +1,5 @@
-import { createHash } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
+import { Transform } from "node:stream";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -15,6 +16,17 @@ export const MASKER_SHA256: Record<string, string> = {
   "tokenizer_config.json": "71ae4d604bb97bd3c2fe964f81965dcd1479909e42cbd44f88e4508f8d0267fd",
   "onnx/model_int4.onnx": "338b7c2daf15168441a93c175b1fe6b364fef9a6ef7dee65e00c9159a76fdfae",
 };
+
+/** Maximum allowed byte size per file during download. */
+export const MASKER_MAX_BYTES: Record<string, number> = {
+  "config.json": 100 * 1024, // ~2.8KB
+  "tokenizer_config.json": 100 * 1024, // ~20KB
+  "tokenizer.json": 10 * 1024 * 1024, // ~4.3MB
+  "onnx/model_int4.onnx": 50 * 1024 * 1024, // ~22.3MB
+};
+
+/** Default transfer timeout (60 seconds). */
+const DOWNLOAD_TIMEOUT_MS = 60_000;
 
 export interface MaskerFiles {
   directory: string;
@@ -56,14 +68,29 @@ function cacheDirectory(cacheRoot?: string): string {
 
 async function download(rel: string, dest: string, expected: string, fetchImpl: typeof fetch): Promise<void> {
   const url = `${BASE_URL}/${MASKER_REVISION}/${rel}`;
-  const res = await fetchImpl(url);
+  const signal = AbortSignal.timeout(DOWNLOAD_TIMEOUT_MS);
+  const res = await fetchImpl(url, { signal });
   if (!res.ok || !res.body) {
     throw new Error(`masker-mini: download failed for ${url} (HTTP ${res.status})`);
   }
   fs.mkdirSync(path.dirname(dest), { recursive: true });
-  const tmp = `${dest}.${process.pid}.${Date.now()}.tmp`;
+  const unique = randomBytes(8).toString("hex");
+  const tmp = `${dest}.${process.pid}.${Date.now()}.${unique}.tmp`;
+  const maxBytes = MASKER_MAX_BYTES[rel] ?? 100 * 1024 * 1024;
+  let received = 0;
+  const limiter = new Transform({
+    transform(chunk, _encoding, callback) {
+      received += chunk.length;
+      if (received > maxBytes) {
+        callback(new Error(`masker-mini: download exceeded maximum size limit of ${maxBytes} bytes for ${rel}`));
+      } else {
+        callback(null, chunk);
+      }
+    },
+  });
+
   try {
-    await pipeline(Readable.fromWeb(res.body as never), fs.createWriteStream(tmp));
+    await pipeline(Readable.fromWeb(res.body as never), limiter, fs.createWriteStream(tmp));
     await verifyFile(tmp, expected);
     fs.renameSync(tmp, dest);
   } catch (error) {

@@ -48,7 +48,16 @@ export function loadConfig(entries: readonly CustomEntryLike[], redactor: Redact
   if (!latest || typeof latest.enabled !== "boolean") return;
   redactor.setEnabled(latest.enabled);
   if (Array.isArray(latest.disabledRules)) {
-    const disabled = new Set(latest.disabledRules);
+    // Map legacy merged rule IDs (passport, drivers-license, tax-id) to canonical government-id
+    const disabled = new Set(
+      latest.disabledRules.map((id) => {
+        const lower = id.toLowerCase().replace(/_/g, "-");
+        if (lower === "passport" || lower === "drivers-license" || lower === "tax-id" || lower === "driver-license") {
+          return "government-id";
+        }
+        return id;
+      })
+    );
     for (const rule of redactor.getRules()) {
       redactor.toggleRule(rule.id, !disabled.has(rule.id));
     }

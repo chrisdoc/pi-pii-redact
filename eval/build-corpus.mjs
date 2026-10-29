@@ -27,6 +27,9 @@ function parse(annotated) {
     if (!pii.some((p) => p.value === value)) pii.push({ value, type });
     return value;
   });
+  if (text.includes("⟦") || text.includes("⟧")) {
+    throw new Error(`unmatched or malformed annotation marker in: ${annotated}`);
+  }
   return { text, pii, counts };
 }
 

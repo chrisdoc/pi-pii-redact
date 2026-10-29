@@ -13,8 +13,8 @@ export function filterSpans(
 }
 
 /**
- * Removes overlapping spans (e.g. the same entity seen in two windows), preferring
- * higher confidence, then longer spans. Returns spans sorted by start.
+ * Merges overlapping spans (retaining their full extent), preferring
+ * higher confidence, then longer spans for metadata. Returns spans sorted by start.
  */
 export function dedupeSpans(spans: readonly Span[]): Span[] {
   const ranked = spans
@@ -22,7 +22,13 @@ export function dedupeSpans(spans: readonly Span[]): Span[] {
     .sort((a, b) => b.confidence - a.confidence || b.end - b.start - (a.end - a.start) || a.start - b.start);
   const kept: Span[] = [];
   for (const s of ranked) {
-    if (!kept.some((k) => s.start < k.end && k.start < s.end)) kept.push(s);
+    const existing = kept.find((k) => s.start < k.end && k.start < s.end);
+    if (!existing) {
+      kept.push({ ...s });
+    } else {
+      existing.start = Math.min(existing.start, s.start);
+      existing.end = Math.max(existing.end, s.end);
+    }
   }
   return kept.sort((a, b) => a.start - b.start || a.end - b.end);
 }

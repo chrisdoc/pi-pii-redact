@@ -112,7 +112,7 @@ export const MODEL_RULE_DEFINITIONS: readonly ModelRuleDefinition[] = [
     enabled: true,
     pattern: IBAN_PATTERN,
     validate: (m) => v.iban(m),
-    description: "International and domestic bank account numbers (including IBAN)",
+    description: "International bank account numbers (IBAN)",
   },
   {
     id: "imei",

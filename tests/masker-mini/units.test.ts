@@ -107,6 +107,12 @@ describe("alignPieces", () => {
   it("does not resync without a preceding unknown token", () => {
     expect(alignPieces("xx b", pieces("▁b"))).toEqual([null]);
   });
+  it("resyncs after a long unknown run (>32 chars)", () => {
+    const emojis = "😀".repeat(40);
+    const text = "a" + emojis + " b";
+    const ps = [{ id: 5, piece: "▁a" }, { id: 3, piece: "[UNK]" }, { id: 6, piece: "▁b" }];
+    expect(alignPieces(text, ps)).toEqual([[0, 1], null, [text.length - 1, text.length]]);
+  });
 });
 
 describe("normalizeWithMap / tokenizeWithOffsets", () => {
@@ -142,9 +148,9 @@ describe("filterSpans / dedupeSpans / argmaxSoftmax", () => {
     expect(filterSpans(spans, [], 0)).toEqual([]);
     expect(filterSpans(spans, undefined, 0)).toEqual([]);
   });
-  it("dedupes overlaps preferring confidence, then length, and sorts by start", () => {
+  it("dedupes overlaps retaining the full combined extent, and sorts by start", () => {
     expect(dedupeSpans([s("A", 0, 5, 0.8), s("A", 3, 8, 0.9), s("A", 10, 12, 0.7)])).toEqual([
-      s("A", 3, 8, 0.9), s("A", 10, 12, 0.7),
+      s("A", 0, 8, 0.9), s("A", 10, 12, 0.7),
     ]);
     expect(dedupeSpans([s("A", 0, 5, 0.9), s("A", 0, 8, 0.9)])).toEqual([s("A", 0, 8, 0.9)]);
   });
@@ -203,6 +209,16 @@ describe("model files", () => {
     await expect(resolveMaskerFiles({ cacheRoot: root, fetchImpl, hashes })).rejects.toThrow(/SHA-256 mismatch/);
     const leftovers = fs.readdirSync(root, { recursive: true, encoding: "utf8" });
     expect(leftovers.filter((f) => f.endsWith(".tmp") || f.endsWith(".json"))).toEqual([]);
+  });
+
+  it("aborts and deletes temporary file when download exceeds size limit", async () => {
+    const root = mk();
+    // Feed >100KB for config.json (limit is 100KB)
+    const big = "x".repeat(120 * 1024);
+    const fetchImpl = (async () => new Response(big)) as unknown as typeof fetch;
+    await expect(resolveMaskerFiles({ cacheRoot: root, fetchImpl, hashes })).rejects.toThrow(/exceeded maximum size limit/);
+    const leftovers = fs.readdirSync(root, { recursive: true, encoding: "utf8" });
+    expect(leftovers.filter((f) => f.endsWith(".tmp"))).toEqual([]);
   });
 });
 

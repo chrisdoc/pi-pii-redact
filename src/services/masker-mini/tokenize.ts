@@ -17,7 +17,6 @@ export const SPECIAL_IDS: ReadonlySet<number> = new Set([0, 1, 2, 3, 63895]);
 /** Whitespace, control and format characters the tokenizer's normalizer drops or turns into spaces. */
 const SKIPPABLE = /[\s\p{Cc}\p{Cf}]/u;
 /** How far past the cursor a piece may be searched after an unknown token. */
-const RESYNC_LOOKAHEAD = 32;
 
 export interface Normalized {
   text: string;
@@ -93,7 +92,7 @@ export function alignPieces(
     if (normalized.startsWith(piece, cursor)) at = cursor;
     else if (gap) {
       const found = normalized.indexOf(piece, cursor);
-      if (found >= 0 && found - cursor <= RESYNC_LOOKAHEAD) at = found;
+      if (found >= 0) at = found;
     }
     if (at < 0) {
       out.push(null);

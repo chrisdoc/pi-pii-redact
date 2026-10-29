@@ -72,6 +72,9 @@ const fpKey = (f: any) => `${f.ruleId}|${f.original}`;
 for (const ca of A.cases) {
   const cb = byIdB.get(ca.id);
   if (!cb) continue;
+  if (ca.text !== cb.text) {
+    throw new Error(`Mismatched corpus text for case ${ca.id}: cannot compare different inputs`);
+  }
   const lines: string[] = [];
   for (const pa of ca.pii) {
     const pb = cb.pii.find((p: any) => p.value === pa.value);
