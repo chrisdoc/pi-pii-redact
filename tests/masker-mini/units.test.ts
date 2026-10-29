@@ -154,6 +154,33 @@ describe("filterSpans / dedupeSpans / argmaxSoftmax", () => {
     ]);
     expect(dedupeSpans([s("A", 0, 5, 0.9), s("A", 0, 8, 0.9)])).toEqual([s("A", 0, 8, 0.9)]);
   });
+  it("merges a bridge across multiple spans and rechecks after expanding", () => {
+    const spans = [s("A", 8, 12, 0.95), s("A", 0, 4, 0.9), s("A", 3, 7, 0.85), s("A", 6, 9, 0.8)];
+    const snapshot = spans.map((span) => ({ ...span }));
+    expect(dedupeSpans(spans)).toEqual([s("A", 0, 12, 0.95)]);
+    expect(spans).toEqual(snapshot);
+    expect(dedupeSpans(spans.slice().reverse())).toEqual([s("A", 0, 12, 0.95)]);
+  });
+  it("keeps a different-label winner's boundaries unchanged", () => {
+    const spans = [s("CITY", 3, 8, 0.95), s("GIVEN_NAME", 0, 5, 0.8)];
+    expect(dedupeSpans(spans)).toEqual([s("CITY", 3, 8, 0.95)]);
+    expect(dedupeSpans(spans.slice().reverse())).toEqual([s("CITY", 3, 8, 0.95)]);
+  });
+  it("resolves different-label overlaps created by same-label expansion", () => {
+    expect(dedupeSpans([
+      s("A", 0, 4, 0.95), s("B", 6, 10, 0.9), s("A", 3, 8, 0.8), s("C", 10, 12, 0.7),
+    ])).toEqual([s("A", 0, 8, 0.95), s("C", 10, 12, 0.7)]);
+    expect(dedupeSpans([
+      s("B", 6, 10, 0.95), s("A", 0, 4, 0.9), s("A", 3, 8, 0.8),
+    ])).toEqual([s("B", 6, 10, 0.95)]);
+  });
+  it("breaks different-label ties by length then start, without merging adjacent spans", () => {
+    expect(dedupeSpans([s("A", 0, 5, 0.9), s("B", 2, 8, 0.9)])).toEqual([s("B", 2, 8, 0.9)]);
+    expect(dedupeSpans([s("B", 2, 7, 0.9), s("A", 0, 5, 0.9)])).toEqual([s("A", 0, 5, 0.9)]);
+    expect(dedupeSpans([s("A", 0, 5, 0.9), s("A", 5, 8, 0.8)])).toEqual([
+      s("A", 0, 5, 0.9), s("A", 5, 8, 0.8),
+    ]);
+  });
   it("computes softmax of the argmax class", () => {
     const [k, prob] = argmaxSoftmax([0, 0, 5, 0, 99, 99], 0, 4);
     expect(k).toBe(2);

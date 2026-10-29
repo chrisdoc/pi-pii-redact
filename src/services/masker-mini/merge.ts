@@ -13,22 +13,33 @@ export function filterSpans(
 }
 
 /**
- * Merges overlapping spans (retaining their full extent), preferring
- * higher confidence, then longer spans for metadata. Returns spans sorted by start.
+ * Unions overlapping spans of the same label, retaining the highest confidence.
+ * Resolves other overlaps by confidence, then length, without widening the winner.
+ * Returns non-overlapping spans sorted by start.
  */
 export function dedupeSpans(spans: readonly Span[]): Span[] {
-  const ranked = spans
-    .slice()
+  const merged: Span[] = [];
+  for (const span of spans) {
+    const combined = { ...span };
+    for (let i = 0; i < merged.length;) {
+      const existing = merged[i];
+      if (combined.label === existing.label && combined.start < existing.end && existing.start < combined.end) {
+        combined.start = Math.min(combined.start, existing.start);
+        combined.end = Math.max(combined.end, existing.end);
+        combined.confidence = Math.max(combined.confidence, existing.confidence);
+        merged.splice(i, 1);
+        i = 0; // Expansion may reach a span we already checked.
+      } else {
+        i++;
+      }
+    }
+    merged.push(combined);
+  }
+  const ranked = merged
     .sort((a, b) => b.confidence - a.confidence || b.end - b.start - (a.end - a.start) || a.start - b.start);
   const kept: Span[] = [];
   for (const s of ranked) {
-    const existing = kept.find((k) => s.start < k.end && k.start < s.end);
-    if (!existing) {
-      kept.push({ ...s });
-    } else {
-      existing.start = Math.min(existing.start, s.start);
-      existing.end = Math.max(existing.end, s.end);
-    }
+    if (!kept.some((k) => s.start < k.end && k.start < s.end)) kept.push(s);
   }
   return kept.sort((a, b) => a.start - b.start || a.end - b.end);
 }

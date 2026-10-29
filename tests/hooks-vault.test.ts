@@ -248,6 +248,18 @@ describe("config persistence and lifecycle", () => {
     expect(redactor.getRules().find((r) => r.id === "phone")!.enabled).toBe(true);
   });
 
+  it("ignores malformed disabled rule entries while restoring valid strings", async () => {
+    const disabledRules = [null, 42, false, {}, ["phone"], "email", "date", "PASSPORT", "DRIVERS_LICENSE", "TAX_ID"];
+    const entries = [{ type: "custom", customType: "pii-config", data: { enabled: false, disabledRules } }];
+    const { mock, ctx, redactor } = setup({ entries });
+    await expect(mock.trigger("session_start", {}, ctx)).resolves.not.toThrow();
+    expect(redactor.isEnabled()).toBe(false);
+    for (const id of ["email", "date", "government-id"]) {
+      expect(redactor.getRules().find((r) => r.id === id)!.enabled).toBe(false);
+    }
+    expect(redactor.getRules().find((r) => r.id === "phone")!.enabled).toBe(true);
+  });
+
   it("disposes the redactor on session_shutdown but keeps the vault", async () => {
     const { mock, ctx, redactor } = setup();
     const spy = vi.spyOn(redactor, "dispose");
