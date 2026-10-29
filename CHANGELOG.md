@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.4.0
+
+### Minor Changes
+
+- [#18](https://github.com/chrisdoc/pi-pii-redact/pull/18) [`3b8a1f8`](https://github.com/chrisdoc/pi-pii-redact/commit/3b8a1f8cc9147b83648ba35a77930a09a439a47b) Thanks [@chrisdoc](https://github.com/chrisdoc)! - Replace the `@desert-ant-labs/redact` model with masker-mini, an on-device NER model (about 22 MB, int4) run through ONNX Runtime. This is a breaking change while the package is 0.x.
+  
+  - Detection is now masker-mini plus deterministic rules. Emails, credit cards (Luhn), IBANs (mod-97), US SSNs, ABA routing numbers, IMEIs, phone numbers, IPv4/IPv6 and Dutch BSNs (new `nl-bsn` rule) are found by checksum- or structure-validated rules that run before the model and no longer depend on it.
+  - New `age` rule (on by default) and opt-in `date` rule (off by default, enable with `/pii toggle date`).
+  - Removed the `state`, `secondary-address`, `url` and `org` rules, which have no detector any more. `passport`, `drivers-license` and `tax-id` are merged into `government-id`; the old names still work as aliases for toggling. Legacy disabled rule ids in persisted settings are automatically migrated to `government-id`.
+  - The default `minimumConfidence` is now 0.55 (was 0.85), calibrated on the bundled evaluation corpus, and the model runs once per text for all active labels.
+  - Model spans are cleaned up: edge punctuation is trimmed, numbers glued into larger identifiers (`usr_99812`) are ignored, partially tagged IDs are widened to the whole token (`12345678Z`), and partially tagged names are widened to the whole word.
+  - ONNX Runtime telemetry is disabled.
+  - The model is downloaded from a pinned Hugging Face revision, SHA-256 verified, and cached in `~/.cache/pi-pii-redact` (previously `~/.cache/desert-ant-models`). Use `PI_PII_REDACT_MODEL_DIR` for offline use.
+  - `onnxruntime-node` and `@huggingface/tokenizers` are now regular dependencies; `@desert-ant-labs/redact` and `koffi` are gone.
+
+- [#19](https://github.com/chrisdoc/pi-pii-redact/pull/19) [`a814e81`](https://github.com/chrisdoc/pi-pii-redact/commit/a814e8152d2280a1a96fcec019dc27c8e60fd78d) Thanks [@chrisdoc](https://github.com/chrisdoc)! - Add secret and credential detection using `@visulima/secret-scanner`. A new `secrets` rule (on by default, toggle with `/pii toggle secrets`) replaces API keys, tokens, JWTs, private keys and credentials in URLs with `[SECRET_n#xxxx]` tokens that are restored like other tokens. Detection runs offline (credential validation is hard-coded off) behind a regex pre-gate, and falls back to the existing regex rules if the native binding cannot load. `/pii status` shows the scanner state. The minimum supported Node version is now `^22.14.0 || >=24.10.0`.
+
+### Patch Changes
+
+- [#18](https://github.com/chrisdoc/pi-pii-redact/pull/18) [`3b8a1f8`](https://github.com/chrisdoc/pi-pii-redact/commit/3b8a1f8cc9147b83648ba35a77930a09a439a47b) Thanks [@chrisdoc](https://github.com/chrisdoc)! - Merge complete overlap clusters sharing a label before replacing model spans, preserving their full extent and highest confidence. Resolve conflicting labels by rank without widening the winner.
+
+- [#18](https://github.com/chrisdoc/pi-pii-redact/pull/18) [`3b8a1f8`](https://github.com/chrisdoc/pi-pii-redact/commit/3b8a1f8cc9147b83648ba35a77930a09a439a47b) Thanks [@chrisdoc](https://github.com/chrisdoc)! - Ignore malformed persisted disabled-rule entries and disable the merged government-ID rule only when explicitly disabled or all three legacy ID rules were disabled. Merge overlapping model spans with the same label completely, and resolve conflicting labels by confidence without widening the winner.
+
 ## 0.3.1
 
 ### Patch Changes
