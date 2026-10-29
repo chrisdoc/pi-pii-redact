@@ -1,0 +1,15 @@
+{
+  "tool_use_id": "toolu_014enGAByKx3pG8qkm2H3tPN",
+  "agent_id": "a137b99e86691011f",
+  "subagent_type": "scoper",
+  "task_description": "Scope pluggable NER backend",
+  "token_usage": {
+    "input_tokens": 28,
+    "cache_creation_tokens": 100670,
+    "cache_read_tokens": 722138,
+    "output_tokens": 25891,
+    "api_call_count": 13
+  },
+  "started_at": "2026-10-29T05:02:30.406124472Z",
+  "completed_at": "2026-10-29T05:05:18.491720445Z"
+}
