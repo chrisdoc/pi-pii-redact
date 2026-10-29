@@ -24,7 +24,7 @@ Most tests run the real on-device model on CPU. On first run it downloads (~25 M
 
 **Important runner rules:**
 - **Never run vitest with `--root /`**: Passing `--root /` forces Vitest to recursively crawl the entire root filesystem searching for tests and dependencies. On this host, this exhausts memory (>3 GB RSS), triggers kernel memory cgroup throttling, and freezes the server.
-- **Keep temporary/scratch tests in the workspace**: If writing temporary demo or debug test files, place them inside the repository (e.g., `tests/scratch.test.ts`) rather than in `/tmp`, or pass the project root explicitly (e.g., `npx vitest run /path/to/test.ts --root .`).
+- **Keep temporary/scratch tests in the workspace**: If writing temporary demo or debug test files, place them inside the repository (e.g., `tests/scratch.test.ts`) rather than in `/tmp`, and run them from the repository root (e.g., `npx vitest run tests/scratch.test.ts --root .`).
 
 CI (`.github/workflows/ci.yml`) runs typecheck and tests on Node 22 and 24.
 
@@ -59,7 +59,7 @@ Anything that changes rules, the enabled state or the vault must clear the cache
 - `tests/mock-pi.ts` provides `createMockExtensionAPI` (captures handlers and `appendEntry` as session entries), `createMockContext` and `createMockRedactor` (no model) for unit tests.
 - `tests/e2e/harness.ts` provides `PiTestHarness` for opaque-box tests through the public entry points, plus `assertRedacted*` matchers. The tiers cover features, boundaries, combinations, workflows and adversarial cases (`tier1` to `tier5`). The core assertion is that the original value is absent from the output and a placeholder is present.
 - `TEST_INFRA.md` / `TEST_READY.md` describe the e2e methodology. They reference `ORIGINAL_REQUEST.md` / `PROJECT.md`, which are not in the repo.
-- **Resource discipline:** The host runner has only 2 vCPUs with zero swap. Each test file runs native model inference on CPU. Running parallel suites or running vitest with `--root /` causes severe I/O thrashing and memory pressure stalls across the machine.
+- **Resource discipline:** The host runner has only 2 vCPUs with zero swap. Model-backed test files run native model inference on CPU. Running parallel suites or running vitest with `--root /` causes severe I/O thrashing and memory pressure stalls across the machine.
 
 ## Releasing
 
