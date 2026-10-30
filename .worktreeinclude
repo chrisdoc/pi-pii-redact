@@ -1,0 +1,2 @@
+# Gitignored local config and dependencies copied into new worktrees. Keep plain paths: `but worktree new` ignores globs.
+node_modules
